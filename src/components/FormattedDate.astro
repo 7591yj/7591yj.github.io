@@ -1,9 +1,10 @@
 ---
 interface Props {
-  date: Date;
+  date: string | Date;
 }
 
-const { date } = Astro.props;
+const { date: rawDate } = Astro.props;
+const date = typeof rawDate === "string" ? new Date(rawDate) : rawDate;
 ---
 
 <time datetime={date.toISOString()}>
