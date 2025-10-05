@@ -21,9 +21,6 @@ pnpm-debug.log*
 .DS_Store
 .yarn/install-state.gz
 
-# consts
-consts.ts
-
 ### Others ###
 
 # Created by https://www.toptal.com/developers/gitignore/api/webstorm

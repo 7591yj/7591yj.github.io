@@ -1,6 +1,6 @@
-# CodeFolio
+# 7591yj.github.io
 
-An open-source portfolio for devs to showcase their projects, coding skills and perosnal story.
+My portfolio
 
 ## License
 
