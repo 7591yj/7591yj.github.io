@@ -1,4 +1,5 @@
 ---
+import {NAME} from "../consts.ts";
 const { selectedItem } = Astro.props;
 ---
 
@@ -21,7 +22,7 @@ const { selectedItem } = Astro.props;
           class="niv-image"
         />
         <div>
-          <div class="label-white">Sam Bernstein</div>
+          <div class="label-white">{NAME}</div>
           <div class="label-gray">Software Engineer</div>
         </div>
       </div>
@@ -60,20 +61,6 @@ const { selectedItem } = Astro.props;
         <div>Software development</div>
       </a>
       <a
-        href="/devops"
-        class={`nav-link-container w-inline-block ${
-          selectedItem === 'devops' ? 'w--current' : ''
-        }`}
-      >
-        <img
-          src="/assets/dns.svg"
-          loading="eager"
-          alt=""
-          class="nav-link-image"
-        />
-        <div>DevOps</div>
-      </a>
-      <a
         href="/personal-projects"
         class={`nav-link-container w-inline-block ${
           selectedItem === 'personal-projects' ? 'w--current' : ''
@@ -87,6 +74,20 @@ const { selectedItem } = Astro.props;
         />
         <div>Personal projects</div>
       </a>
+        <a
+                href="/blog"
+                class={`nav-link-container w-inline-block ${
+                    selectedItem === 'blog' ? 'w--current' : ''
+                }`}
+        >
+            <img
+                    src="/assets/favorite.svg"
+                    loading="eager"
+                    alt=""
+                    class="nav-link-image"
+            />
+            <div>Blog</div>
+        </a>
     </nav>
 
     <div
