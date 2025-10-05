@@ -1,9 +1,9 @@
 ---
-import Header from "../components/Header.astro";
-import Project from "../components/Project.astro";
-import Sidebar from "../components/Sidebar.astro";
-import { NAME } from "../consts.ts";
-import { softwareDevelopment as projects } from "../data/projects.ts";
+import Header from "../../components/Header.astro";
+import Project from "../../components/Project.astro";
+import Sidebar from "../../components/Sidebar.astro";
+import { NAME } from "../../consts.ts";
+import { softwareDevelopment as projects } from "../../data/projects.ts";
 ---
 
 <!doctype html>
@@ -31,13 +31,18 @@ import { softwareDevelopment as projects } from "../data/projects.ts";
               <div class="resouce-items">
                 {
                   projects.map((project) => (
-                    <Project
-                      title={project.title}
-                      subtitle={project.subtitle}
-                      status={project.status}
-                      desc={project.desc}
-                      tech={project.tech}
-                    />
+                    <a
+                      href={`/software-development/${project.title}`}
+                      style="text-decoration: none"
+                    >
+                      <Project
+                        title={project.title}
+                        subtitle={project.subtitle}
+                        status={project.status}
+                        desc={project.desc}
+                        tech={project.tech}
+                      />
+                    </a>
                   ))
                 }
               </div>
