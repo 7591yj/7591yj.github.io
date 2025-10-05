@@ -34,8 +34,6 @@ export const softwareDevelopment: Project[] = [
     tech: [
       "Next.js",
       "Typescript",
-      "shadcn/ui",
-      "Node.js",
       "Python",
       "FastAPI",
       "AWS",
@@ -55,6 +53,14 @@ export const softwareDevelopment: Project[] = [
       "Leading the software development team for several months",
       "Managing the project in terms of user experience",
     ],
-    tech: ["Svelte", "SvelteKit", "Node.js", "Socket.IO", "protobuf"],
+    tech: ["Svelte", "SvelteKit", "Socket.IO", "protobuf"],
   },
+];
+
+export const softwareDevelopmentTechStack: string[] = [
+  ...new Set([...softwareDevelopment].flatMap((project) => project.tech)),
+];
+
+export const personalProjectsTechStack: string[] = [
+  ...new Set([...personalProjects].flatMap((project) => project.tech)),
 ];

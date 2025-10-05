@@ -3,6 +3,11 @@ import Header from "../components/Header.astro";
 import Sidebar from "../components/Sidebar.astro";
 import { EMAIL, NAME } from "../consts.ts";
 import Intro from "../data/intro.astro";
+import ChipsContainer from "../components/ChipsContainer.astro";
+import {
+  personalProjectsTechStack,
+  softwareDevelopmentTechStack,
+} from "../data/projects.ts";
 ---
 
 <!doctype html>
@@ -38,20 +43,7 @@ import Intro from "../data/intro.astro";
                   <div class="mini-label-white gray-color">
                     Technologies &amp; tools
                   </div>
-                  <div class="chips-container chips-container-small-width">
-                    <div class="single-chip small-chip">React</div>
-                    <div class="single-chip small-chip">Next.js</div>
-                    <div class="single-chip small-chip">Node.js</div>
-                    <div class="single-chip small-chip">MongoDB</div>
-                    <div class="single-chip small-chip">Heroku</div>
-                    <div class="single-chip small-chip">RabbitMQ</div>
-                    <div class="single-chip small-chip">Express.js</div>
-                    <div class="single-chip small-chip">TypeScript</div>
-                    <div class="single-chip small-chip">NestJS</div>
-                    <div class="single-chip small-chip">Angular</div>
-                    <div class="single-chip small-chip">Postgres</div>
-                    <div class="single-chip small-chip">Linode</div>
-                  </div>
+                  <ChipsContainer techStack={softwareDevelopmentTechStack} />
                 </div>
               </div>
             </a>
@@ -73,21 +65,7 @@ import Intro from "../data/intro.astro";
                   <div class="mini-label-white gray-color">
                     Technologies &amp; tools
                   </div>
-                  <div class="chips-container chips-container-small-width">
-                    <div class="single-chip small-chip">Terraform</div>
-                    <div class="single-chip small-chip">Azure</div>
-                    <div class="single-chip small-chip">AWS</div>
-                    <div class="single-chip small-chip">Docker</div>
-                    <div class="single-chip small-chip">Kubernetes</div>
-                    <div class="single-chip small-chip">GitLab CI/CD</div>
-                    <div class="single-chip small-chip">RKE</div>
-                    <div class="single-chip small-chip">Node.js</div>
-                    <div class="single-chip small-chip">RabbitMQ</div>
-                    <div class="single-chip small-chip">Linux</div>
-                    <div class="single-chip small-chip">Bash</div>
-                    <div class="single-chip small-chip">Grafana</div>
-                    <div class="single-chip small-chip">Prometheus</div>
-                  </div>
+                  <ChipsContainer techStack={personalProjectsTechStack} />
                 </div>
               </div>
             </a>

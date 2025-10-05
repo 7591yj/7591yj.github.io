@@ -1,0 +1,11 @@
+---
+interface Props {
+  techStack: string[];
+}
+
+const { techStack } = Astro.props;
+---
+
+<div class="chips-container chips-container-small-width">
+  {techStack.map((tech) => <div class="single-chip small-chip">{tech}</div>)}
+</div>
