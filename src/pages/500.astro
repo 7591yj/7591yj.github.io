@@ -1,0 +1,41 @@
+---
+import Header from "../components/Header.astro";
+interface Props {
+  error: unknown;
+}
+const { error } = Astro.props;
+
+import { NAME } from "../consts.ts";
+---
+
+<!doctype html>
+<html>
+  <Header title=`500 Error | ${NAME}` />
+  <body>
+    <div class="content">
+      <nav class="main">
+        <div class="container">
+          <div class="back-nav-container">
+            <a href="/" class="back-nav-button w-inline-block"
+              ><img
+                src="/assets/back.svg"
+                loading="lazy"
+                alt=""
+                class="back-nav-img"
+              />
+              <div>Back</div>
+            </a>
+          </div>
+          <div class="content-container">
+            <h1>500 Error</h1>
+            <div>
+              {error instanceof Error ? error.message : "Unknown error"}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+  </body>
+</html>
