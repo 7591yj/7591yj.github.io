@@ -1,0 +1,74 @@
+---
+import Header from "../../components/Header.astro";
+import Project from "../../components/Project.astro";
+import Sidebar from "../../components/Sidebar.astro";
+import { NAME } from "../../consts.ts";
+const projects = [
+  {
+    title: "tg-webm-converter",
+    desc: [
+      "Created a python cli tool to convert image/video files to webm format, matching the Telegram sticker requirements",
+      "Implemented batch conversion management",
+      "Released the tool through pypi",
+    ],
+    tech: ["Python", "ffmpeg", "PyPI"],
+  },
+  {
+    title: "fireplace",
+    desc: [
+      "Developed a simple social media webapp using React and Firebase",
+      "Released with GitHub Pages",
+    ],
+    tech: ["React", "Firebase", "GitHub Pages"],
+  },
+];
+---
+
+<!doctype html>
+<html>
+  <Header title=`Personal Projects | ${NAME}` />
+  <body>
+    <div class="content">
+      <Sidebar selectedItem="personal-projects" />
+      <nav class="main">
+        <div class="container">
+          <div class="back-nav-container">
+            <a href="/public" class="back-nav-button w-inline-block"
+              ><img
+                src="/assets/back.svg"
+                loading="lazy"
+                alt=""
+                class="back-nav-img"
+              />
+              <div>Back</div>
+            </a>
+          </div>
+          <div class="content-container">
+            <h1>Personal Projects</h1>
+            <section class="items-container">
+              <div class="resouce-items">
+                {
+                  projects.map((project) => (
+                    <a
+                      href={`/personal-projects/${project.title}`}
+                      style="text-decoration: none"
+                    >
+                      <Project
+                        title={project.title}
+                        desc={project.desc}
+                        tech={project.tech}
+                      />
+                    </a>
+                  ))
+                }
+              </div>
+            </section>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!--[if lte IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+  </body>
+</html>
