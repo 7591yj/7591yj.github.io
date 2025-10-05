@@ -1,5 +1,5 @@
 {
-  "name": "Codefolio",
+  "name": "7591yj.labs",
   "type": "module",
   "version": "1.0.0",
   "scripts": {
@@ -11,6 +11,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,astro}\" --cache"
   },
   "dependencies": {
+    "@astrojs/mdx": "^4.3.6",
+    "@astrojs/sitemap": "^3.6.0",
     "astro": "^5.1.5"
   },
   "devDependencies": {
