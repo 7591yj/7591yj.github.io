@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Header from "../../components/Header.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
+import { NAME } from "../../consts";
+import Sidebar from "../../components/Sidebar.astro";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <Header title=`Blog | ${NAME}` />
+  <body>
+    <div class="content">
+      <Sidebar selectedItem="blog" />
+      <nav class="main">
+        <div class="container">
+          <div class="back-nav-container">
+            <a href="/" class="back-nav-button w-inline-block"
+              ><img
+                src="/assets/back.svg"
+                loading="lazy"
+                alt=""
+                class="back-nav-img"
+              />
+              <div>Back</div>
+            </a>
+          </div>
+
+          <div class="content-container">
+            <h1>Blog</h1>
+            <section class="items-container">
+              <div class="content-container">
+                <ul>
+                  {
+                    posts.map((post) => (
+                      <li>
+                        <a href={`/blog/${post.id}/`}>
+                          {post.data.heroImage && (
+                            <Image
+                              width={720}
+                              height={360}
+                              src={post.data.heroImage}
+                              alt=""
+                            />
+                          )}
+                          <h4 class="title">{post.data.title}</h4>
+                          <p class="date">
+                            <FormattedDate date={post.data.pubDate} />
+                          </p>
+                        </a>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </section>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </body>
+</html>

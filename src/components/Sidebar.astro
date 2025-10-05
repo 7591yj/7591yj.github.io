@@ -1,5 +1,5 @@
 ---
-import {NAME} from "../consts.ts";
+import { NAME, PROFILE_IMAGE } from "../consts.ts";
 const { selectedItem } = Astro.props;
 ---
 
@@ -16,7 +16,7 @@ const { selectedItem } = Astro.props;
     <a href="/" class="w-nav-brand" aria-label="home">
       <div class="niv-data">
         <img
-          src="/assets/sam.jpg"
+          src={PROFILE_IMAGE}
           loading="eager"
           alt="Profile picture"
           class="niv-image"
@@ -32,7 +32,7 @@ const { selectedItem } = Astro.props;
       <a
         href="/"
         class={`nav-link-container w-inline-block ${
-          selectedItem === 'home' ? 'w--current' : ''
+          selectedItem === "home" ? "w--current" : ""
         }`}
       >
         <img
@@ -46,11 +46,11 @@ const { selectedItem } = Astro.props;
       <a
         href="/software-development"
         class={`nav-link-container w-inline-block ${
-          selectedItem === 'software-development' ? 'w--current' : ''
+          selectedItem === "software-development" ? "w--current" : ""
         }`}
-        aria-current={
-          selectedItem === 'software-development' ? 'page' : undefined
-        }
+        aria-current={selectedItem === "software-development"
+          ? "page"
+          : undefined}
       >
         <img
           src="/assets/code.svg"
@@ -63,7 +63,21 @@ const { selectedItem } = Astro.props;
       <a
         href="/personal-projects"
         class={`nav-link-container w-inline-block ${
-          selectedItem === 'personal-projects' ? 'w--current' : ''
+          selectedItem === "personal-projects" ? "w--current" : ""
+        }`}
+      >
+        <img
+          src="/assets/dns.svg"
+          loading="eager"
+          alt=""
+          class="nav-link-image"
+        />
+        <div>Personal projects</div>
+      </a>
+      <a
+        href="/blog"
+        class={`nav-link-container w-inline-block ${
+          selectedItem === "blog" ? "w--current" : ""
         }`}
       >
         <img
@@ -72,22 +86,8 @@ const { selectedItem } = Astro.props;
           alt=""
           class="nav-link-image"
         />
-        <div>Personal projects</div>
+        <div>Blog</div>
       </a>
-        <a
-                href="/blog"
-                class={`nav-link-container w-inline-block ${
-                    selectedItem === 'blog' ? 'w--current' : ''
-                }`}
-        >
-            <img
-                    src="/assets/favorite.svg"
-                    loading="eager"
-                    alt=""
-                    class="nav-link-image"
-            />
-            <div>Blog</div>
-        </a>
     </nav>
 
     <div
@@ -97,25 +97,20 @@ const { selectedItem } = Astro.props;
       role="button"
       tabindex="0"
     >
-      <img
-        src="/assets/menu.svg"
-        loading="eager"
-        alt=""
-        class="navbar-icon"
-      />
+      <img src="/assets/menu.svg" loading="eager" alt="" class="navbar-icon" />
     </div>
   </div>
 
   <script>
-    import { setupNav } from '../scripts/nav.js';
-    
+    import { setupNav } from "../scripts/nav.js";
+
     let cleanup;
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener("astro:page-load", () => {
       if (cleanup) cleanup();
       cleanup = setupNav();
     });
 
-    document.addEventListener('astro:before-swap', () => {
+    document.addEventListener("astro:before-swap", () => {
       if (cleanup) cleanup();
     });
   </script>
