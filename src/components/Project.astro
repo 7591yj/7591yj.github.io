@@ -1,10 +1,13 @@
 ---
+import StatusBubble from "./StatusBubble.astro";
 const { title, subtitle, status, desc, tech } = Astro.props;
 ---
 
 <div class="single-item">
-  <h3>{title}</h3>
-  <div>{status}</div>
+  <div class="flex items-center justify-between">
+    <h3>{title}</h3>
+    <StatusBubble status={status} />
+  </div>
   <h4>{subtitle}</h4>
   <div class="project-desc project-desc-list w-richtext">
     <ul role="list">

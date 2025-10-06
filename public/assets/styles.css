@@ -120,6 +120,10 @@ ul {
   padding-left: 40px;
 }
 
+ul, ol {
+    list-style: initial;
+}
+
 @media screen and (max-width: 767px) {
   .w-nav-brand {
     padding-left: 10px;

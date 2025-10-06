@@ -3,7 +3,7 @@ import type { Project } from "../types";
 export const personalProjects: Project[] = [
   {
     title: "tg-webm-converter",
-    status: "Released",
+    status: "released",
     subtitle: "Python CLI Tool for Telegram Sticker Conversion",
     desc: [
       "Convert image/video files to webm format, matching the Telegram sticker requirements",
@@ -14,7 +14,7 @@ export const personalProjects: Project[] = [
   },
   {
     title: "fireplace",
-    status: "Released",
+    status: "released",
     subtitle: "Simple Social Media Webapp Using React and Firebase",
     desc: ["Released with GitHub Pages"],
     tech: ["React", "Firebase", "GitHub Pages"],
@@ -24,7 +24,7 @@ export const personalProjects: Project[] = [
 export const softwareDevelopment: Project[] = [
   {
     title: "BizLenz",
-    status: "Released",
+    status: "released",
     subtitle: "AI-powered business proposal analysis tool for the web",
     desc: [
       "Designed and implemented frontend and database architecture",
@@ -43,7 +43,7 @@ export const softwareDevelopment: Project[] = [
   },
   {
     title: "modulino",
-    status: "In Development",
+    status: "inDev",
     subtitle:
       "3D-printer farm management/upgrade platform with dedicated hardware",
     desc: [

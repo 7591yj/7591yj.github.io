@@ -5,8 +5,14 @@ import sitemap from "@astrojs/sitemap";
 import { PROD_URL } from "./src/consts.js";
 import { defineConfig } from "astro/config";
 
+import tailwindcss from "@tailwindcss/vite";
+
 // https://astro.build/config
 export default defineConfig({
   site: PROD_URL,
   integrations: [mdx(), sitemap()],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

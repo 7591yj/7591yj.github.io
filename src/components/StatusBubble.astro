@@ -1,0 +1,30 @@
+---
+interface Props {
+  status: "released" | "inDev" | "planning";
+}
+
+const { status } = Astro.props;
+
+const statusColors = {
+  released: "bg-green-500",
+  inDev: "bg-yellow-500",
+  planning: "bg-gray-500",
+};
+
+const statusText = {
+  released: "Released",
+  inDev: "In Dev",
+  planning: "Planning",
+};
+
+const indicatorColor = statusColors[status] || "bg-gray-500";
+const text = statusText[status] || "Unknown";
+---
+
+<div
+  class="inline-flex items-center gap-x-2 rounded-full border px-3 py-1 text-xs font-medium"
+  style="color: #a8a8a8"
+>
+  <span class={`h-2 w-2 rounded-full ${indicatorColor}`}></span>
+  <span>{text}</span>
+</div>
