@@ -64,3 +64,11 @@ export const softwareDevelopmentTechStack: string[] = [
 export const personalProjectsTechStack: string[] = [
   ...new Set([...personalProjects].flatMap((project) => project.tech)),
 ];
+
+export const allTechStack: string[] = [
+  ...new Set(
+    [...personalProjects, ...softwareDevelopment].flatMap(
+      (project) => project.tech,
+    ),
+  ),
+];

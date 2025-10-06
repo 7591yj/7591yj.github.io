@@ -1,6 +1,10 @@
 ---
+import SoftwareDevelopmentPost from "../../layouts/SoftwareDevelopmentPost.astro";
+import Sidebar from "../../components/Sidebar.astro";
+import Header from "../../components/Header.astro";
+
 import { type CollectionEntry, getCollection, render } from "astro:content";
-import BlogPost from "../../layouts/SoftwareDevelopmentPost.astro";
+import { NAME } from "../../consts.ts";
 
 export async function getStaticPaths() {
   const posts = await getCollection("softwareDevelopment");
@@ -15,6 +19,34 @@ const post = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BlogPost {...post.data}>
-  <Content />
-</BlogPost>
+<!doctype html>
+<html>
+  <Header title=`Software Development | ${NAME}` />
+  <body>
+    <div class="content">
+      <Sidebar selectedItem="software-development" />
+      <nav class="main">
+        <div class="container">
+          <div class="back-nav-container">
+            <a
+              href="/software-development"
+              class="back-nav-button w-inline-block"
+              ><img
+                src="/assets/back.svg"
+                loading="lazy"
+                alt=""
+                class="back-nav-img"
+              />
+              <div>Back</div></a
+            >
+          </div>
+          <SoftwareDevelopmentPost {...post.data}>
+            <Content />
+          </SoftwareDevelopmentPost>
+        </div>
+      </nav>
+    </div>
+    <!--[if lte IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+  </body>
+</html>
