@@ -74,19 +74,34 @@ const { selectedItem } = Astro.props;
         />
         <div>Personal projects</div>
       </a>
+      <!-- TODO: undo comment after implementation-->
+      <!--<a-->
+      <!--  href="/blog"-->
+      <!--  class={`nav-link-container w-inline-block ${-->
+      <!--    selectedItem === "blog" ? "w&#45;&#45;current" : ""-->
+      <!--  }`}-->
+      <!--&gt;-->
+      <!--  <img-->
+      <!--    src="/assets/favorite.svg"-->
+      <!--    loading="eager"-->
+      <!--    alt=""-->
+      <!--    class="nav-link-image"-->
+      <!--  />-->
+      <!--  <div>Blog</div>-->
+      <!--</a>-->
       <a
-        href="/blog"
+        href="/about"
         class={`nav-link-container w-inline-block ${
-          selectedItem === "blog" ? "w--current" : ""
+          selectedItem === "about" ? "w--current" : ""
         }`}
       >
         <img
-          src="/assets/favorite.svg"
+          src="/assets/me.svg"
           loading="eager"
           alt=""
           class="nav-link-image"
         />
-        <div>Blog</div>
+        <div>About Me</div>
       </a>
     </nav>
 
