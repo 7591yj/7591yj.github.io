@@ -4,9 +4,9 @@ import type { CollectionEntry } from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+type Props = CollectionEntry<"personalProjects">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, heroImage } = Astro.props;
 ---
 
 <html lang="en">
@@ -67,16 +67,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         </div>
         <div class="prose">
           <div class="title">
-            <div class="date">
-              <FormattedDate date={pubDate} />
-              {
-                updatedDate && (
-                  <div class="last-updated-on">
-                    Last updated on <FormattedDate date={updatedDate} />
-                  </div>
-                )
-              }
-            </div>
             <h1>{title}</h1>
             <hr />
           </div>
