@@ -1,7 +1,8 @@
 // Place any global data in this file.
 
-export const NAME = "7591yj";
-export const EMAIL = "steam.attire550@passinbox.com";
+export const NAME = "Yeongjin Kim";
+export const EMAIL = "yeongjin.kim@proton.me";
+export const LOCATION = "Tokyo, Japan";
 export const PROFILE_IMAGE =
   "https://gravatar.com/avatar/462c23905ddb3bf0411ec5c26495dedd?s=400&d=robohash&r=x";
 
