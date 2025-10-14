@@ -26,7 +26,9 @@ const personalProjects = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      description: z.string(),
+      year: z.number(),
+      status: z.enum(["inDev", "released", "planning"]),
+      link: z.string(),
       heroImage: image().optional(),
     }),
 });
@@ -41,7 +43,9 @@ const softwareDevelopment = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      description: z.string(),
+      year: z.number(),
+      status: z.enum(["inDev", "released", "planning"]),
+      link: z.string(),
       heroImage: image().optional(),
     }),
 });

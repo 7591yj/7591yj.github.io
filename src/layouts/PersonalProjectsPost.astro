@@ -1,10 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
+import StatusBubble from "../components/StatusBubble.astro";
 
 type Props = CollectionEntry<"personalProjects">["data"];
 
-const { title, description, heroImage } = Astro.props;
+const { title, year, status, link, heroImage } = Astro.props;
 ---
 
 <main>
@@ -13,9 +14,17 @@ const { title, description, heroImage } = Astro.props;
       {heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
     </div>
     <div class="prose">
-      <div class="title">
-        <h1>{title}</h1>
-        <hr />
+      <div class="flex flex-row items-center justify-between">
+        <div class="title">
+          <h1>{title}</h1>
+          <p>{year}</p>
+        </div>
+        <div class="flex flex-col items-end gap-4">
+          <StatusBubble status={status} />
+          <a href={link} class="button w-button">
+            <img src="/assets/gh.svg" alt="" />
+          </a>
+        </div>
       </div>
       <slot />
     </div>
