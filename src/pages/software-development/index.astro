@@ -32,7 +32,7 @@ import { softwareDevelopment as projects } from "../../content/projects.ts";
                 {
                   projects.map((project) => (
                     <a
-                      href={`/software-development/${project.title}`}
+                      href={`/software-development/${project.title.toLowerCase()}`}
                       style="text-decoration: none"
                     >
                       <Project
