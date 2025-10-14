@@ -1,6 +1,129 @@
-<p>
-  I am a software engineer with a passion for building scalable and maintainable
-  applications. I have a strong background in full-stack development and a keen
-  eye for detail. I am always looking for new challenges and opportunities to
-  learn and grow.
-</p>
+---
+import { EMAIL, NAME, LOCATION, PROFILE_IMAGE } from "../consts.ts";
+---
+
+<h2>Personal Details</h2>
+<div class="about-top-container">
+  <div>
+    <img src={PROFILE_IMAGE} alt="Profile image" class="rounded-4xl" />
+  </div>
+  <div>
+    <p><b>{NAME}</b></p>
+    <p>
+      Junior software developer with a passion for building scalable and
+      maintainable applications.
+    </p>
+    <div>
+      <div class="about-content-icons-container">
+        <img src="/assets/cake.svg" alt="Born in" />
+        <p>07.20.2002</p>
+      </div>
+      <div class="about-content-icons-container">
+        <img src="/assets/mail.svg" alt="Mail Me at" />
+        <p><a href=`mailto:${EMAIL}`>{EMAIL}</a></p>
+      </div>
+      <div class="about-content-icons-container">
+        <img src="/assets/map-pin.svg" alt="Where am I" />
+        <p>{LOCATION}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <h3>Education</h3>
+  <div>
+    <h4>Inha University (Incheon, South Korea)</h4>
+    <p>Student</p>
+    <p>2021.03-2027.02(expected)</p>
+    <p>Major in Computer Science and Engineering</p>
+  </div>
+  <div>
+    <h4>Chuo University (Tokyo, Japan)</h4>
+    <p>Exchange Student</p>
+    <p>2025.09-2026.08(expected)</p>
+    <p>Major in Information and System Engineering</p>
+  </div>
+</div>
+
+<div>
+  <h3>Certificates</h3>
+  <table class="w-full">
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+      <th>Issuer</th>
+    </tr>
+    <tr>
+      <td>07.13.2021</td>
+      <td>Driver's License, Type 1, Normal</td>
+      <td>Jeonbuk Provincial Police Agency</td>
+    </tr>
+    <tr>
+      <td>8.13.2024</td>
+      <td>JLPT N2</td>
+      <td>The Japan Foundation</td>
+    </tr>
+    <tr>
+      <td>01.26.2025</td>
+      <td>TOEIC, 925</td>
+      <td>Korea TOEIC Committee</td>
+    </tr>
+    <tr>
+      <td>05.24.2025</td>
+      <td>TOPCIT, 677</td>
+      <td>Ministry of Science and ICT, Korea</td>
+    </tr>
+  </table>
+</div>
+
+<div>
+  <h3>Club Activities</h3>
+  <table class="w-full">
+    <tr>
+      <th>Period</th>
+      <th>Club Name</th>
+      <th>Topic</th>
+      <th>Position</th>
+    </tr>
+    <tr>
+      <td>03.2021-08.2021</td>
+      <td>IGRUS</td>
+      <td>SW Development</td>
+      <td>Member</td>
+    </tr>
+    <tr>
+      <td>03.2024-08.2024</td>
+      <td>IGRUS</td>
+      <td>SW Development</td>
+      <td>Member</td>
+    </tr>
+    <tr>
+      <td>03.2024-08.2025</td>
+      <td>Seeds</td>
+      <td>Web Development</td>
+      <td>Staff</td>
+    </tr>
+  </table>
+</div>
+
+<div>
+  <h3>Awards</h3>
+  <table class="w-full">
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+      <th>Award</th>
+    </tr>
+    <tr>
+      <td>11.12.2023</td>
+      <td>Chung-Ang University x SEOULLAB PARTNERS '2023 START-LAB </td>
+      <td>Grand Prize</td>
+    </tr>
+    <tr>
+      <td>01.18.2025</td>
+      <td>2025 GreenTech Globalthon</td>
+      <td>Best Startup Pitch Award</td>
+    </tr>
+  </table>
+</div>

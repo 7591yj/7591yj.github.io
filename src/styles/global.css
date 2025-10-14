@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+/* ABOUT */
+
+.about-top-container {
+    display: flex;
+    flex-direction: row;
+    gap: calc(var(--spacing) * 4);
+    justify-content: space-between;
+}
+
+.about-content-icons-container {
+    display: flex;
+    flex-direction: row;
+    gap: calc(var(--spacing) * 2);
+    margin-bottom: calc(var(--spacing) * 2);
+}
+
+.about-content-icons-container p {
+    margin-bottom: 0;
+}
