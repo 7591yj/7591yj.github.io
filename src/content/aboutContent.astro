@@ -1,5 +1,11 @@
 ---
-import { EMAIL, NAME, LOCATION, PROFILE_IMAGE } from "../consts.ts";
+import {
+  EMAIL,
+  NAME,
+  LOCATION_NOW,
+  LOCATION_FROM,
+  PROFILE_IMAGE,
+} from "../consts.ts";
 ---
 
 <h2>Personal Details</h2>
@@ -19,12 +25,16 @@ import { EMAIL, NAME, LOCATION, PROFILE_IMAGE } from "../consts.ts";
         <p>07.20.2002</p>
       </div>
       <div class="about-content-icons-container">
-        <img src="/assets/mail.svg" alt="Mail Me at" />
+        <img src="/assets/at.svg" alt="Mail Me at" />
         <p><a href=`mailto:${EMAIL}`>{EMAIL}</a></p>
       </div>
       <div class="about-content-icons-container">
+        <img src="/assets/map-pin-house.svg" alt="Where I am from" />
+        <p>{LOCATION_FROM}</p>
+      </div>
+      <div class="about-content-icons-container">
         <img src="/assets/map-pin.svg" alt="Where am I" />
-        <p>{LOCATION}</p>
+        <p>{LOCATION_NOW}</p>
       </div>
     </div>
   </div>
