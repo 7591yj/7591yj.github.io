@@ -1,0 +1,9 @@
+.sidebar {
+    @apply w-full h-full max-w-[280px] bg-[#1c1c1c] border-1 border-[#353535] p-[32px] pl-[24px] pr-[18px]
+}
+
+@media screen and (max-width: 991px) {
+    .sidebar {
+        @apply h-auto max-w-full pt-[18px] pb-[18px] pr-[28px] border-0
+    }
+}
