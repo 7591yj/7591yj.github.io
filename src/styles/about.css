@@ -1,0 +1,11 @@
+.about-top-container {
+    @apply flex flex-row gap-4 justify-between
+}
+
+.about-content-icons-container {
+    @apply flex flex-row gap-2 mb-2
+}
+
+.about-content-icons-container p {
+    @apply mb-0
+}
