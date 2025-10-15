@@ -1,21 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
+@import "./about.css";
 
-/* ABOUT */
-
-.about-top-container {
-    display: flex;
-    flex-direction: row;
-    gap: calc(var(--spacing) * 4);
-    justify-content: space-between;
+@theme {
+    --font-sans: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', sans-serif;
+    --font-sans-arial: 'Arial', sans-serif;
+    --font-icons: 'webflow-icons';
+    --font-sans-raw: sans-serif;
 }
 
-.about-content-icons-container {
-    display: flex;
-    flex-direction: row;
-    gap: calc(var(--spacing) * 2);
-    margin-bottom: calc(var(--spacing) * 2);
+/* Basis */
+
+* {
+    @apply box-border
 }
 
-.about-content-icons-container p {
-    margin-bottom: 0;
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    @apply font-sans h-full
+}
+
+body {
+    @apply bg-[#161616] text-[#333] font-[14px] font-sans min-h-full m-0 text-[14px] leading-[20px]
+}
+
+/* Layout */
+
+aside,
+main,
+nav,
+section {
+    @apply block
+}
+
+/* Image */
+
+img {
+    @apply border-0 max-w-full align-middle inline-block
+}
+
+/* Typography */
+
+/**** CUSTOM CLASSES ****/
+
+.content {
+    @apply w-[100vw] h-[100vh] flex
+}
+
+.sidebar {
+    @apply w-full h-full max-w-[280px] bg-[#1c1c1c] p-[32px] pl-[24px] pr-[18px]
+}
+
+@media screen and (max-width: 991px) {
+    .sidebar {
+        @apply h-auto max-w-full pt-[18px] pb-[18px] pr-[28px]
+    }
 }
