@@ -1,95 +1,67 @@
-h1,
-h3,
-h4 {
-    @apply mb-[10px] font-bold
+h1, h2, h3, h4 {
+    @apply text-white scroll-m-20 tracking-tight
 }
 
 h1 {
-    font-size: 38px;
-    line-height: 44px;
-    @apply m-[0.67em_0] text-[2em] mt-[20px]
-}
-
-h3 {
-    margin-top: 20px;
-    font-size: 24px;
-    line-height: 30px;
-}
-
-h4 {
-    margin-top: 10px;
-    font-size: 18px;
-    line-height: 24px;
-}
-
-p {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-ul {
-    margin-top: 0;
-    margin-bottom: 10px;
-    padding-left: 40px;
-}
-
-ul, ol {
-    list-style: initial;
-}
-
-h1 {
-    color: #fff;
-    letter-spacing: -0.5px;
-    margin-top: 0;
-    margin-bottom: 18px;
-    font-size: 58px;
-    font-weight: 300;
-    line-height: 72px;
+    @apply text-4xl font-light text-balance
 }
 
 h2 {
-    @apply text-white scroll-m-20 border-b border-[#a3a3a3] pb-2 text-3xl font-normal tracking-tight first:mt-0
+    @apply border-b border-[#a3a3a3] pb-2 text-3xl font-light first:mt-0
 }
 
 h3 {
-    color: #fff;
-    margin-top: 0;
-    margin-bottom: 12px;
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 42px;
+    @apply text-2xl font-normal mt-6
 }
 
 h4 {
-    color: #fff;
-    margin-top: 0;
-    margin-bottom: 0;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 24px;
+    @apply text-xl font-normal mt-6
 }
 
 p {
-    color: #a8a8a8;
-    margin-bottom: 10px;
-    font-size: 16px;
-    line-height: 26px;
+    @apply text-[#a8a8a8] leading-7 [&:not(:first-child)]:mt-6
 }
 
 blockquote {
     @apply mt-6 border-l-2 pl-6 italic
 }
 
+code {
+    @apply bg-[#161616] text-[#a8a8a8] relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold
+}
+
+.lead {
+    @apply text-xl
+}
+
+.large {
+    @apply text-lg font-semibold
+}
+
+.small {
+    @apply text-sm leading-none font-medium
+}
+
+/* List */
+
 ul, ol {
     @apply text-[#a8a8a8] my-6 ml-6 list-disc [&>li]:mt-2
 }
 
-@media screen and (max-width: 767px) {
-    h1 {
-        @apply text-[54px] leading-[64px]
-    }
+/* Table */
 
-    h4 {
-        @apply text-[32px] leading-[48px] font-light
-    }
+table {
+    @apply w-full text-[#a3a3a3] mt-6
+}
+
+tr {
+    @apply m-0 border-t p-0
+}
+
+th {
+    @apply text-white border border-[#a3a3a3] px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right
+}
+
+td {
+    @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right
 }
