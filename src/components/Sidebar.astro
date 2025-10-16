@@ -31,7 +31,7 @@ const { selectedItem } = Astro.props;
     <nav role="navigation" class="w-nav-menu">
       <a
         href="/"
-        class={`nav-link-container w-inline-block ${
+        class={`nav-link-container  ${
           selectedItem === "home" ? "w--current" : ""
         }`}
       >
@@ -45,7 +45,7 @@ const { selectedItem } = Astro.props;
       </a>
       <a
         href="/software-development"
-        class={`nav-link-container w-inline-block ${
+        class={`nav-link-container ${
           selectedItem === "software-development" ? "w--current" : ""
         }`}
         aria-current={selectedItem === "software-development"
@@ -62,7 +62,7 @@ const { selectedItem } = Astro.props;
       </a>
       <a
         href="/personal-projects"
-        class={`nav-link-container w-inline-block ${
+        class={`nav-link-container  ${
           selectedItem === "personal-projects" ? "w--current" : ""
         }`}
       >
@@ -77,7 +77,7 @@ const { selectedItem } = Astro.props;
       <!-- TODO: undo comment after implementation-->
       <!--<a-->
       <!--  href="/blog"-->
-      <!--  class={`nav-link-container w-inline-block ${-->
+      <!--  class={`nav-link-container  ${-->
       <!--    selectedItem === "blog" ? "w&#45;&#45;current" : ""-->
       <!--  }`}-->
       <!--&gt;-->
@@ -91,7 +91,7 @@ const { selectedItem } = Astro.props;
       <!--</a>-->
       <a
         href="/about"
-        class={`nav-link-container w-inline-block ${
+        class={`nav-link-container  ${
           selectedItem === "about" ? "w--current" : ""
         }`}
       >

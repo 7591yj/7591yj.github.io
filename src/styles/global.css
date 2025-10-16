@@ -1,12 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
+/* components */
+@import "./button.css";
+@import "./typography.css";
+
 /* custom styles */
+@import "./w.css";
 @import "./sidebar.css";
 @import "./project-card.css";
 
-/* components */
-@import "./typography.css";
 
 /* page-specific styles */
 @import "./index.css";

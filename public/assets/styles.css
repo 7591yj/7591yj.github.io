@@ -1,20 +1,3 @@
-.w-inline-block {
-  max-width: 100%;
-  display: inline-block;
-}
-
-.w-button {
-  color: #fff;
-  line-height: inherit;
-  cursor: pointer;
-  background-color: #3898ec;
-  border: 0;
-  border-radius: 0;
-  padding: 9px 15px;
-  text-decoration: none;
-  display: inline-block;
-}
-
 @media screen and (max-width: 767px) {
   .w-nav-brand {
     padding-left: 10px;
@@ -71,24 +54,6 @@
   left: 0;
   right: 0;
   top: 92px;
-}
-
-.w-nav-button {
-  float: right;
-  cursor: pointer;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  padding: 18px;
-  font-size: 24px;
-  display: none;
-  position: relative;
-}
-
-.w-nav-button:focus {
-  outline: 0;
 }
 
 @media screen and (max-width: 991px) {
@@ -187,24 +152,6 @@
   color: #fff;
   margin-bottom: 0;
   line-height: 26px;
-}
-
-.button {
-  color: #fff;
-  background-color: #1c1c1c;
-  border: 1px solid #363636;
-  border-right-color: #353535;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 26px;
-  transition: all 40ms;
-}
-
-.button:hover {
-  background-color: #202020;
-  box-shadow: 0 2px 4px rgba(8, 8, 8, 0.82);
 }
 
 .fold-content {
@@ -354,23 +301,6 @@
 
 .back-nav-img {
   width: 18px;
-}
-
-.back-nav-button {
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0);
-  border-radius: 8px;
-  margin-top: -12px;
-  padding: 12px 16px;
-  text-decoration: none;
-  transition: all 0.12s;
-  display: flex;
-}
-
-.back-nav-button:hover {
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  background-color: rgba(8, 8, 8, 0.24);
 }
 
 .project-desc {

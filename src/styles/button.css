@@ -1,0 +1,31 @@
+.button {
+    @apply text-white bg-[#1c1c1c] border-solid border-1 border-[#363636] border-r-[#353535] rounded-[8px]
+    p-[12px_20px] text-[14px] font-medium leading-[26px] transition-all duration-[40ms]
+}
+
+.button:hover {
+    @apply bg-[#202020] shadow-[0_2px_4px_rgba(8,8,8,0.82)]
+}
+
+.back-nav-button {
+    @apply text-white bg-[rgba(0,0,0,0)] rounded-[8px] p-[12px_16px]
+    mt-[-12px] no-underline transition-all duration-[0.12s] flex
+}
+
+.back-nav-button:hover {
+    -webkit-backdrop-filter: blur(4px);
+    @apply backdrop-blur-xs bg-[rgba(8, 8, 8, 0.24)]
+}
+
+.w-nav-button {
+    tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    @apply float-right cursor-pointer select-none
+    p-[18px] text-[24px] relative hidden
+}
+
+.w-nav-button:focus {
+    @apply outline-0
+}
