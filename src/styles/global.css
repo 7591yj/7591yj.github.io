@@ -3,11 +3,13 @@
 
 /* custom styles */
 @import "./sidebar.css";
+@import "./project-card.css";
 
 /* components */
 @import "./typography.css";
 
 /* page-specific styles */
+@import "./index.css";
 @import "./about.css";
 
 @theme {
@@ -58,24 +60,6 @@ a {
 a:active,
 a:hover {
     @apply outline-none
-}
-
-/* Table */
-
-table {
-    @apply w-full text-[#a3a3a3]
-}
-
-tr {
-    @apply m-0 border-t p-0
-}
-
-th {
-    @apply text-white border border-[#a3a3a3] px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right
-}
-
-td {
-    @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right
 }
 
 /**** CUSTOM CLASSES ****/
