@@ -147,13 +147,6 @@
   display: flex;
 }
 
-.lead {
-  max-width: 580px;
-  color: #fff;
-  margin-bottom: 0;
-  line-height: 26px;
-}
-
 .fold-content {
   margin-bottom: 48px;
 }
@@ -203,7 +196,7 @@
   font-size: 16px;
 }
 
-.resouce-items {
+.resource-items {
   grid-column-gap: 64px;
   grid-row-gap: 64px;
   flex-direction: column;
@@ -237,50 +230,6 @@
   color: #fff;
   background-color: #2b2b2b;
   border-color: #353535;
-}
-
-.projects-container {
-  grid-column-gap: 24px;
-  grid-row-gap: 24px;
-  align-items: stretch;
-  text-decoration: none;
-  display: flex;
-}
-
-.single-projects-category {
-  display: flex;
-}
-
-.projects-category-image-container {
-  min-height: 180px;
-  min-width: 180px;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  background-color: rgba(53, 53, 53, 0.12);
-  border: 1px #000;
-  border-radius: 12px;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.24), 0 -1px 1px rgba(255, 255, 255, 0.24);
-}
-
-.projects-category-image-container.devops-img {
-  background-image: none;
-  background-position: 0 0;
-}
-
-.single-projects-content {
-  flex-direction: column;
-  justify-content: center;
-  display: flex;
-}
-
-.projects-section {
-  grid-column-gap: 32px;
-  grid-row-gap: 32px;
-  flex-direction: column;
-  display: flex;
 }
 
 .tech-tools-container {
@@ -317,11 +266,6 @@
   grid-row-gap: 32px;
   flex-direction: column;
   display: flex;
-}
-
-.projects-category-image {
-  width: 82px;
-  height: 82px;
 }
 
 @media screen and (max-width: 991px) {
@@ -384,31 +328,5 @@
   .nav-link-container {
     padding-left: 24px;
     padding-right: 18px;
-  }
-
-  .projects-container {
-    flex-direction: column;
-  }
-
-  .projects-category-image-container {
-    min-height: 124px;
-    min-width: 124px;
-    margin-bottom: -42px;
-    position: relative;
-  }
-
-  .single-projects-content {
-    position: relative;
-    top: 1.75rem;
-  }
-
-  .projects-section {
-    grid-column-gap: 68px;
-    grid-row-gap: 68px;
-  }
-
-  .projects-category-image {
-    width: 64px;
-    height: 64px;
   }
 }

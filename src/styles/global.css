@@ -8,6 +8,7 @@
 /* custom styles */
 @import "./w.css";
 @import "./sidebar.css";
+@import "projects.css";
 @import "./project-card.css";
 
 
