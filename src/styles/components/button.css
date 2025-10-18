@@ -14,7 +14,7 @@
 
 .back-nav-button:hover {
     -webkit-backdrop-filter: blur(4px);
-    @apply backdrop-blur-xs bg-[rgba(8, 8, 8, 0.24)]
+    @apply backdrop-blur-xs bg-[#181818]
 }
 
 .w-nav-button {

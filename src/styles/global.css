@@ -1,16 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
-/* components */
-@import "./button.css";
-@import "./typography.css";
-
-/* custom styles */
-@import "./w.css";
-@import "./sidebar.css";
-@import "projects.css";
-@import "./project-card.css";
-
+@import "components/components.css";
 
 /* page-specific styles */
 @import "./index.css";
@@ -37,7 +28,7 @@ html {
 }
 
 body {
-    @apply bg-[#161616] text-[#333] font-[14px] font-sans min-h-full m-0 text-[14px] leading-[20px]
+    @apply bg-[#161616] text-[#333] font-sans min-h-full m-0 text-base leading-[20px]
 }
 
 /* Layout */
