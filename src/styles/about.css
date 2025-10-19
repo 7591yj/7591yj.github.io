@@ -10,7 +10,7 @@
     @apply mt-2 mb-2
 }
 
-.about-top-container img {
+.about-top-container-profile-img {
     @apply rounded-4xl border-black shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)]
 }
 

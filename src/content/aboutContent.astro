@@ -8,12 +8,15 @@ import {
 } from "../consts.ts";
 ---
 
-<h2>Personal Details</h2>
 <div class="about-top-container">
   <div>
-    <img src={PROFILE_IMAGE} alt="Profile image" class="rounded-4xl" />
+    <img
+      src={PROFILE_IMAGE}
+      class="about-top-container-profile-img"
+      alt="Profile image"
+    />
   </div>
-  <div>
+  <div class="about-top-container-text">
     <h3>{NAME}</h3>
     <p>
       Junior software developer with a passion for building scalable and
@@ -42,19 +45,39 @@ import {
 
 <div>
   <h3>Education</h3>
-  <div>
-    <h4>Inha University</h4>
-    <p>Incheon, South Korea</p>
-    <p>Student</p>
-    <p>2021.03-2027.02(expected)</p>
-    <p>Major in Computer Science and Engineering</p>
-  </div>
-  <div>
-    <h4>Chuo University</h4>
-    <p>Tokyo, Japan</p>
-    <p>Exchange Student</p>
-    <p>2025.09-2026.08(expected)</p>
-    <p>Major in Information and System Engineering</p>
+  <div class="about-education-container">
+    <div class="about-education-content">
+      <h4>Inha University</h4>
+      <div class="about-content-icons-container">
+        <img src="/assets/map-pin.svg" alt="Location" />
+        <p class="mt-0">Incheon, South Korea</p>
+      </div>
+      <div class="about-content-icons-container">
+        <img src="/assets/me.svg" alt="Position" />
+        <p>Student</p>
+      </div>
+      <div class="about-content-icons-container">
+        <img src="/assets/calendar.svg" alt="Period" />
+        <p>2021.03-2027.02 (expected)</p>
+      </div>
+      <p>Major in Computer Science and Engineering</p>
+    </div>
+    <div class="about-education-content">
+      <h4>Chuo University</h4>
+      <div class="about-content-icons-container">
+        <img src="/assets/map-pin.svg" alt="Location" />
+        <p class="mt-0">Tokyo, Japan</p>
+      </div>
+      <div class="about-content-icons-container">
+        <img src="/assets/me.svg" alt="Position" />
+        <p>Exchange Student</p>
+      </div>
+      <div class="about-content-icons-container">
+        <img src="/assets/calendar.svg" alt="Period" />
+        <p>2025.09-2026.08 (expected)</p>
+      </div>
+      <p>Major in Information and System Engineering</p>
+    </div>
   </div>
 </div>
 
@@ -72,7 +95,7 @@ import {
       <td>Jeonbuk Provincial Police Agency</td>
     </tr>
     <tr>
-      <td>8.13.2024</td>
+      <td>08.13.2024</td>
       <td>JLPT N2</td>
       <td>The Japan Foundation</td>
     </tr>
