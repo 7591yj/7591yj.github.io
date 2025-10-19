@@ -1,18 +1,3 @@
-.w-richtext:before,
-.w-richtext:after {
-  content: ' ';
-  grid-area: 1 / 1 / 2 / 2;
-  display: table;
-}
-
-.w-richtext:after {
-  clear: both;
-}
-
-.w-richtext ul {
-  overflow: hidden;
-}
-
 .main {
   width: 100%;
   height: 100%;
@@ -58,15 +43,6 @@
   flex-direction: column;
   justify-content: flex-end;
   display: flex;
-}
-
-.project-desc {
-  color: #a8a8a8;
-  line-height: 24px;
-}
-
-.project-desc.project-desc-list {
-  margin-left: -24px;
 }
 
 .content-container {

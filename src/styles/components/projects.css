@@ -1,3 +1,16 @@
+.w-richtext:before,
+.w-richtext:after {
+    @apply content-['_'] [grid-area:1/1/2/2] table
+}
+
+.w-richtext:after {
+    @apply clear-both
+}
+
+.w-richtext ul {
+    @apply overflow-hidden
+}
+
 .projects-container {
     @apply gap-x-6 gap-y-6 items-stretch no-underline flex
 }
@@ -22,6 +35,14 @@
     -webkit-backdrop-filter: blur(4px);
     @apply min-h-[180px] min-w-[180px] backdrop-blur-xs bg-[rgba(53,53,53,0.12)]
     rounded-[12px] justify-center items-center flex shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)]
+}
+
+.project-desc {
+    @apply text-[#a8a8a8] leading-[24px]
+}
+
+.project-desc.project-desc-list {
+    @apply ml-[-24px]
 }
 
 @media screen and (max-width: 767px) {
