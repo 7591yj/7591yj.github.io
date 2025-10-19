@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
-@import "components/components.css";
+@import "./components/components.css";
 
 /* page-specific styles */
 @import "./index.css";
