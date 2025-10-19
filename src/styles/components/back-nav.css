@@ -1,0 +1,11 @@
+.back-nav-container {
+    @apply tracking-[2px] items-center pb-0 flex
+}
+
+.back-nav-container div {
+    @apply uppercase text-white font-medium text-sm
+}
+
+.back-nav-img {
+    @apply w-[18px]
+}
