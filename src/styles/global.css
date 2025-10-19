@@ -40,6 +40,68 @@ section {
     @apply block
 }
 
+.main {
+    @apply w-full h-full flex-col items-center
+    [background-image:linear-gradient(rgba(28,28,28,0.64),rgba(28,28,28,0.64)),url('../../public/assets/grid-top-right.svg'),linear-gradient(rgba(28,28,28,0.24),rgba(28,28,28,0.24))] [background-position:0_0,0_0,0_0] [background-size:auto,auto_1130px,auto]
+    p-[46px_48px_82px] flex overflow-auto
+}
+
+.container {
+    @apply w-full max-w-[680px] gap-x-[68px] gap-y-[68px] flex-col flex
+}
+
+.content {
+    @apply w-[100vw] h-[100vh] flex
+}
+
+.single-item {
+    @apply text-[16px]
+}
+
+.resource-items {
+    @apply gap-x-[64px] gap-y-[64px] flex-col flex
+}
+
+.fold-content {
+    @apply mb-[48px]
+}
+
+.items-container {
+    @apply flex-col
+}
+
+.tech-tools-container {
+    @apply flex-col justify-end flex
+}
+
+.content-container {
+    @apply gap-x-[32px] gap-y-[32px] flex-col flex
+}
+
+@media screen and (max-width: 991px) {
+    .content {
+        @apply flex-col
+    }
+
+    .fold-content {
+        @apply mb-[32px]
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .main {
+        @apply pl-[28px] pr-[28px]
+    }
+
+    .container {
+        @apply gap-x-[68px] gap-y-[68px]
+    }
+
+    .fold-content {
+        @apply mb-[24px]
+    }
+}
+
 /* Image */
 
 img {
@@ -55,10 +117,4 @@ a {
 a:active,
 a:hover {
     @apply outline-none
-}
-
-/**** CUSTOM CLASSES ****/
-
-.content {
-    @apply w-[100vw] h-[100vh] flex
 }
