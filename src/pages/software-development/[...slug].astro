@@ -1,5 +1,5 @@
 ---
-import SoftwareDevelopmentPost from "../../layouts/SoftwareDevelopmentPost.astro";
+import ProjectPost from "../../layouts/ProjectPost.astro";
 import Sidebar from "../../components/Sidebar.astro";
 import Header from "../../components/Header.astro";
 
@@ -40,9 +40,9 @@ const { Content } = await render(post);
               <div>Back</div></a
             >
           </div>
-          <SoftwareDevelopmentPost {...post.data}>
+          <ProjectPost {...post.data}>
             <Content />
-          </SoftwareDevelopmentPost>
+          </ProjectPost>
         </div>
       </nav>
     </div>

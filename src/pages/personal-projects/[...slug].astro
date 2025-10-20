@@ -3,7 +3,7 @@ import Header from "../../components/Header.astro";
 import Sidebar from "../../components/Sidebar.astro";
 
 import { type CollectionEntry, getCollection, render } from "astro:content";
-import PersonalProjectsPost from "../../layouts/PersonalProjectsPost.astro";
+import ProjectPost from "../../layouts/ProjectPost.astro";
 import { NAME } from "../../consts.ts";
 
 export async function getStaticPaths() {
@@ -38,9 +38,9 @@ const { Content } = await render(post);
               <div>Back</div></a
             >
           </div>
-          <PersonalProjectsPost {...post.data}>
+          <ProjectPost {...post.data}>
             <Content />
-          </PersonalProjectsPost>
+          </ProjectPost>
         </div>
       </nav>
     </div>
