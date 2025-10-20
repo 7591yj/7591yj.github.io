@@ -10,6 +10,10 @@
     @apply mt-2 mb-2
 }
 
+.about-top-container-text-more {
+    @apply underline cursor-pointer
+}
+
 .about-top-container-profile-img {
     @apply rounded-4xl border-black shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)]
 }
@@ -37,4 +41,19 @@
 
 .about-education-content h4 {
     @apply mt-6 mb-2
+}
+
+@media screen and (max-width: 767px) {
+    .about-top-container p {
+        @apply text-sm
+    }
+
+    .about-education-container {
+        @apply flex flex-col gap-2 text-sm
+    }
+
+    .about-bottom-container th,
+    .about-bottom-container td {
+        @apply text-sm
+    }
 }

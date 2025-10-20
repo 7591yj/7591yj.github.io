@@ -42,7 +42,7 @@ section {
 
 .main {
     @apply w-full h-full flex-col items-center
-    [background-image:linear-gradient(rgba(28,28,28,0.64),rgba(28,28,28,0.64)),url('../../public/assets/grid-top-right.svg'),linear-gradient(rgba(28,28,28,0.24),rgba(28,28,28,0.24))] [background-position:0_0,0_0,0_0] [background-size:auto,auto_1130px,auto]
+    [background-image:linear-gradient(rgba(28,28,28,0.64),rgba(28,28,28,0.64)),url('/assets/grid-top-right.svg'),linear-gradient(rgba(28,28,28,0.24),rgba(28,28,28,0.24))] [background-position:0_0,0_0,0_0] [background-size:auto,auto_1130px,auto]
     p-[46px_48px_82px] flex overflow-auto
 }
 

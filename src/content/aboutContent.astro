@@ -21,8 +21,11 @@ import {
     <p>
       Junior software developer with a passion for building scalable and
       maintainable applications.
+      <a href="#" class="about-top-container-text-more inline md:hidden"
+        >more...</a
+      >
     </p>
-    <div>
+    <div class="about-top-container-icons hidden md:block">
       <div class="about-content-icons-container">
         <img src="/assets/cake.svg" alt="Born in" />
         <p>07.20.2002</p>
@@ -81,84 +84,91 @@ import {
   </div>
 </div>
 
-<div>
-  <h3>Certificates</h3>
-  <table class="w-full">
-    <tr>
-      <th>Date</th>
-      <th>Name</th>
-      <th>Issuer</th>
-    </tr>
-    <tr>
-      <td>07.13.2021</td>
-      <td>Driver's License, Type 1, Normal</td>
-      <td>Jeonbuk Provincial Police Agency</td>
-    </tr>
-    <tr>
-      <td>08.13.2024</td>
-      <td>JLPT N2</td>
-      <td>The Japan Foundation</td>
-    </tr>
-    <tr>
-      <td>01.26.2025</td>
-      <td>TOEIC, 925</td>
-      <td>Korea TOEIC Committee</td>
-    </tr>
-    <tr>
-      <td>05.24.2025</td>
-      <td>TOPCIT, 677</td>
-      <td>Ministry of Science and ICT, Korea</td>
-    </tr>
-  </table>
+<div class="about-bottom-container">
+  <div>
+    <h3>Certificates</h3>
+    <table class="w-full">
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Issuer</th>
+      </tr>
+      <tr>
+        <td>07.13.2021</td>
+        <td>Driver's License, Type 1, Normal</td>
+        <td>Jeonbuk Provincial Police Agency</td>
+      </tr>
+      <tr>
+        <td>08.13.2024</td>
+        <td>JLPT N2</td>
+        <td>The Japan Foundation</td>
+      </tr>
+      <tr>
+        <td>01.26.2025</td>
+        <td>TOEIC, 925</td>
+        <td>Korea TOEIC Committee</td>
+      </tr>
+      <tr>
+        <td>05.24.2025</td>
+        <td>TOPCIT, 677</td>
+        <td>Ministry of Science and ICT, Korea</td>
+      </tr>
+    </table>
+  </div>
+
+  <div>
+    <h3>Club Activities</h3>
+    <table class="w-full">
+      <tr>
+        <th>Period</th>
+        <th>Name</th>
+        <th>Topic</th>
+        <th>Position</th>
+      </tr>
+      <tr>
+        <td>03.2021<br />-08.2021</td>
+        <td>IGRUS</td>
+        <td>SW Dev</td>
+        <td>Member</td>
+      </tr>
+      <tr>
+        <td>03.2024<br />-08.2024</td>
+        <td>IGRUS</td>
+        <td>SW Dev</td>
+        <td>Member</td>
+      </tr>
+      <tr>
+        <td>03.2024<br />-08.2025</td>
+        <td>Seeds</td>
+        <td>Web Dev</td>
+        <td>Staff</td>
+      </tr>
+    </table>
+  </div>
+
+  <div>
+    <h3>Awards</h3>
+    <table class="w-full">
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Award</th>
+      </tr>
+      <tr>
+        <td>11.12.2023</td>
+        <td>Chung-Ang University x SEOULLAB PARTNERS '2023 START-LAB </td>
+        <td>Grand Prize</td>
+      </tr>
+      <tr>
+        <td>01.18.2025</td>
+        <td>2025 GreenTech Globalthon</td>
+        <td>Best Startup Pitch Award</td>
+      </tr>
+    </table>
+  </div>
 </div>
 
-<div>
-  <h3>Club Activities</h3>
-  <table class="w-full">
-    <tr>
-      <th>Period</th>
-      <th>Club Name</th>
-      <th>Topic</th>
-      <th>Position</th>
-    </tr>
-    <tr>
-      <td>03.2021-08.2021</td>
-      <td>IGRUS</td>
-      <td>SW Development</td>
-      <td>Member</td>
-    </tr>
-    <tr>
-      <td>03.2024-08.2024</td>
-      <td>IGRUS</td>
-      <td>SW Development</td>
-      <td>Member</td>
-    </tr>
-    <tr>
-      <td>03.2024-08.2025</td>
-      <td>Seeds</td>
-      <td>Web Development</td>
-      <td>Staff</td>
-    </tr>
-  </table>
-</div>
-
-<div>
-  <h3>Awards</h3>
-  <table class="w-full">
-    <tr>
-      <th>Date</th>
-      <th>Name</th>
-      <th>Award</th>
-    </tr>
-    <tr>
-      <td>11.12.2023</td>
-      <td>Chung-Ang University x SEOULLAB PARTNERS '2023 START-LAB </td>
-      <td>Grand Prize</td>
-    </tr>
-    <tr>
-      <td>01.18.2025</td>
-      <td>2025 GreenTech Globalthon</td>
-      <td>Best Startup Pitch Award</td>
-    </tr>
-  </table>
-</div>
+<script>
+  import toggleAbout from "../scripts/toggleAbout.js";
+  toggleAbout();
+</script>
