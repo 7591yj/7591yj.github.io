@@ -1,0 +1,24 @@
+.project-card h1,
+.project-card h2,
+.project-card h3,
+.project-card h4,
+.project-card h5,
+.project-card h6 {
+    @apply text-white
+}
+
+.project-card p {
+    @apply text-[#a8a8a8]
+}
+
+.project-card ul {
+    @apply mt-0 mb-[10px] pl-[40px]
+}
+
+.project-card ul {
+    @apply m-0 list-disc
+}
+
+.project-card ol {
+    @apply m-0 list-decimal
+}

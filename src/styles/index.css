@@ -1,0 +1,48 @@
+.index h1,
+.index h2,
+.index h3,
+.index h4 {
+    @apply mb-[10px] font-bold text-white
+}
+
+.index h1 {
+    @apply leading-[44px] m-[0.67em_0] text-[2em] mt-[20px]
+}
+
+.index h3 {
+    @apply mt-[20px] text-[24px] leading-[30px]
+}
+
+.index h4 {
+    @apply mt-[10px] text-[18px] leading-[24px]
+}
+
+.index p {
+    @apply mb-[10px] mt-0
+}
+
+.index h1 {
+    @apply tracking-[-0.5px] mt-0 mb-[10px] text-[58px] font-light leading-[72px]
+}
+
+.index h3 {
+    @apply mt-0 mb-[12px] text-[32px] font-normal leading-[42px]
+}
+
+.index h4 {
+    @apply mt-0 mb-0 text-[18px] font-normal leading-[24px]
+}
+
+.index p {
+    @apply text-[#a8a8a8] mb-[10px] text-[16px] leading-[26px]
+}
+
+@media screen and (max-width: 767px) {
+    .index h1 {
+        @apply text-[54px] leading-[64px]
+    }
+
+    .index h4 {
+        @apply text-[32px] leading-[48px] font-light
+    }
+}

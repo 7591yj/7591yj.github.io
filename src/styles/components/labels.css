@@ -1,0 +1,20 @@
+@theme {
+    --font-mono: 'IBM Plex Mono', sans-serif;
+}
+
+.label-white {
+    @apply text-white mb-[2px] text-[16px] leading-[24px]
+}
+
+.label-gray {
+    @apply text-[#a8a8a8] text-[14px] leading-[22px]
+}
+
+.mini-label-white {
+    @apply text-white tracking-[0.75px] uppercase mt-[24px]
+        font-mono text-[10px] font-normal leading-[24px]
+}
+
+.mini-label-white.gray-color {
+    @apply text-[#a8a8a8]
+}

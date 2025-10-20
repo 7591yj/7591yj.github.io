@@ -1,0 +1,67 @@
+h1, h2, h3, h4 {
+    @apply text-white scroll-m-20 tracking-tight
+}
+
+h1 {
+    @apply text-4xl font-light text-balance
+}
+
+h2 {
+    @apply border-b border-[#a3a3a3] pb-2 text-3xl font-light first:mt-0
+}
+
+h3 {
+    @apply text-2xl font-normal mt-6
+}
+
+h4 {
+    @apply text-xl font-normal mt-6
+}
+
+p {
+    @apply text-[#a8a8a8] leading-7 [&:not(:first-child)]:mt-6
+}
+
+blockquote {
+    @apply mt-6 border-l-2 pl-6 italic
+}
+
+code {
+    @apply bg-[#161616] text-[#a8a8a8] relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold
+}
+
+.lead {
+    @apply text-xl
+}
+
+.large {
+    @apply text-lg font-semibold
+}
+
+.small {
+    @apply text-sm leading-none font-medium
+}
+
+/* List */
+
+ul, ol {
+    @apply text-[#a8a8a8] my-6 ml-6 list-disc [&>li]:mt-2
+}
+
+/* Table */
+
+table {
+    @apply w-full text-[#a3a3a3] mt-6
+}
+
+tr {
+    @apply m-0 border-t p-0
+}
+
+th {
+    @apply text-white border border-[#a3a3a3] px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right
+}
+
+td {
+    @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right
+}

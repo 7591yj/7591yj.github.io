@@ -1,21 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
-/* ABOUT */
+@import "./components/components.css";
 
-.about-top-container {
-    display: flex;
-    flex-direction: row;
-    gap: calc(var(--spacing) * 4);
-    justify-content: space-between;
+/* page-specific styles */
+@import "./index.css";
+@import "./about.css";
+
+@theme {
+    --font-sans: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', sans-serif;
+    --font-sans-arial: 'Arial', sans-serif;
+    --font-icons: 'webflow-icons';
+    --font-sans-raw: sans-serif;
 }
 
-.about-content-icons-container {
-    display: flex;
-    flex-direction: row;
-    gap: calc(var(--spacing) * 2);
-    margin-bottom: calc(var(--spacing) * 2);
+/* Basis */
+
+* {
+    @apply box-border
 }
 
-.about-content-icons-container p {
-    margin-bottom: 0;
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    @apply font-sans h-full
+}
+
+body {
+    @apply bg-[#161616] text-[#333] font-sans min-h-full m-0 text-base leading-[20px]
+}
+
+/* Layout */
+
+aside,
+main,
+nav,
+section {
+    @apply block
+}
+
+.main {
+    @apply w-full h-full flex-col items-center
+    [background-image:linear-gradient(rgba(28,28,28,0.64),rgba(28,28,28,0.64)),url('../../public/assets/grid-top-right.svg'),linear-gradient(rgba(28,28,28,0.24),rgba(28,28,28,0.24))] [background-position:0_0,0_0,0_0] [background-size:auto,auto_1130px,auto]
+    p-[46px_48px_82px] flex overflow-auto
+}
+
+.container {
+    @apply w-full max-w-[680px] gap-x-[68px] gap-y-[68px] flex-col flex
+}
+
+.content {
+    @apply w-[100vw] h-[100vh] flex
+}
+
+.single-item {
+    @apply text-[16px]
+}
+
+.resource-items {
+    @apply gap-x-[64px] gap-y-[64px] flex-col flex
+}
+
+.fold-content {
+    @apply mb-[48px]
+}
+
+.items-container {
+    @apply flex-col
+}
+
+.tech-tools-container {
+    @apply flex-col justify-end flex
+}
+
+.content-container {
+    @apply gap-x-[32px] gap-y-[32px] flex-col flex
+}
+
+@media screen and (max-width: 991px) {
+    .content {
+        @apply flex-col
+    }
+
+    .fold-content {
+        @apply mb-[32px]
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .main {
+        @apply pl-[28px] pr-[28px]
+    }
+
+    .container {
+        @apply gap-x-[68px] gap-y-[68px]
+    }
+
+    .fold-content {
+        @apply mb-[24px]
+    }
+}
+
+/* Image */
+
+img {
+    @apply border-0 max-w-full align-middle inline-block
+}
+
+/* Anchors */
+
+a {
+    @apply bg-[rgba(0,0,0,0)]
+}
+
+a:active,
+a:hover {
+    @apply outline-none
 }

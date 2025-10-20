@@ -1,0 +1,25 @@
+@theme {
+    --font-mono: 'IBM Plex Mono', sans-serif;
+}
+
+.chips-container {
+    grid-column-gap: 12px;
+    grid-row-gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-top: 8px;
+    display: flex;
+}
+
+.chips-container.chips-container-small-width {
+    @apply max-w-[380px]
+}
+
+.single-chip {
+    @apply text-white bg-[#353535] rounded-[8px] p-[8px_12px]
+    font-mono
+}
+
+.single-chip.small-chip {
+    @apply p-[4px_8px] text-[12px]
+}
