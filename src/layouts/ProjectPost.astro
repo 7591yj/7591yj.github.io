@@ -1,9 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import type { CollectionEntry } from "astro:content";
 import StatusBubble from "../components/StatusBubble.astro";
-
-type Props = CollectionEntry<"softwareDevelopment">["data"];
 
 const { title, year, status, link, heroImage } = Astro.props;
 ---
@@ -11,9 +8,13 @@ const { title, year, status, link, heroImage } = Astro.props;
 <main>
   <article>
     <div class="between flex flex-row items-center gap-6">
-      <div class="hero-image">
-        {heroImage && <Image width={120} height={120} src={heroImage} alt="" />}
-      </div>
+      {
+        heroImage && (
+          <div class="hero-image">
+            <Image width={120} height={120} src={heroImage} alt="" />
+          </div>
+        )
+      }
       <div class="flex w-full flex-row items-center justify-between">
         <div class="title">
           <h1>{title}</h1>
