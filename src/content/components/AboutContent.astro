@@ -1,0 +1,133 @@
+---
+import { AboutContent as about } from "../pages/about.ts";
+---
+
+<div class="about-top-container">
+  <div>
+    <img
+      src={about.profileImage}
+      class="about-top-container-profile-img"
+      alt="Profile image"
+    />
+  </div>
+  <div class="about-top-container-text">
+    <h3>{about.name}</h3>
+    <p>
+      {about.shortDesc}
+      <a href="#" class="about-top-container-text-more inline md:hidden"
+        >more...</a
+      >
+    </p>
+    {
+      about.iconsMeta.map((icon) => (
+        <div class="about-content-icons-container">
+          <img src={icon.icon} alt={icon.alt} />
+          {icon.href ? (
+            <p>
+              <a href={icon.href}>{icon.content}</a>
+            </p>
+          ) : (
+            <p>{icon.content}</p>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<div>
+  <h3>Education</h3>
+  <div class="about-education-container">
+    {
+      about.educations.map((education) => (
+        <div class="about-education-content">
+          <h4>{education.name}</h4>
+          <div class="about-content-icons-container">
+            <img src="/assets/map-pin.svg" alt="Location" />
+            <p class="mt-0">{education.location}</p>
+          </div>
+          <div class="about-content-icons-container">
+            <img src="/assets/me.svg" alt="Position" />
+            <p>{education.role}</p>
+          </div>
+          <div class="about-content-icons-container">
+            <img src="/assets/calendar.svg" alt="Period" />
+            <p>{education.period}</p>
+          </div>
+          {education.desc.map((desc) => (
+            <p>{desc}</p>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<div class="about-bottom-container">
+  <div>
+    <h3>Certificates</h3>
+    <table class="w-full">
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Issuer</th>
+      </tr>
+      {
+        about.certificates.map((certificate) => (
+          <tr>
+            <td>{certificate.date}</td>
+            <td>{certificate.name}</td>
+            <td>{certificate.issuer}</td>
+          </tr>
+        ))
+      }
+    </table>
+  </div>
+
+  <div>
+    <h3>Club Activities</h3>
+    <table class="w-full">
+      <tr>
+        <th>Period</th>
+        <th>Name</th>
+        <th>Topic</th>
+        <th>Position</th>
+      </tr>
+      {
+        about.clubs.map((club) => (
+          <tr>
+            <td>{club.period}</td>
+            <td>{club.name}</td>
+            <td>{club.topic}</td>
+            <td>{club.role}</td>
+          </tr>
+        ))
+      }
+    </table>
+  </div>
+
+  <div>
+    <h3>Awards</h3>
+    <table class="w-full">
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Award</th>
+      </tr>
+      {
+        about.awards.map((award) => (
+          <tr>
+            <td>{award.date}</td>
+            <td>{award.name}</td>
+            <td>{award.award}</td>
+          </tr>
+        ))
+      }
+    </table>
+  </div>
+</div>
+
+<script>
+  import toggleAbout from "../../scripts/toggleAbout.js";
+  toggleAbout();
+</script>

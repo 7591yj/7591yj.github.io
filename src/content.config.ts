@@ -19,7 +19,7 @@ const blog = defineCollection({
 const personalProjects = defineCollection({
   // Load Markdown and MDX files in the `src/content/personal-projects/` directory.
   loader: glob({
-    base: "./src/content/personal-projects",
+    base: "./src/content/pages/personal-projects",
     pattern: "**/*.{md,mdx}",
   }),
   // Type-check frontmatter using a schema
@@ -36,7 +36,7 @@ const personalProjects = defineCollection({
 const softwareDevelopment = defineCollection({
   // Load Markdown and MDX files in the `src/content/software-development/` directory.
   loader: glob({
-    base: "./src/content/software-development",
+    base: "./src/content/pages/software-development",
     pattern: "**/*.{md,mdx}",
   }),
   // Type-check frontmatter using a schema
