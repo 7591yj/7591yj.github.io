@@ -35,7 +35,7 @@ blockquote {
 }
 
 code {
-  @apply relative rounded bg-[#161616] px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold text-[#a8a8a8];
+  @apply relative rounded bg-[#353535] px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold text-white;
 }
 
 .lead {
