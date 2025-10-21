@@ -57,7 +57,7 @@ section {
 }
 
 .resource-items {
-  @apply flex flex-col gap-x-[64px] gap-y-[64px];
+  @apply flex flex-col gap-x-[64px] gap-y-[32px];
 }
 
 .fold-content {

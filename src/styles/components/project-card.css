@@ -1,14 +1,26 @@
+.project-card {
+  @apply rounded-2xl border-black bg-[rgba(53,53,53,0.12)] p-6 pt-2 shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)] backdrop-blur-xs;
+}
+
 .project-card h1,
 .project-card h2,
 .project-card h3,
 .project-card h4,
 .project-card h5,
 .project-card h6 {
-  @apply text-white;
+  @apply mt-0 text-white;
+}
+
+.project-card h4 {
+  @apply mt-2 mb-2;
 }
 
 .project-card p {
-  @apply text-[#a8a8a8];
+  @apply mt-2 mb-2 leading-5 text-[#a8a8a8];
+}
+
+.project-card li {
+  @apply mt-0 text-sm;
 }
 
 .project-card ul {

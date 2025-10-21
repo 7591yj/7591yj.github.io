@@ -16,7 +16,7 @@
 }
 
 .single-chip {
-  @apply rounded-[8px] bg-[#353535] p-[8px_12px] font-mono text-white;
+  @apply rounded-[8px] bg-[#353535] p-[8px_12px] font-mono text-sm text-white;
 }
 
 .single-chip.small-chip {

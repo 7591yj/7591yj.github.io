@@ -1,7 +1,8 @@
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5 {
   @apply scroll-m-20 tracking-tight text-white;
 }
 
@@ -19,6 +20,10 @@ h3 {
 
 h4 {
   @apply mt-6 text-xl font-normal;
+}
+
+h5 {
+  @apply mt-6 text-lg font-normal;
 }
 
 p {

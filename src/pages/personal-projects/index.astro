@@ -28,21 +28,23 @@ import { personalProjects as projects } from "../../content/pages/projects.ts";
           <div class="content-container">
             <h1>Personal Projects</h1>
             <section class="items-container">
-              <div class="resource-items project-card">
+              <div class="resource-items">
                 {
                   projects.map((project) => (
-                    <a
-                      href={`/personal-projects/${project.title.toLowerCase()}`}
-                      style="text-decoration: none"
-                    >
-                      <Project
-                        title={project.title}
-                        subtitle={project.subtitle}
-                        status={project.status}
-                        desc={project.desc}
-                        tech={project.tech}
-                      />
-                    </a>
+                    <div class="project-card">
+                      <a
+                        href={`/personal-projects/${project.title.toLowerCase()}`}
+                        style="text-decoration: none"
+                      >
+                        <Project
+                          title={project.title}
+                          subtitle={project.subtitle}
+                          status={project.status}
+                          desc={project.desc}
+                          tech={project.tech}
+                        />
+                      </a>
+                    </div>
                   ))
                 }
               </div>

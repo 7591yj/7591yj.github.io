@@ -80,18 +80,21 @@ export const AboutContent = {
       name: "IGRUS",
       topic: "SW Dev",
       role: "Member",
+      href: "https://www.instagram.com/igrus_inha/",
     },
     {
       period: "03.2024\n-08.2024",
       name: "IGRUS",
       topic: "SW Dev",
       role: "Member",
+      href: "https://www.instagram.com/igrus_inha/",
     },
     {
       period: "03.2024\n-08.2025",
       name: "Seeds",
       topic: "Web Dev",
       role: "Staff",
+      href: "https://jelly-locust-cea.notion.site/Seeds-1beac07ca4e98043bbe9e81ccf29e806",
     },
   ],
   awards: [

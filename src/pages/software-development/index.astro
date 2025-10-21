@@ -22,27 +22,29 @@ import { softwareDevelopment as projects } from "../../content/pages/projects.ts
                 alt=""
                 class="back-nav-img"
               />
-              <div>Back</div></a
-            >
+              <div>Back</div>
+            </a>
           </div>
           <div class="content-container">
             <h1>Software Development</h1>
             <section class="items-container">
-              <div class="resouce-items project-card">
+              <div class="resource-items">
                 {
                   projects.map((project) => (
-                    <a
-                      href={`/software-development/${project.title.toLowerCase()}`}
-                      style="text-decoration: none"
-                    >
-                      <Project
-                        title={project.title}
-                        subtitle={project.subtitle}
-                        status={project.status}
-                        desc={project.desc}
-                        tech={project.tech}
-                      />
-                    </a>
+                    <div class="project-card">
+                      <a
+                        href={`/software-development/${project.title.toLowerCase()}`}
+                        style="text-decoration: none"
+                      >
+                        <Project
+                          title={project.title}
+                          subtitle={project.subtitle}
+                          status={project.status}
+                          desc={project.desc}
+                          tech={project.tech}
+                        />
+                      </a>
+                    </div>
                   ))
                 }
               </div>
@@ -52,6 +54,7 @@ import { softwareDevelopment as projects } from "../../content/pages/projects.ts
       </nav>
     </div>
 
-    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+    <!--[if lte IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
   </body>
 </html>
