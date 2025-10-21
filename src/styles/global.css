@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
 @import "./components/components.css";
@@ -8,27 +8,27 @@
 @import "./about.css";
 
 @theme {
-    --font-sans: 'IBM Plex Sans', sans-serif;
-    --font-mono: 'IBM Plex Mono', sans-serif;
-    --font-sans-arial: 'Arial', sans-serif;
-    --font-icons: 'webflow-icons';
-    --font-sans-raw: sans-serif;
+  --font-sans: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", sans-serif;
+  --font-sans-arial: "Arial", sans-serif;
+  --font-icons: "webflow-icons";
+  --font-sans-raw: sans-serif;
 }
 
 /* Basis */
 
 * {
-    @apply box-border
+  @apply box-border;
 }
 
 html {
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
-    @apply font-sans h-full
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  @apply h-full font-sans;
 }
 
 body {
-    @apply bg-[#161616] text-[#333] font-sans min-h-full m-0 text-base leading-[20px]
+  @apply m-0 min-h-full bg-[#161616] font-sans text-base leading-[20px] text-[#333];
 }
 
 /* Layout */
@@ -37,84 +37,95 @@ aside,
 main,
 nav,
 section {
-    @apply block
+  @apply block;
 }
 
 .main {
-    @apply w-full h-full flex-col items-center
-    [background-image:linear-gradient(rgba(28,28,28,0.64),rgba(28,28,28,0.64)),url('/assets/grid-top-right.svg'),linear-gradient(rgba(28,28,28,0.24),rgba(28,28,28,0.24))] [background-position:0_0,0_0,0_0] [background-size:auto,auto_1130px,auto]
-    p-[46px_48px_82px] flex overflow-auto
+  @apply flex h-full w-full flex-col items-center overflow-auto [background-image:linear-gradient(rgba(28,28,28,0.64),rgba(28,28,28,0.64)),url('/assets/grid-top-right.svg'),linear-gradient(rgba(28,28,28,0.24),rgba(28,28,28,0.24))] [background-size:auto,auto_1130px,auto] [background-position:0_0,0_0,0_0] p-[46px_48px_82px];
 }
 
 .container {
-    @apply w-full max-w-[680px] gap-x-[68px] gap-y-[68px] flex-col flex
+  @apply flex w-full max-w-[680px] flex-col gap-x-[68px] gap-y-[68px];
 }
 
 .content {
-    @apply w-[100vw] h-[100vh] flex
+  @apply flex h-[100vh] w-[100vw];
 }
 
 .single-item {
-    @apply text-[16px]
+  @apply text-[16px];
 }
 
 .resource-items {
-    @apply gap-x-[64px] gap-y-[64px] flex-col flex
+  @apply flex flex-col gap-x-[64px] gap-y-[64px];
 }
 
 .fold-content {
-    @apply mb-[48px]
+  @apply mb-[48px];
 }
 
 .items-container {
-    @apply flex-col
+  @apply flex-col;
 }
 
 .tech-tools-container {
-    @apply flex-col justify-end flex
+  @apply flex flex-col justify-end;
 }
 
 .content-container {
-    @apply gap-x-[32px] gap-y-[32px] flex-col flex
+  @apply flex flex-col gap-x-[32px] gap-y-[32px];
 }
 
 @media screen and (max-width: 991px) {
-    .content {
-        @apply flex-col
-    }
+  .content {
+    @apply flex-col;
+  }
 
-    .fold-content {
-        @apply mb-[32px]
-    }
+  .fold-content {
+    @apply mb-[32px];
+  }
 }
 
 @media screen and (max-width: 767px) {
-    .main {
-        @apply pl-[28px] pr-[28px]
-    }
+  .main {
+    @apply pr-[28px] pl-[28px];
+  }
 
-    .container {
-        @apply gap-x-[68px] gap-y-[68px]
-    }
+  .container {
+    @apply gap-x-[68px] gap-y-[68px];
+  }
 
-    .fold-content {
-        @apply mb-[24px]
-    }
+  .fold-content {
+    @apply mb-[24px];
+  }
 }
 
 /* Image */
 
 img {
-    @apply border-0 max-w-full align-middle inline-block
+  @apply inline-block max-w-full border-0 align-middle;
 }
 
 /* Anchors */
 
 a {
-    @apply bg-[rgba(0,0,0,0)]
+  @apply bg-[rgba(0,0,0,0)];
 }
 
 a:active,
 a:hover {
-    @apply outline-none
+  @apply outline-none;
+}
+
+/* Others */
+
+.prose table {
+  @apply overflow-x-auto;
+}
+
+@media screen and (max-width: 767px) {
+  .prose th,
+  .prose td {
+    @apply text-sm;
+  }
 }

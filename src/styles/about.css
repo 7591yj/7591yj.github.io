@@ -1,59 +1,59 @@
 .about-top-container {
-    @apply flex flex-row gap-4 justify-between
+  @apply flex flex-row justify-between gap-4;
 }
 
 .about-top-container h3 {
-    @apply mt-0
+  @apply mt-0;
 }
 
 .about-top-container p {
-    @apply mt-2 mb-2
+  @apply mt-2 mb-2;
 }
 
 .about-top-container-text-more {
-    @apply underline cursor-pointer
+  @apply cursor-pointer underline;
 }
 
 .about-top-container-profile-img {
-    @apply rounded-4xl border-black shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)]
+  @apply rounded-4xl border-black shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)];
 }
 
 .about-top-container-text {
-    @apply flex flex-col
+  @apply flex flex-col;
 }
 
 .about-content-icons-container {
-    @apply flex flex-row gap-2 mb-2
+  @apply mb-2 flex flex-row gap-2;
 }
 
 .about-content-icons-container p {
-    @apply m-0
+  @apply m-0;
 }
 
 .about-education-container {
-    @apply flex flex-row gap-4 justify-around
+  @apply flex flex-row justify-around gap-4;
 }
 
 .about-education-content {
-    -webkit-backdrop-filter: blur(4px);
-    @apply bg-[rgba(53,53,53,0.12)] border-black rounded-2xl backdrop-blur-xs p-6 pt-2 mt-6 min-h-[180px] min-w-[180px] shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)]
+  -webkit-backdrop-filter: blur(4px);
+  @apply mt-6 min-h-[180px] min-w-[180px] rounded-2xl border-black bg-[rgba(53,53,53,0.12)] p-6 pt-2 shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)] backdrop-blur-xs;
 }
 
 .about-education-content h4 {
-    @apply mt-6 mb-2
+  @apply mt-6 mb-2;
 }
 
 @media screen and (max-width: 767px) {
-    .about-top-container p {
-        @apply text-sm
-    }
+  .about-top-container p {
+    @apply text-sm;
+  }
 
-    .about-education-container {
-        @apply flex flex-col gap-2 text-sm
-    }
+  .about-education-container {
+    @apply flex flex-col gap-2 text-sm;
+  }
 
-    .about-bottom-container th,
-    .about-bottom-container td {
-        @apply text-sm
-    }
+  .about-bottom-container th,
+  .about-bottom-container td {
+    @apply text-sm;
+  }
 }

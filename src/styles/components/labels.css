@@ -1,20 +1,19 @@
 @theme {
-    --font-mono: 'IBM Plex Mono', sans-serif;
+  --font-mono: "IBM Plex Mono", sans-serif;
 }
 
 .label-white {
-    @apply text-white mb-[2px] text-[16px] leading-[24px]
+  @apply mb-[2px] text-[16px] leading-[24px] text-white;
 }
 
 .label-gray {
-    @apply text-[#a8a8a8] text-[14px] leading-[22px]
+  @apply text-[14px] leading-[22px] text-[#a8a8a8];
 }
 
 .mini-label-white {
-    @apply text-white tracking-[0.75px] uppercase mt-[24px]
-        font-mono text-[10px] font-normal leading-[24px]
+  @apply mt-[24px] font-mono text-[10px] leading-[24px] font-normal tracking-[0.75px] text-white uppercase;
 }
 
 .mini-label-white.gray-color {
-    @apply text-[#a8a8a8]
+  @apply text-[#a8a8a8];
 }

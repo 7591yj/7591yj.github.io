@@ -1,11 +1,11 @@
 .back-nav-container {
-    @apply tracking-[2px] items-center pb-0 flex
+  @apply flex items-center pb-0 tracking-[2px];
 }
 
 .back-nav-container div {
-    @apply uppercase text-white font-medium text-sm
+  @apply text-sm font-medium text-white uppercase;
 }
 
 .back-nav-img {
-    @apply w-[18px]
+  @apply w-[18px];
 }

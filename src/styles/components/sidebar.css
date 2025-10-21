@@ -1,9 +1,9 @@
 .sidebar {
-    @apply w-full h-full max-w-[280px] bg-[#1c1c1c] border-1 border-[#353535] p-[32px] pl-[24px] pr-[18px]
+  @apply h-full w-full max-w-[280px] border-1 border-[#353535] bg-[#1c1c1c] p-[32px] pr-[18px] pl-[24px];
 }
 
 @media screen and (max-width: 991px) {
-    .sidebar {
-        @apply h-auto max-w-full pt-[18px] pb-[18px] pr-[28px] border-0
-    }
+  .sidebar {
+    @apply h-auto max-w-full border-0 pt-[18px] pr-[28px] pb-[18px];
+  }
 }
