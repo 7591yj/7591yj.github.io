@@ -108,5 +108,11 @@ export const AboutContent = {
       name: "2025 GreenTech Globalthon",
       award: "Best Startup Pitch Award",
     },
+    {
+      date: "11.19.2025",
+      name: "2025 Hanium Dream-Up Contest (Creative Challenge Track)",
+      award:
+        "Encouragement Award, Final Evaluation (Selected as Outstanding Project in Preliminary Round)",
+    },
   ],
 };
