@@ -86,11 +86,9 @@ import { aboutPageContent as about } from "../../data/about.ts";
 
   <div>
     <h3>Papers</h3>
-    {
-      about.papers.map((paper) => (
-        <li>{paper}</li>
-      ))
-    }
+    <ul>
+      {about.papers.map((paper) => <li>{paper}</li>)}
+    </ul>
   </div>
 
   <div>

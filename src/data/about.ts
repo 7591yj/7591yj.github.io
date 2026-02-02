@@ -76,7 +76,7 @@ export const aboutPageContent: AboutPageContent = {
     },
   ],
   papers: [
-    //"The 25th International Conference on Electronics, Information, and Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026) (Published) “Automated Korean-English Bilingual Highlighted Text Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim et.al 8"
+    "The 25th International Conference on Electronics, Information, and Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026) (Published) “Automated Korean-English Bilingual Highlighted Text Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim et.al 8"
   ],
   clubs: [
     {
