@@ -1,3 +1,13 @@
+/**
+ * Navigation Styles
+ *
+ * Navigation components including sidebar nav links, mobile menu,
+ * and responsive navigation behavior.
+ *
+ * Note: .w-nav-* classes follow Webflow naming convention for legacy compatibility.
+ * Consider migrating to semantic names in future refactors.
+ */
+
 .niv-data {
   @apply flex items-center;
 }

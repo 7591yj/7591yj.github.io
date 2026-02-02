@@ -1,3 +1,10 @@
+/**
+ * About Page Styles
+ *
+ * Layout and component styles specific to the about page.
+ * Includes profile header, education cards, and table sections.
+ */
+
 .about-top-container {
   @apply flex flex-row justify-between gap-4;
 }

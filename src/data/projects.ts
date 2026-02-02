@@ -1,5 +1,8 @@
-import type { Project } from "../../types";
+import type { Project } from "../types";
 
+/**
+ * Personal side projects and experiments
+ */
 export const personalProjects: Project[] = [
   {
     title: "tg-webm-converter",
@@ -21,6 +24,9 @@ export const personalProjects: Project[] = [
   },
 ];
 
+/**
+ * Team-based software development projects
+ */
 export const softwareDevelopment: Project[] = [
   {
     title: "BizLenz",

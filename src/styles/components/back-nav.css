@@ -1,3 +1,10 @@
+/**
+ * Back Navigation Component
+ *
+ * Navigation element for returning to parent pages.
+ * Used on detail pages (projects, about, etc.)
+ */
+
 .back-nav-container {
   @apply flex items-center pb-0 tracking-[2px];
 }

@@ -1,6 +1,7 @@
-import { NAME } from "../../consts.ts";
+import { NAME } from "../consts.ts";
+import type { IntroContent } from "../types";
 
-export const Intro = {
+export const introContent: IntroContent = {
   title: `Hi, I'm ${NAME}.\nI craft web solutions.`,
   subtitle:
     "Junior software engineer with a product-first mindset and team leadership experience.",

@@ -1,6 +1,9 @@
-@theme {
-  --font-mono: "IBM Plex Mono", sans-serif;
-}
+/**
+ * Labels Component
+ *
+ * Text labels used for headings, descriptions, and metadata.
+ * Includes white (primary), gray (secondary), and mini (small uppercase) variants.
+ */
 
 .label-white {
   @apply mb-[2px] text-[16px] leading-[24px] text-white;

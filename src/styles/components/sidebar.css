@@ -1,3 +1,10 @@
+/**
+ * Sidebar Component
+ *
+ * Main navigation sidebar containing profile info and navigation links.
+ * Collapses to a top bar on tablet and mobile viewports.
+ */
+
 .sidebar {
   @apply h-full w-full max-w-[280px] border-1 border-[#353535] bg-[#1c1c1c] p-[32px] pr-[18px] pl-[24px];
 }

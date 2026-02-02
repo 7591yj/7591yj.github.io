@@ -1,3 +1,10 @@
+/**
+ * Index Page Styles
+ *
+ * Typography and layout overrides specific to the hero.
+ * Scoped under .index class to avoid conflicts with global typography.
+ */
+
 .index h1,
 .index h2,
 .index h3,

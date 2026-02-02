@@ -1,5 +1,5 @@
 ---
-import { AboutContent as about } from "../pages/about.ts";
+import { aboutPageContent as about } from "../../data/about.ts";
 ---
 
 <div class="about-top-container">
@@ -82,6 +82,15 @@ import { AboutContent as about } from "../pages/about.ts";
         ))
       }
     </table>
+  </div>
+
+  <div>
+    <h3>Papers</h3>
+    {
+      about.papers.map((paper) => (
+        <li>{paper}</li>
+      ))
+    }
   </div>
 
   <div>

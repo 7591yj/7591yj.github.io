@@ -1,3 +1,11 @@
+/**
+ * Typography Styles
+ *
+ * Global typography rules for headings, paragraphs, lists, tables, and code blocks.
+ * Based on a consistent scale with --color-text-primary for headings
+ * and --color-text-secondary for body text.
+ */
+
 h1,
 h2,
 h3,

@@ -1,3 +1,10 @@
+/**
+ * Project Card Component
+ *
+ * Glass-morphism card used to display project information on listing pages.
+ * Contains title, description, status, and technology chips.
+ */
+
 .project-card {
   @apply rounded-2xl border-black bg-[rgba(53,53,53,0.12)] p-6 pt-2 shadow-[0_1px_1px_rgba(255,255,255,0.24),_0_-1px_1px_rgba(255,255,255,0.24)] backdrop-blur-xs;
 }

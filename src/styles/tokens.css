@@ -1,0 +1,85 @@
+/**
+ * Design Tokens
+ *
+ * This file centralizes all design tokens (colors, typography, spacing, etc.)
+ * used throughout the application.
+ *
+ * Importing this file first in global.css is expected
+ */
+
+@theme {
+  /* ========================================
+   * Typography
+   * ======================================== */
+
+  /* Primary */
+  --font-sans: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", sans-serif;
+
+  /* Fallback fonts */
+  --font-sans-arial: "Arial", sans-serif;
+  --font-sans-raw: sans-serif;
+  --font-icons: "webflow-icons";
+
+  /* ========================================
+   * Colors
+   * ======================================== */
+
+  /* Background colors */
+  --color-bg-primary: #161616; /* Main page background */
+  --color-bg-secondary: #1c1c1c; /* Sidebar, buttons, cards */
+  --color-bg-tertiary: #202020; /* Hover states */
+  --color-bg-elevated: #2b2b2b; /* Active/selected states */
+
+  /* Border colors */
+  --color-border: #353535; /* Default borders */
+  --color-border-light: #a3a3a3; /* Light borders (table headers) */
+
+  /* Text colors */
+  --color-text-primary: #ffffff; /* Headings, important text */
+  --color-text-secondary: #a8a8a8; /* Body text, descriptions */
+  --color-text-muted: #333; /* Muted/disabled text */
+
+  /* Surface colors with transparency */
+  --color-surface-glass: rgba(53, 53, 53, 0.12); /* backgrounds */
+  --color-surface-overlay: rgba(28, 28, 28, 0.64); /* Overlay backgrounds */
+
+  /* ========================================
+   * Spacing
+   * ======================================== */
+
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+  --spacing-2xl: 68px;
+
+  /* ========================================
+   * Border Radius
+   * ======================================== */
+
+  --radius-sm: 8px; /* Buttons, chips */
+  --radius-md: 12px; /* Cards, containers */
+  --radius-lg: 16px; /* Large cards */
+  --radius-full: 100px; /* Avatars, pills */
+
+  /* ========================================
+   * Shadows
+   * ======================================== */
+
+  /* Highlight shadow for elevated elements */
+  --shadow-highlight:
+    0 1px 1px rgba(255, 255, 255, 0.24), 0 -1px 1px rgba(255, 255, 255, 0.24);
+
+  /* Button hover shadow */
+  --shadow-button: 0 2px 4px rgba(8, 8, 8, 0.82);
+
+  /* ========================================
+   * Transitions
+   * ======================================== */
+
+  --transition-fast: 40ms;
+  --transition-normal: 120ms;
+  --transition-slow: 250ms;
+}

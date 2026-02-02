@@ -1,21 +1,25 @@
+/**
+ * Global Styles
+ *
+ * Main stylesheet that importing all dependencies and defining base.
+ */
+
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
+/* Design tokens */
+@import "./tokens.css";
+
+/* Component styles */
 @import "./components/components.css";
 
-/* page-specific styles */
+/* Page-specific styles */
 @import "./index.css";
 @import "./about.css";
 
-@theme {
-  --font-sans: "IBM Plex Sans", sans-serif;
-  --font-mono: "IBM Plex Mono", sans-serif;
-  --font-sans-arial: "Arial", sans-serif;
-  --font-icons: "webflow-icons";
-  --font-sans-raw: sans-serif;
-}
-
-/* Basis */
+/* ========================================
+ * Base/Reset Styles
+ * ======================================== */
 
 * {
   @apply box-border;
@@ -31,7 +35,9 @@ body {
   @apply m-0 min-h-full bg-[#161616] font-sans text-base leading-[20px] text-[#333];
 }
 
-/* Layout */
+/* ========================================
+ * Layout Classes
+ * ======================================== */
 
 aside,
 main,
@@ -100,13 +106,13 @@ section {
   }
 }
 
-/* Image */
+/* ========================================
+ * Element Defaults
+ * ======================================== */
 
 img {
   @apply inline-block max-w-full border-0 align-middle;
 }
-
-/* Anchors */
 
 a {
   @apply bg-[rgba(0,0,0,0)];
@@ -117,7 +123,9 @@ a:hover {
   @apply outline-none;
 }
 
-/* Others */
+/* ========================================
+ * Prose/Content Styles for MDX
+ * ======================================== */
 
 .prose table {
   @apply overflow-x-auto;

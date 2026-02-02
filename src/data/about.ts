@@ -4,9 +4,10 @@ import {
   LOCATION_NOW,
   NAME,
   PROFILE_IMAGE,
-} from "../../consts.ts";
+} from "../consts.ts";
+import type { AboutPageContent } from "../types";
 
-export const AboutContent = {
+export const aboutPageContent: AboutPageContent = {
   name: NAME,
   profileImage: PROFILE_IMAGE,
   shortDesc:
@@ -73,6 +74,9 @@ export const AboutContent = {
       name: "TOPCIT, 677",
       issuer: "Ministry of Science and ICT, Korea",
     },
+  ],
+  papers: [
+    //"The 25th International Conference on Electronics, Information, and Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026) (Published) “Automated Korean-English Bilingual Highlighted Text Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim et.al 8"
   ],
   clubs: [
     {

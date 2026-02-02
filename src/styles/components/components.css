@@ -1,9 +1,15 @@
-@import "./button.css";
-@import "./typography.css";
-@import "./project-card.css";
-@import "./sidebar.css";
-@import "./projects.css";
-@import "./nav.css";
-@import "./back-nav.css";
-@import "./chips.css";
-@import "./labels.css";
+/**
+ * Component Styles Index
+ *
+ * Central import file for all component-level CSS.
+ */
+
+@import "./button.css"; /* Button variants (primary, nav, mobile toggle) */
+@import "./typography.css"; /* Global heading, paragraph, list, table, code styles */
+@import "./project-card.css"; /* Project display cards */
+@import "./sidebar.css"; /* Main navigation sidebar */
+@import "./projects.css"; /* Project listing sections and containers */
+@import "./nav.css"; /* Navigation links and mobile menu */
+@import "./back-nav.css"; /* Back navigation component */
+@import "./chips.css"; /* Technology tag chips */
+@import "./labels.css"; /* Text label variants */

@@ -1,6 +1,8 @@
-@theme {
-  --font-mono: "IBM Plex Mono", sans-serif;
-}
+/**
+ * Chips Component
+ *
+ * Technology tag chips used to display tech stacks on project cards.
+ */
 
 .chips-container {
   grid-column-gap: 12px;

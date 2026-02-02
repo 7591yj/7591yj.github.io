@@ -1,3 +1,10 @@
+/**
+ * Button Components
+ *
+ * Primary button styles for CTAs and navigation actions.
+ * Includes .button (primary), .back-nav-button (navigation), and .w-nav-button (mobile menu toggle).
+ */
+
 .button {
   @apply rounded-[8px] border-1 border-solid border-[#363636] border-r-[#353535] bg-[#1c1c1c] p-[12px_20px] text-[14px] leading-[26px] font-medium text-white transition-all duration-[40ms];
 }
