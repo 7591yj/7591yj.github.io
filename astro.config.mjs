@@ -11,6 +11,10 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
   site: "https://7591yj.github.io",
+  i18n: {
+    locales: ["en", "ja", "ko"],
+    defaultLocale: "en",
+  },
   markdown: {
     remarkPlugins: [remarkGfm],
   },
@@ -28,3 +32,4 @@ export default defineConfig({
     ],
   },
 });
+
