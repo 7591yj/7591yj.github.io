@@ -1,0 +1,144 @@
+---
+import { Icon } from "astro-icon/components";
+
+const languages = [
+  { code: "en", label: "English" },
+  { code: "ja", label: "日本語" },
+  // { code: "ko", label: "한국어" },
+];
+---
+
+<div class="lang-select">
+  <button id="lang-toggle" class="nav-link" aria-label="Change language">
+    <span id="lang-label">EN</span>
+    <span class="lang-icon">
+      <Icon name="carbon:triangle-down-solid" />
+    </span>
+  </button>
+  <div id="lang-dropdown" class="lang-dropdown" role="menu">
+    {
+      languages.map(({ code, label }) => (
+        <button class="lang-option" data-lang={code} role="menuitem">
+          {label}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .lang-select {
+    position: relative;
+    height: 100%;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    padding: 0.56vh 3vh;
+    height: 100%;
+    transition:
+      color var(--duration-fast) ease,
+      background var(--duration-fast) ease;
+    gap: 1.2vh;
+    border-left: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    cursor: pointer;
+  }
+  .nav-link:hover {
+    color: var(--color-text-primary);
+  }
+  .lang-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 100%;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    z-index: var(--z-dropdown);
+    display: none;
+  }
+  .lang-dropdown.open {
+    display: flex;
+    flex-direction: column;
+  }
+  .lang-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.56vh 3vh;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition:
+      color var(--duration-fast) ease,
+      background var(--duration-fast) ease;
+    white-space: nowrap;
+  }
+  .lang-option:hover {
+    color: var(--color-text-primary);
+    background: var(--color-bg-secondary);
+  }
+  .lang-option.active {
+    color: var(--color-accent);
+  }
+  .lang-icon {
+    display: flex;
+    transition: transform var(--duration-fast) ease;
+  }
+  .lang-icon.flipped {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const toggle = document.getElementById("lang-toggle");
+    const dropdown = document.getElementById("lang-dropdown");
+    const label = document.getElementById("lang-label");
+    const options = dropdown?.querySelectorAll(".lang-option");
+
+    const storedLang = localStorage.getItem("lang") || "en";
+    applyLanguage(storedLang);
+
+    toggle?.addEventListener("click", () => {
+      dropdown?.classList.toggle("open");
+      toggle.querySelector(".lang-icon")?.classList.toggle("flipped");
+    });
+
+    options?.forEach((option) => {
+      option.addEventListener("click", () => {
+        const lang = (option as HTMLElement).dataset.lang;
+        if (lang) {
+          applyLanguage(lang);
+          localStorage.setItem("lang", lang);
+        }
+        dropdown?.classList.remove("open");
+        toggle?.querySelector(".lang-icon")?.classList.remove("flipped");
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!(e.target as HTMLElement).closest(".lang-select")) {
+        dropdown?.classList.remove("open");
+        toggle?.querySelector(".lang-icon")?.classList.remove("flipped");
+      }
+    });
+
+    function applyLanguage(lang: string) {
+      document.documentElement.setAttribute("data-lang", lang);
+
+      if (label) {
+        label.textContent = lang.toUpperCase();
+      }
+
+      options?.forEach((option) => {
+        const optLang = (option as HTMLElement).dataset.lang;
+        option.classList.toggle("active", optLang === lang);
+      });
+    }
+  });
+</script>

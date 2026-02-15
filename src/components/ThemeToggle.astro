@@ -1,0 +1,68 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">
+  <Icon class="icon-sun" name="carbon:light" />
+  <Icon class="icon-moon" name="carbon:moon" />
+</button>
+
+<style>
+  .theme-toggle {
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    color: var(--color-text-primary);
+  }
+
+  :global([data-theme="light"]) .icon-moon {
+    display: none;
+  }
+  :global([data-theme="dark"]) .icon-sun {
+    display: none;
+  }
+</style>
+
+<script>
+  import { animate } from "framer-motion";
+  import {
+    toggleTheme,
+    getCurrentTheme,
+  } from "../scripts/theme";
+
+  const animateIcon = (icon: Element) => {
+    animate(
+      icon,
+      { opacity: [0, 1], scale: [0.8, 1] },
+      { duration: 0.2, ease: "easeOut" },
+    );
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    const button = document.getElementById("theme-toggle");
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "data-theme"
+        ) {
+          const theme = getCurrentTheme();
+          const icon = document.querySelector(
+            theme === "light" ? ".icon-sun" : ".icon-moon",
+          );
+          if (icon) animateIcon(icon);
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    button?.addEventListener("click", toggleTheme);
+  });
+</script>

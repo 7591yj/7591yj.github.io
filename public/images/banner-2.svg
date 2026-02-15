@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="50%" stop-color="#0f2847"/>
+      <stop offset="100%" stop-color="#134e5e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect y="300" width="1200" height="2" fill="url(#accent)"/>
+  <rect y="370" width="1200" height="1" fill="url(#accent)" opacity="0.5"/>
+  <circle cx="200" cy="180" r="200" fill="#06b6d4" opacity="0.05"/>
+  <circle cx="1000" cy="520" r="150" fill="#0891b2" opacity="0.04"/>
+  <text x="600" y="310" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="48" font-weight="600" fill="#a5f3fc" letter-spacing="2">BANNER 2</text>
+  <text x="600" y="360" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#5eaab5" letter-spacing="4">1200 × 675</text>
+</svg>

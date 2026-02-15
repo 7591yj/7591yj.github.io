@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7f1d1d"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <circle cx="200" cy="200" r="140" fill="#ef4444" opacity="0.08"/>
+  <circle cx="200" cy="200" r="80" fill="#ef4444" opacity="0.06"/>
+  <text x="200" y="185" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#fca5a5">4</text>
+  <text x="200" y="240" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#ef4444" letter-spacing="3" font-weight="500">CARD</text>
+  <rect x="160" y="255" width="80" height="1" fill="#ef4444" opacity="0.4"/>
+</svg>

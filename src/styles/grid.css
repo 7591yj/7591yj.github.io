@@ -1,0 +1,49 @@
+/* full-width banner */
+.grid-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+/* responsive 1→2→3 column */
+.grid-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 3/4 + 1/4 */
+.grid-content-sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 3fr 1fr;
+  }
+}
+
+/* auto-fill responsive grid */
+.grid-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14.58vw, 1fr));
+  gap: var(--spacing-sm);
+}
+
+/* two-column equal split */
+.grid-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}

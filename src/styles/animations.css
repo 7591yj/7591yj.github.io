@@ -1,0 +1,74 @@
+/* Scroll-triggered animations (data-animate pattern) */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(2.22vh);
+  transition:
+    opacity var(--duration-slow) var(--ease-out-expo),
+    transform var(--duration-slow) var(--ease-out-expo);
+}
+
+[data-animate].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delay via data attribute */
+[data-animate-delay="1"] {
+  transition-delay: 80ms;
+}
+[data-animate-delay="2"] {
+  transition-delay: 160ms;
+}
+[data-animate-delay="3"] {
+  transition-delay: 240ms;
+}
+[data-animate-delay="4"] {
+  transition-delay: 320ms;
+}
+[data-animate-delay="5"] {
+  transition-delay: 400ms;
+}
+
+/* Keyframe animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(2.22vh);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(1.25vw);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up var(--duration-slow) var(--ease-out-expo) both;
+}
+
+.animate-fade-in {
+  animation: fade-in var(--duration-normal) ease both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right var(--duration-slow) var(--ease-out-expo) both;
+}

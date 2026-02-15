@@ -9,6 +9,23 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.17.1"
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/sitemap": "^3.7.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.17.1",
+    "astro-icon": "^1.1.5",
+    "framer-motion": "^12.34.0",
+    "lottie-react": "^2.4.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remark-gfm": "^4.0.1",
+    "swiper": "^12.1.1",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.2.18"
   }
 }

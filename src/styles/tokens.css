@@ -1,0 +1,75 @@
+/* ========================================
+ * Colors
+ * ======================================== */
+:root {
+  /* Light Theme (Default) */
+  --color-bg-primary: #f8f8fc;
+  --color-bg-secondary: #f0f0f6;
+  --color-bg-tertiary: #e4e4ec;
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #4a4a5e;
+  --color-text-muted: #8a8a9e;
+  --color-accent: #4f46e5;
+  --color-accent-hover: #6366f1;
+  --color-accent-subtle: rgba(79, 70, 229, 0.12);
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.16);
+}
+
+[data-theme="dark"] {
+  /* Dark Theme */
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #12121a;
+  --color-bg-tertiary: #1a1a2e;
+  --color-text-primary: #e8e8f0;
+  --color-text-secondary: #a0a0b8;
+  --color-text-muted: #6b6b80;
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-subtle: rgba(99, 102, 241, 0.15);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.16);
+}
+
+@theme {
+  /* ========================================
+   * Spacing
+   * ======================================== */
+  --spacing-xs: 0.48vw;
+  --spacing-sm: 0.84vw;
+  --spacing-md: 1.25vw;
+  --spacing-lg: 2.5vw;
+  --spacing-xl: 3.33vw;
+  --spacing-2xl: 4.25vw;
+  --spacing-3xl: 5vw;
+  --spacing-4xl: 6.8vw;
+
+  /* ========================================
+   * Border Radius
+   * ======================================== */
+  --radius-sm: 0.3vw;
+  --radius-md: 0.52vw;
+  --radius-lg: 0.84vw;
+  --radius-xl: 1.25vw;
+
+  /* ========================================
+   * Animation Tokens
+   * ======================================== */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 800ms;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* ========================================
+   * Z-Index Scale
+   * ======================================== */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
