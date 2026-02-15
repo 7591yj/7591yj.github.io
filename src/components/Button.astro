@@ -1,0 +1,232 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  variant?: "default" | "reverse" | "icon";
+  size?: "sm" | "md" | "lg";
+  icon?: string;
+  href?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = "default",
+  size = "md",
+  icon,
+  href,
+  class: className,
+  ...rest
+} = Astro.props;
+const Tag = href ? "a" : "button";
+const hasLabel = Astro.slots.has("default");
+---
+
+<Tag
+  class:list={["btn", `btn--${variant}`, `btn--${size}`, className]}
+  href={href}
+  {...rest}
+>
+  {variant !== "icon" && <span class="btn__fill" aria-hidden="true" />}
+  {icon && <Icon name={icon} class="btn__icon" />}
+  {
+    hasLabel && (
+      <span class="btn__label">
+        <slot />
+      </span>
+    )
+  }
+</Tag>
+
+<style>
+  /* ========================================
+   * Button Base
+   * ======================================== */
+  .btn {
+    --cut: 0.45em;
+    --border-w: 1px;
+    --clip: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%,
+      0 var(--cut)
+    );
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    clip-path: var(--clip);
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: var(--border-w);
+    clip-path: var(--clip);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Hover fill sweep */
+  .btn__fill {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+    pointer-events: none;
+  }
+
+  .btn:hover .btn__fill {
+    transform: scaleX(1);
+  }
+
+  .btn__label,
+  .btn__icon {
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn__icon {
+    width: 1.15em;
+    height: 1.15em;
+  }
+
+  /* ---- Sizes ---- */
+  .btn--sm {
+    font-size: 0.75rem;
+    padding: 0.55em 1.3em;
+  }
+  .btn--sm.btn--icon {
+    padding: 0.55em;
+  }
+
+  .btn--md {
+    font-size: 1rem;
+    padding: 0.7em 1.6em;
+  }
+  .btn--md.btn--icon {
+    padding: 0.7em;
+  }
+
+  .btn--lg {
+    font-size: 1.33rem;
+    padding: 0.85em 2em;
+  }
+  .btn--lg.btn--icon {
+    padding: 0.85em;
+  }
+
+  /* ---- Keyframes ---- */
+  @keyframes text-fade {
+    0% {
+      opacity: 1;
+    }
+    35% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes border-shrink {
+    0% {
+      inset: var(--border-w);
+    }
+    50% {
+      inset: calc(var(--border-w) + 1.5px);
+    }
+    100% {
+      inset: var(--border-w);
+    }
+  }
+
+  /* ========================================
+   * Default Fill-In
+   * ======================================== */
+  .btn--default {
+    background: var(--color-text-primary);
+    color: var(--color-text-primary);
+  }
+
+  .btn--default::after {
+    background: var(--color-bg-primary);
+  }
+
+  .btn--default .btn__fill {
+    background: var(--color-text-primary);
+  }
+
+  .btn--default:hover {
+    color: var(--color-bg-primary);
+  }
+
+  .btn--default:hover::after {
+    animation: border-shrink var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .btn--default:hover .btn__label,
+  .btn--default:hover .btn__icon {
+    animation: text-fade var(--duration-normal) var(--ease-out-expo);
+  }
+
+  /* ========================================
+   * Reverse Fill-In
+   * ======================================== */
+  .btn--reverse {
+    background: var(--color-bg-primary);
+    color: var(--color-bg-primary);
+  }
+
+  .btn--reverse::after {
+    background: var(--color-text-primary);
+  }
+
+  .btn--reverse .btn__fill {
+    background: var(--color-bg-primary);
+  }
+
+  .btn--reverse:hover {
+    color: var(--color-text-primary);
+  }
+
+  .btn--reverse:hover::after {
+    animation: border-shrink var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .btn--reverse:hover .btn__label,
+  .btn--reverse:hover .btn__icon {
+    animation: text-fade var(--duration-normal) var(--ease-out-expo);
+  }
+
+  /* ========================================
+   * Icon Button
+   * ======================================== */
+  .btn--icon {
+    background: var(--color-text-primary);
+    color: var(--color-text-primary);
+  }
+
+  .btn--icon::after {
+    background: var(--color-bg-primary);
+  }
+
+  .btn--icon:hover::after {
+    animation: border-shrink var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .btn--icon:hover .btn__icon {
+    animation: text-fade var(--duration-fast) var(--ease-out-expo);
+  }
+</style>
