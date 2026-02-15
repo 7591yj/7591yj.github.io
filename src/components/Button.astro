@@ -63,8 +63,26 @@ const hasLabel = Astro.slots.has("default");
     cursor: pointer;
     border: none;
     text-decoration: none;
+    background: var(--color-border);
     clip-path: var(--clip);
     transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+
+  /* Hover border fade-in */
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    clip-path: var(--clip);
+    background: var(--color-border-hover);
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .btn:hover::before {
+    opacity: 1;
   }
 
   .btn::after {
@@ -72,15 +90,16 @@ const hasLabel = Astro.slots.has("default");
     position: absolute;
     inset: var(--border-w);
     clip-path: var(--clip);
-    z-index: 0;
+    z-index: 1;
     pointer-events: none;
   }
 
   /* Hover fill sweep */
   .btn__fill {
     position: absolute;
-    inset: 0;
-    z-index: 1;
+    inset: var(--border-w);
+    clip-path: var(--clip);
+    z-index: 2;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform var(--duration-normal) var(--ease-out-expo);
@@ -94,7 +113,7 @@ const hasLabel = Astro.slots.has("default");
   .btn__label,
   .btn__icon {
     position: relative;
-    z-index: 2;
+    z-index: 3;
   }
 
   .btn__icon {
@@ -156,7 +175,6 @@ const hasLabel = Astro.slots.has("default");
    * Default Fill-In
    * ======================================== */
   .btn--default {
-    background: var(--color-text-primary);
     color: var(--color-text-primary);
   }
 
@@ -185,7 +203,6 @@ const hasLabel = Astro.slots.has("default");
    * Reverse Fill-In
    * ======================================== */
   .btn--reverse {
-    background: var(--color-bg-primary);
     color: var(--color-bg-primary);
   }
 
@@ -214,7 +231,6 @@ const hasLabel = Astro.slots.has("default");
    * Icon Button
    * ======================================== */
   .btn--icon {
-    background: var(--color-text-primary);
     color: var(--color-text-primary);
   }
 
