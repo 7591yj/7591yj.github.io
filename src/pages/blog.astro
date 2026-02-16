@@ -1,0 +1,52 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "../layouts/Layout.astro";
+import FadeInSection from "../components/motion/FadeInSection.tsx";
+import Button from "../components/Button.astro";
+---
+
+<Layout title="7591yj | Blog">
+  <main>
+    <section>
+      <FadeInSection client:load>
+        <div class="heading flex items-end">
+          <div class="flex-3">
+            <p class="text-l text-[var(--color-text-secondary)] mb-8 mx-auto">
+              MODULE.002///
+            </p>
+            <h1 class="font-shippori pt-20 text-5xl font-bold tracking-tight">
+              Blog
+            </h1>
+          </div>
+          <div class="text-l"></div>
+        </div>
+      </FadeInSection>
+      <div></div>
+    </section>
+
+    <style>
+      div {
+        border: 1px solid var(--color-border);
+        border-top: 0;
+      }
+
+      a {
+        text-decoration: underline;
+      }
+
+      .heading div {
+        padding: 6.4vh;
+        padding-bottom: 4.8vh;
+      }
+
+      .subheading {
+        padding: 2.2vh;
+        padding-left: 6.4vh;
+        padding-right: 6.4vh;
+        background: var(--color-bg-secondary);
+        color: var(--color-text-secondary);
+        font-weight: bold;
+      }
+    </style>
+  </main>
+</Layout>
