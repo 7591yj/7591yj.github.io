@@ -1,0 +1,286 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "../layouts/Layout.astro";
+import FadeInSection from "../components/motion/FadeInSection.tsx";
+import EducationCard from "../components/EducationCard.astro";
+import Button from "../components/Button.astro";
+---
+
+<Layout title="7591yj | About">
+  <main>
+    <section>
+      <FadeInSection client:load>
+        <div class="heading flex items-end">
+          <div class="flex-3">
+            <p class="text-l text-[var(--color-text-secondary)] mb-8 mx-auto">
+              MODULE.003///
+            </p>
+            <h1 class="font-shippori pt-20 text-5xl font-bold tracking-tight">
+              About Me
+            </h1>
+          </div>
+          <div class="text-l">
+            <h2 class="text-xl text-center pb-6">Yeongjin Kim</h2>
+            <ul>
+              <li>
+                <Icon name="cake" />
+                <span>2002. 07. 20</span>
+              </li>
+              <li>
+                <Icon name="at" />
+                <a href="mailto:yeongjin.kim@proton.me"
+                  >yeongjin.kim@proton.me</a
+                >
+              </li>
+              <li>
+                <Icon name="map-pin-house" />
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Jeonju,%20South%20Korea"
+                  >Jeonju, South Korea</a
+                >
+              </li>
+              <li>
+                <Icon name="map-pin" />
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Tokyo,%20Japan"
+                  >Tokyo, Japan</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </FadeInSection>
+      <div>
+        <div class="subheading">
+          <h2 class="text-xl tracking-tight">EDUCATION///</h2>
+        </div>
+        <div class="gallery">
+          <EducationCard
+            href="https://www.inha.ac.kr/sites/kr/index..do"
+            src="https://raw.githubusercontent.com/incalc/inha-logo/refs/heads/master/svg/static/inha_symbol_mark.svg"
+            institution="Inha University"
+            location="Incheon, South Korea"
+            position="Student"
+            period="2021. 03 - 2027. 02 (expected)"
+            major="Computer Science and Engineering"
+            class="p-5"
+            size="20%"
+          />
+          <EducationCard
+            href="https://www.chuo-u.ac.jp/"
+            src="https://www.chuo-u.ac.jp/media/images/en/common/header_logo.svg"
+            institution="Chuo University"
+            location="Tokyo, Japan"
+            position="Exchange Student"
+            period="2025. 09 - 2026. 08 (expected)"
+            major="Information and System Engineering"
+            class="p-5"
+            size="70%"
+          />
+        </div>
+      </div>
+      <div>
+        <div class="subheading">
+          <h2 class="text-xl tracking-tight">CERTIFICATES///</h2>
+        </div>
+        <div class="container-main pt-6 pb-6">
+          <table class="cert-table w-full">
+            <tr class="font-shippori text-xl">
+              <th>Date</th>
+              <th>Name</th>
+              <th>Issuer</th>
+            </tr>
+            <tr>
+              <td>2021. 07. 13</td>
+              <td>Driver's License, Type 1, Normal</td>
+              <td>Jeonbuk Provincial Police Agency</td>
+            </tr>
+            <tr>
+              <td>2024. 08. 13</td>
+              <td>JLPT N2</td>
+              <td>The Japan Foundation</td>
+            </tr>
+            <tr>
+              <td>2025. 01. 26</td>
+              <td>TOEIC, 925</td>
+              <td>Korea TOEIC Committee</td>
+            </tr>
+            <tr>
+              <td>2025. 05. 24</td>
+              <td>TOPCIT, 677</td>
+              <td>Ministry of Science and ICT, Korea</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="subheading">
+          <h2 class="text-xl tracking-tight">PAPERS///</h2>
+        </div>
+        <div class="container-main pt-6 pb-6">
+          <div class="p-4 flex flex-col">
+            <p class="pb-6">
+              The 25th International Conference on Electronics, Information, and
+              Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026)
+              (Published) “Automated Korean-English Bilingual Highlighted Text
+              Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim
+              et.al 8
+            </p>
+            <div></div>
+            <Button
+              size="md"
+              href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
+              >See Paper</Button
+            >
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="subheading">
+          <h2 class="text-xl tracking-tight">CLUBS///</h2>
+        </div>
+        <div class="container-main pt-6 pb-6">
+          <table class="cert-table w-full">
+            <tr class="font-shippori text-xl flex-1">
+              <th>Period</th>
+              <th>Name</th>
+              <th>Topic</th>
+              <th>Role</th>
+            </tr>
+            <tr class="flex-1">
+              <td>2021. 03 - 2021. 08</td>
+              <td>
+                <a href="https://www.instagram.com/igrus_inha/">IGRUS</a>
+              </td>
+              <td>SW Dev</td>
+              <td>Member</td>
+            </tr>
+            <tr>
+              <td>2024. 03 - 2024. 08</td>
+              <td>
+                <a href="https://www.instagram.com/igrus_inha/">IGRUS</a>
+              </td>
+              <td>SW Dev</td>
+              <td>Member</td>
+            </tr>
+            <tr>
+              <td>2024. 03 - 2025. 08</td>
+              <td>
+                <a
+                  href="https://jelly-locust-cea.notion.site/Seeds-1beac07ca4e98043bbe9e81ccf29e806"
+                  >Seeds</a
+                >
+              </td>
+              <td>Web Dev</td>
+              <td>Staff</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="subheading">
+          <h2 class="text-xl tracking-tight">AWARDS///</h2>
+        </div>
+        <div class="container-main pt-6 pb-6">
+          <table class="cert-table w-full">
+            <tr class="font-shippori text-xl">
+              <th>Date</th>
+              <th>Name</th>
+              <th>Award</th>
+            </tr>
+            <tr>
+              <td>2023. 11. 12</td>
+              <td>
+                Chung-Ang University x SEOULLAB PARTNERS '2023 START-LAB
+              </td>
+              <td>Grand Prize</td>
+            </tr>
+            <tr>
+              <td>2025. 01. 18</td>
+              <td> 2025 GreenTech Globalthon </td>
+              <td>Best Startup Pitch Award</td>
+            </tr>
+            <tr>
+              <td>2025. 11. 19</td>
+              <td> 2025 Hanium Dream-Up Contest (Creative Challenge Track) </td>
+              <td>
+                Encouragement Award, Final Evaluation (Selected as Outstanding
+                Project in Preliminary Round)
+              </td>
+            </tr>
+            <tr>
+              <td>2025. 11. 12</td>
+              <td>
+                <a
+                  href="https://www.chuo-u.ac.jp/academics/faculties/science/departments/infotech/news/2026/01/83597/"
+                >
+                  画像・映像コンテンツ演習 成果発表会
+                </a>
+              </td>
+              <td>Grand Prize</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    div {
+      border: 1px solid var(--color-border);
+      border-top: 0;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+
+    .heading div {
+      padding: 6.4vh;
+      padding-bottom: 4.8vh;
+    }
+
+    .subheading {
+      padding: 2.2vh;
+      padding-left: 6.4vh;
+      padding-right: 6.4vh;
+      background: var(--color-bg-secondary);
+      color: var(--color-text-secondary);
+      font-weight: bold;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 1.2vh;
+      padding-bottom: 1vh;
+    }
+
+    [data-icon] {
+      color: var(--color-text-primary);
+    }
+
+    .gallery {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .gallery > * {
+      border: 1px solid var(--color-border);
+    }
+
+    .cert-table tr {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .cert-table th {
+      padding: 1vh;
+      text-align: start;
+    }
+
+    .cert-table td {
+      padding: 0.8vh;
+    }
+  </style>
+</Layout>

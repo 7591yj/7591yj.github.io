@@ -1,0 +1,116 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  src: string;
+  institution: string;
+  location: string;
+  position: string;
+  period: string;
+  major: string;
+  href?: string;
+  size?: string;
+  class?: string;
+}
+
+const {
+  src,
+  institution,
+  location,
+  position,
+  period,
+  major,
+  href,
+  size,
+  class: className,
+} = Astro.props;
+
+const Tag = href ? "a" : "div";
+---
+
+<Tag class:list={["edu-card", className]} href={href}>
+  <div class="edu-card__backdrop">
+    <div
+      class="edu-card__bg"
+      style={`background-image: url('${src}');${size ? ` background-size: ${size}` : ""}`}
+    >
+    </div>
+  </div>
+  <div class="edu-card__content">
+    <h3 class="font-shippori text-2xl pt-2 pb-2">{institution}</h3>
+    <ul class="text-l">
+      <li>
+        <Icon name="map-pin" />
+        <span>{location}</span>
+      </li>
+      <li>
+        <Icon name="me" />
+        <span>{position}</span>
+      </li>
+      <li>
+        <Icon name="calendar" />
+        <span>{period}</span>
+      </li>
+    </ul>
+    <p>Major in {major}</p>
+  </div>
+</Tag>
+
+<style>
+  .edu-card {
+    border: 1px solid var(--color-border);
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .edu-card__backdrop {
+    position: absolute;
+    inset: 0;
+    background: white;
+    overflow: hidden;
+  }
+
+  :global([data-theme="dark"]) .edu-card__backdrop {
+    filter: brightness(0.5);
+  }
+
+  .edu-card__bg {
+    position: absolute;
+    inset: 2vh;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: blur(20px);
+    transform: scale(1.1);
+    transition:
+      filter var(--duration-slow) var(--ease-out-expo),
+      transform var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .edu-card:hover .edu-card__bg {
+    filter: blur(0);
+    transform: scale(1.1);
+  }
+
+  .edu-card__content {
+    position: relative;
+    padding: 2rem;
+    color: var(--color-text-primary);
+    opacity: 1;
+    transition: opacity var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .edu-card:hover .edu-card__content {
+    opacity: 0;
+  }
+
+  ul li {
+    display: flex;
+    align-items: center;
+    gap: 1vh;
+  }
+</style>

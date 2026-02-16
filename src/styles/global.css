@@ -5,6 +5,11 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+@theme {
+  --font-plex: var(--font-plex);
+  --font-shippori: var(--font-shippori);
+}
+
 /* Base styles */
 html {
   color: var(--color-text-primary);
@@ -22,9 +27,8 @@ body {
 /* Container */
 .container-main {
   width: 100%;
-  max-width: 62.5%;
+  max-width: 80%;
   margin-inline: auto;
-  padding-inline: var(--spacing-md);
 }
 
 .container-header {

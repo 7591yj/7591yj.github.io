@@ -18,7 +18,14 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkGfm],
   },
-  integrations: [mdx(), sitemap(), react(), icon()],
+  integrations: [
+    mdx(),
+    sitemap(),
+    react(),
+    icon({
+      iconDir: "src/icons",
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -28,6 +35,11 @@ export default defineConfig({
         provider: fontProviders.google(),
         name: "IBM Plex Mono",
         cssVariable: "--font-plex",
+      },
+      {
+        provider: fontProviders.google(),
+        name: "Shippori Mincho",
+        cssVariable: "--font-shippori",
       },
     ],
   },
