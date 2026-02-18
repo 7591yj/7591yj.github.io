@@ -84,7 +84,7 @@ import Button from "../components/Button.astro";
           <h2 class="text-xl tracking-tight">CERTIFICATES///</h2>
         </div>
         <div class="container-main pt-6 pb-6">
-          <table class="cert-table w-full">
+          <table class="info-table w-full">
             <tr class="font-shippori text-xl">
               <th>Date</th>
               <th>Name</th>
@@ -118,20 +118,21 @@ import Button from "../components/Button.astro";
           <h2 class="text-xl tracking-tight">PAPERS///</h2>
         </div>
         <div class="container-main pt-6 pb-6">
-          <div class="p-4 flex flex-col">
-            <p class="pb-6">
+          <div class="p-4 flex gap-4">
+            <p class="pb-6 flex-10">
               The 25th International Conference on Electronics, Information, and
               Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026)
               (Published) “Automated Korean-English Bilingual Highlighted Text
               Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim
               et.al 8
             </p>
-            <div></div>
-            <Button
-              size="md"
-              href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
-              >See Paper</Button
-            >
+            <div class="button-box flex-1 p-2">
+              <Button
+                size="md"
+                href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
+                >See<br />Paper</Button
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -140,7 +141,7 @@ import Button from "../components/Button.astro";
           <h2 class="text-xl tracking-tight">CLUBS///</h2>
         </div>
         <div class="container-main pt-6 pb-6">
-          <table class="cert-table w-full">
+          <table class="info-table w-full">
             <tr class="font-shippori text-xl flex-1">
               <th>Period</th>
               <th>Name</th>
@@ -182,7 +183,12 @@ import Button from "../components/Button.astro";
           <h2 class="text-xl tracking-tight">AWARDS///</h2>
         </div>
         <div class="container-main pt-6 pb-6">
-          <table class="cert-table w-full">
+          <table class="info-table award-table w-full">
+            <colgroup>
+              <col />
+              <col style="width: 50%" />
+              <col style="width: 50%" />
+            </colgroup>
             <tr class="font-shippori text-xl">
               <th>Date</th>
               <th>Name</th>
@@ -191,7 +197,7 @@ import Button from "../components/Button.astro";
             <tr>
               <td>2023. 11. 12</td>
               <td>
-                Chung-Ang University x SEOULLAB PARTNERS '2023 START-LAB
+                Chung-Ang University x SEOULLAB PARTNERS '2023<br />START-LAB
               </td>
               <td>Grand Prize</td>
             </tr>
@@ -202,10 +208,12 @@ import Button from "../components/Button.astro";
             </tr>
             <tr>
               <td>2025. 11. 19</td>
-              <td> 2025 Hanium Dream-Up Contest (Creative Challenge Track) </td>
               <td>
-                Encouragement Award, Final Evaluation (Selected as Outstanding
-                Project in Preliminary Round)
+                2025 Hanium Dream-Up Contest<br />(Creative Challenge Track)
+              </td>
+              <td>
+                Encouragement Award, Final Evaluation<br />(Selected as
+                Outstanding Project in<br /> Preliminary Round)
               </td>
             </tr>
             <tr>
@@ -233,6 +241,10 @@ import Button from "../components/Button.astro";
 
     a {
       text-decoration: underline;
+    }
+
+    a:hover {
+      color: var(--color-accent);
     }
 
     .heading div {
@@ -270,17 +282,38 @@ import Button from "../components/Button.astro";
       border: 1px solid var(--color-border);
     }
 
-    .cert-table tr {
+    .info-table {
+      table-layout: fixed;
+    }
+
+    .info-table tr {
       border-bottom: 1px solid var(--color-border);
     }
 
-    .cert-table th {
+    .info-table th {
       padding: 1vh;
       text-align: start;
     }
 
-    .cert-table td {
-      padding: 0.8vh;
+    .info-table td {
+      padding: 1.2vh;
+    }
+
+    .award-table {
+      table-layout: auto;
+    }
+
+    .award-table td:first-child,
+    .award-table th:first-child {
+      white-space: nowrap;
+    }
+
+    .container-main > div {
+      border: 0;
+    }
+
+    .button-box {
+      border: 0;
     }
   </style>
 </Layout>

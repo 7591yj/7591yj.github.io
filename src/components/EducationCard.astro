@@ -37,7 +37,10 @@ const Tag = href ? "a" : "div";
     </div>
   </div>
   <div class="edu-card__content">
-    <h3 class="font-shippori text-2xl pt-2 pb-2">{institution}</h3>
+    <h3 class="font-shippori text-2xl pt-2 pb-2 flex items-center gap-2">
+      <Icon name="cutoff-square" class="inline text-[var(--color-accent)]" />
+      <span>{institution}</span>
+    </h3>
     <ul class="text-l">
       <li>
         <Icon name="map-pin" />
