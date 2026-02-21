@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 import { Font } from "astro:assets";
 
@@ -42,6 +43,7 @@ const { title = "7591yj" } = Astro.props;
   <body>
     <Header />
     <slot />
+    <Footer />
     <script src="../scripts/scroll-animate.ts"></script>
     <script>
       import { initTheme, watchSystemPreference } from "../scripts/theme";

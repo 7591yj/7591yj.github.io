@@ -72,3 +72,23 @@
 .animate-slide-in-right {
   animation: slide-in-right var(--duration-slow) var(--ease-out-expo) both;
 }
+
+/* text color sweep */
+.hover-sweep-text {
+  --sweep-color: var(--color-accent);
+  background: linear-gradient(
+    to right,
+    var(--sweep-color) 50%,
+    currentColor 50%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position var(--duration-slower) var(--ease-out-expo);
+}
+
+.hover-sweep-text:hover {
+  background-position: 0 0;
+}
