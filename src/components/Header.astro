@@ -19,6 +19,7 @@ const currentPath = Astro.url.pathname;
             <a
               href={href}
               class:list={["nav-link", { active: currentPath === href }]}
+              data-scramble={label}
             >
               {label}
             </a>
