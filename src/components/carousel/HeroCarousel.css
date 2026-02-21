@@ -1,0 +1,134 @@
+/* ========================================
+ * Carousel Layout
+ * ======================================== */
+.hero-carousel {
+  position: relative;
+}
+
+.hero-carousel__swiper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.hero-carousel__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-carousel__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 1.5rem;
+}
+
+.hero-carousel__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.hero-carousel__subtitle {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+ * Navigation
+ * ======================================== */
+.hero-carousel__nav {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  z-index: 10;
+}
+
+/* ========================================
+ * Button
+ * ======================================== */
+.hero-carousel .btn {
+  --cut: 0.45em;
+  --border-w: 1px;
+  --clip: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  background: transparent;
+  clip-path: var(--clip);
+  transition: background var(--duration-normal) var(--ease-out-expo),
+              color var(--duration-normal) var(--ease-out-expo);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Border via ::before pseudo (follows clip-path) */
+.hero-carousel .btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: var(--clip);
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 0;
+  pointer-events: none;
+  transition: background var(--duration-normal) var(--ease-out-expo);
+}
+
+/* Inner fill punches out the border */
+.hero-carousel .btn::after {
+  content: "";
+  position: absolute;
+  inset: var(--border-w);
+  clip-path: var(--clip);
+  background: transparent;
+  z-index: 1;
+  pointer-events: none;
+  transition: background var(--duration-normal) var(--ease-out-expo);
+}
+
+.hero-carousel .btn:hover::before {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.hero-carousel .btn:hover::after {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hero-carousel .btn:hover {
+  color: #fff;
+}
+
+/* Icon */
+.hero-carousel .btn__icon {
+  position: relative;
+  z-index: 3;
+  width: 1.15em;
+  height: 1.15em;
+}
+
+/* Size: md */
+.hero-carousel .btn--md {
+  font-size: 1rem;
+  padding: 0.7em;
+}
+
