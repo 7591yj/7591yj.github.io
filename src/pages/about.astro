@@ -126,13 +126,12 @@ import Button from "../components/Button.astro";
               Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim
               et.al 8
             </p>
-            <div class="button-box flex-1 p-2">
-              <Button
-                size="md"
-                href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
-                >See<br />Paper</Button
-              >
-            </div>
+            <Button
+              class="m-4"
+              size="md"
+              href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
+              >See<br />Paper</Button
+            >
           </div>
         </div>
       </div>
@@ -239,15 +238,7 @@ import Button from "../components/Button.astro";
       border-top: 0;
     }
 
-    a {
-      text-decoration: underline;
-    }
-
-    a:hover {
-      color: var(--color-accent);
-    }
-
-    .heading div {
+.heading div {
       padding: 6.4vh;
       padding-bottom: 4.8vh;
     }
@@ -314,6 +305,10 @@ import Button from "../components/Button.astro";
 
     .button-box {
       border: 0;
+    }
+
+    div:last-of-type {
+      border-bottom: 0;
     }
   </style>
 </Layout>
