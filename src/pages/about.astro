@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
+import SectionBlock from "../components/SectionBlock.astro";
 import EducationCard from "../components/EducationCard.astro";
 import Button from "../components/Button.astro";
 ---
@@ -38,10 +39,7 @@ import Button from "../components/Button.astro";
           </li>
         </ul>
       </PageHeading>
-      <div>
-        <div class="subheading">
-          <h2 class="text-xl tracking-tight">EDUCATION///</h2>
-        </div>
+      <SectionBlock title="EDUCATION///">
         <div class="gallery">
           <EducationCard
             href="https://www.inha.ac.kr/sites/kr/index..do"
@@ -66,11 +64,8 @@ import Button from "../components/Button.astro";
             size="70%"
           />
         </div>
-      </div>
-      <div>
-        <div class="subheading">
-          <h2 class="text-xl tracking-tight">CERTIFICATES///</h2>
-        </div>
+      </SectionBlock>
+      <SectionBlock title="CERTIFICATES///">
         <div class="container-main pt-6 pb-6">
           <table class="info-table w-full">
             <tr class="font-shippori text-xl">
@@ -100,11 +95,8 @@ import Button from "../components/Button.astro";
             </tr>
           </table>
         </div>
-      </div>
-      <div>
-        <div class="subheading">
-          <h2 class="text-xl tracking-tight">PAPERS///</h2>
-        </div>
+      </SectionBlock>
+      <SectionBlock title="PAPERS///">
         <div class="container-main pt-6 pb-6">
           <div class="p-4 flex gap-4">
             <p class="pb-6 flex-10">
@@ -122,11 +114,8 @@ import Button from "../components/Button.astro";
             >
           </div>
         </div>
-      </div>
-      <div>
-        <div class="subheading">
-          <h2 class="text-xl tracking-tight">CLUBS///</h2>
-        </div>
+      </SectionBlock>
+      <SectionBlock title="CLUBS///">
         <div class="container-main pt-6 pb-6">
           <table class="info-table w-full">
             <tr class="font-shippori text-xl flex-1">
@@ -164,11 +153,8 @@ import Button from "../components/Button.astro";
             </tr>
           </table>
         </div>
-      </div>
-      <div>
-        <div class="subheading">
-          <h2 class="text-xl tracking-tight">AWARDS///</h2>
-        </div>
+      </SectionBlock>
+      <SectionBlock title="AWARDS///">
         <div class="container-main pt-6 pb-6">
           <table class="info-table award-table w-full">
             <colgroup>
@@ -216,24 +202,11 @@ import Button from "../components/Button.astro";
             </tr>
           </table>
         </div>
-      </div>
+      </SectionBlock>
     </section>
   </main>
 
   <style>
-    div {
-      border: 1px solid var(--color-border);
-      border-top: 0;
-    }
-
-    .subheading {
-      padding: 2.2vh;
-      padding-left: 6.4vh;
-      padding-right: 6.4vh;
-      background: var(--color-bg-secondary);
-      color: var(--color-text-secondary);
-      font-weight: bold;
-    }
 
     li {
       display: flex;
@@ -282,16 +255,5 @@ import Button from "../components/Button.astro";
       white-space: nowrap;
     }
 
-    .container-main > div {
-      border: 0;
-    }
-
-    .button-box {
-      border: 0;
-    }
-
-    div:last-of-type {
-      border-bottom: 0;
-    }
   </style>
 </Layout>
