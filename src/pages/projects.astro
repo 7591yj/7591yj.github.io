@@ -1,27 +1,24 @@
 ---
 import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
-import FadeInSection from "../components/motion/FadeInSection.tsx";
+import PageHeading from "../components/PageHeading.astro";
 import Button from "../components/Button.astro";
 ---
 
 <Layout title="7591yj | Projects">
   <main>
     <section>
-      <FadeInSection client:load>
-        <div class="heading flex items-end">
-          <div class="flex-3">
-            <p class="text-l text-[var(--color-text-secondary)] mb-8 mx-auto">
-              MODULE.001///
-            </p>
-            <h1 class="font-shippori pt-20 text-5xl font-bold tracking-tight">
-              Projects
-            </h1>
-          </div>
-          <div class="text-l"></div>
-        </div>
-      </FadeInSection>
-      <div></div>
+      <PageHeading module="MODULE.001///" title="Projects" />
+      <div>
+        <nav class="project-nav">
+          <Button variant="icon" class="previous-button">
+            <Icon name="carbon:triangle-left-solid" />
+          </Button>
+          <Button variant="icon" class="next-button">
+            <Icon name="carbon:triangle-right-solid" />
+          </Button>
+        </nav>
+      </div>
     </section>
 
     <style>
@@ -34,11 +31,6 @@ import Button from "../components/Button.astro";
         text-decoration: underline;
       }
 
-      .heading div {
-        padding: 6.4vh;
-        padding-bottom: 4.8vh;
-      }
-
       .subheading {
         padding: 2.2vh;
         padding-left: 6.4vh;
@@ -46,6 +38,16 @@ import Button from "../components/Button.astro";
         background: var(--color-bg-secondary);
         color: var(--color-text-secondary);
         font-weight: bold;
+      }
+
+      .project-nav {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .project-nav > button {
+        margin: 2vh;
+        margin-left: 0vh;
       }
     </style>
   </main>

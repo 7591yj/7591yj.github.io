@@ -1,0 +1,33 @@
+---
+import FadeInSection from "./motion/FadeInSection.tsx";
+
+interface Props {
+  module: string;
+  title: string;
+}
+
+const { module, title } = Astro.props;
+---
+
+<FadeInSection client:load>
+  <div class="heading flex items-end">
+    <div class="flex-3">
+      <p class="text-l text-[var(--color-text-secondary)] mb-8 mx-auto">
+        {module}
+      </p>
+      <h1 class="font-shippori pt-20 text-5xl font-bold tracking-tight">
+        {title}
+      </h1>
+    </div>
+    <div class="text-l">
+      <slot />
+    </div>
+  </div>
+</FadeInSection>
+
+<style>
+  .heading div {
+    padding: 6.4vh;
+    padding-bottom: 4.8vh;
+  }
+</style>
