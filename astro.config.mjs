@@ -41,6 +41,11 @@ export default defineConfig({
         name: "Shippori Mincho",
         cssVariable: "--font-shippori",
       },
+      {
+        provider: fontProviders.google(),
+        name: "Noto Sans JP",
+        cssVariable: "--font-sans",
+      },
     ],
   },
 });
