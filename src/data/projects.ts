@@ -13,7 +13,7 @@ export const softwareDevelopment: Project[] = [
     tech: ["Typescript", "Next.js", "Python", "FastAPI", "PostgreSQL"],
     tags: ["frontend", "backend", "ai"],
     slug: "bizlenz",
-    href: "https://github.com/bizlenz",
+    href: "https://github.com/BizLenz",
   },
   {
     title: "modulino",
@@ -57,6 +57,7 @@ export const personalProjects: Project[] = [
     desc: ["Released with GitHub Pages"],
     tech: ["Typescript", "React"],
     tags: ["frontend"],
+    href: "https://github.com/7591yj/fireplace",
   },
 ];
 
