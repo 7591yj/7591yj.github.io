@@ -1,0 +1,53 @@
+---
+layout: ../../layouts/ProjectDetail.astro
+title: "tg-webm-converter"
+year: 2025
+status: released
+link: "https://github.com/7591yj/tg-webm-converter"
+---
+
+### Project Overview
+
+`tg-webm-converter` is a Python CLI tool designed to automate the conversion of image and video files into WebM format, adhering to Telegram's specific sticker and icon requirements.
+
+Originating from a personal need to streamline sticker creation, this tool eliminates manual conversion steps, allowing users to effortlessly generate static and animated stickers for a unified sticker pack experience.
+
+It is distributed via PyPI, making it accessible for broader use across various operating systems.
+
+### Technical Stack
+
+- **Python** for Core application logic and CLI interface.
+- **Poetry** for Dependency management and project packaging.
+- **FFmpeg** for High-performance media processing and optimization.
+
+### Key Features
+
+- Batch Conversion
+- Telegram Sticker Compliance:
+  - Generates 512x512 WebM stickers (max 256KB).
+  - Generates 100x100 WebM icons (max 32KB) via dedicated `--icon-file` argument.
+- Automatic Optimization
+  - Leverages FFmpeg for efficient encoding and size reduction, ensuring files meet Telegram's strict size limits without manual intervention.
+- Cross-Platform Accessibility
+  - Rewritten from a shell script into a Python CLI for compatibility beyond `bash`/`zsh` environments, including Windows.
+- Streamlined Workflow
+  - Simplifies the process of creating custom Telegram stickers programmatically, replacing complex manual FFmpeg commands.
+
+### Problem Solved
+
+As a Telegram user myself, the process of manually converting media files to meet Telegram's sticker specifications and
+managing separate static and dynamic sticker packs presented a significant friction point.
+
+`tg-webm-converter` addresses these challenges by:
+
+1.  **Automating tedious conversions:** eliminates the need for graphic tools or complex FFmpeg commands.
+2.  **Enabling unified sticker packs:** converts all media to WebM, allowing both static and dynamic elements within a single sticker pack.
+3.  **Providing an accessible solution:** offers a user-friendly CLI tool installable via `pip`, making it available to a wider audience.
+
+### Highlights
+
+Developed with Python 3.8+, `tg-webm-converter` integrates robust argument parsing for targeted conversions and supports directory-wide processing.
+
+Its release on PyPI facilitates easy installation (`pip install tg-webm-converter`).
+
+Future enhancements such as GUI support and performance optimizations for large-scale batches are to be seen.

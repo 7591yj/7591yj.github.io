@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { Project } from "../../types";
 
 interface Props {
@@ -10,6 +11,8 @@ interface Props {
   onPointerLeave: () => void;
 }
 
+const DRAG_THRESHOLD = 5;
+
 export default function GraphNode({
   project,
   dimmed,
@@ -19,9 +22,57 @@ export default function GraphNode({
   onPointerEnter,
   onPointerLeave,
 }: Props) {
+  const pointerOrigin = useRef<{ x: number; y: number } | null>(null);
+
+  const hasLink = !!(project.slug || project.href);
+  const linkTarget = project.slug
+    ? `/projects/${project.slug}`
+    : project.href ?? undefined;
+  const isExternal = !project.slug && !!project.href;
+
+  const handleLinkPointerDown = (e: React.PointerEvent) => {
+    pointerOrigin.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (pointerOrigin.current) {
+      const dx = e.clientX - pointerOrigin.current.x;
+      const dy = e.clientY - pointerOrigin.current.y;
+      if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
+        e.preventDefault();
+      }
+    }
+    pointerOrigin.current = null;
+  };
+
+  const nodeClasses = [
+    "graph-node",
+    !hasLink && "graph-node--no-link",
+    project.current && "graph-node--current",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const borderClasses = [
+    "graph-node__border",
+    project.current && "graph-node__border--current",
+    highlighted && "graph-node__border--highlighted",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const borderStyle: React.CSSProperties =
+    project.current && !highlighted
+      ? {}
+      : {
+          background: highlighted
+            ? "var(--color-border-hover)"
+            : "var(--color-border)",
+        };
+
   return (
     <div
-      className="graph-node"
+      className={nodeClasses}
       style={{
         ...style,
         opacity: dimmed ? 0.4 : 1,
@@ -31,20 +82,30 @@ export default function GraphNode({
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
     >
-      <div
-        className="graph-node__border"
-        style={{
-          background: highlighted
-            ? "var(--color-border-hover)"
-            : "var(--color-border)",
-        }}
-      >
+      <div className={borderClasses} style={borderStyle}>
         <div className="graph-node__inner">
           <div className="graph-node__header">
             <span
               className={`graph-node__led ${project.status === "released" ? "led--released" : "led--indev"}`}
             />
-            <h3 className="graph-node__title">{project.title}</h3>
+            {hasLink ? (
+              <a
+                className="graph-node__title graph-node__title--link"
+                href={linkTarget}
+                {...(isExternal
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                onPointerDown={handleLinkPointerDown}
+                onClick={handleLinkClick}
+              >
+                {project.title}
+                <span className="graph-node__arrow">
+                  {isExternal ? "\u2197" : "\u2192"}
+                </span>
+              </a>
+            ) : (
+              <h3 className="graph-node__title">{project.title}</h3>
+            )}
           </div>
           <p className="graph-node__subtitle">{project.subtitle}</p>
           <div className="graph-node__tech">

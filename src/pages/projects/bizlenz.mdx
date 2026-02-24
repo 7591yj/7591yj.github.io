@@ -1,0 +1,91 @@
+---
+layout: ../../layouts/ProjectDetail.astro
+title: "BizLenz"
+year: 2025
+status: released
+heroImage: "https://raw.githubusercontent.com/BizLenz/.github/refs/heads/main/assets/logo/logo_dark.svg"
+link: "https://github.com/BizLenz"
+---
+
+### Project Overview
+
+> BizLenz는 과학기술정보통신부 대학디지털교육역량강화사업의 지원을 통해 수행한 한이음 드림업 프로젝트 결과물입니다.
+>
+> BizLenz is the outcome of the Hanium Dream-Up Project, carried out with support from the Ministry of Science, Korea and ICT’s University Digital Education Capacity Enhancement Program.
+
+#### AI-powered business proposal analysis tool for the web
+
+This project is a platform that utilizes AI to identify areas for improvement in business plans.
+
+- **NLP-based Business Plan Evaluation Model:** Establishes a methodology for evaluating business plans and designs an AI evaluation model capable of performing both quantitative and qualitative analyses.
+- **AI-based Business Plan Diagnostic System:** Builds an AI system that analyzes the content of business plans and assesses their logical flow and validity.
+
+and planned other features, i.e.:
+
+- **Automated Business Model Canvas Generation System:** Automatically generates a BMC based on the content of the business plan.
+- **API Provision:** Provides the systems in API form, enabling integration with external services.
+- **Team-based Functionalities:** Invite team members in a specific workspace.
+
+### Technical Stack
+
+- **Typescript**: provides type definitions, which is almost a must when handling big JSON requests and responses.
+- **Next.js**: enables server‑side rendering, optimized performance, and efficient integration of dynamic AI‑driven content.
+- **FastAPI**: ensure seamless integration with AI systems.
+- **PostgreSQL**: provides excellent JSON support, enabling the system to handle big JSON's that are part of the nature for AI services.
+- **AWS**: enables centralized management, from containers to user authentication.
+
+### Key Features
+
+- Business evaluation and result export tailored to specific programs (e.g., [예비창업패키지(Pre-startup package, Korea)](https://www.kised.or.kr/menu.es?mid=a10205010000))
+- Web application, based on dashboard-first UI
+- Result tracking and management
+
+#### Planned Features
+
+- Visualization (Business Model Canvas generator)
+- API integration for external service connectivity
+- Team-based features
+
+### Problem Solved
+
+Entrepreneurs write business plans for various reasons—such as applying for government support programs, competitions, or attracting investment—but they often struggle to create them effectively.
+
+> “Universities with smaller scales and poor financial conditions cannot even consider consulting. The cost of consulting easily exceeds 100 million KRW per month, depending on the number of consultants dispatched and the time spent.”
+>
+> _According to 한국대학신문, 2015_
+
+Although mentoring and consulting services from startup mentors, accelerators, and venture capital reviewers exist to address this issue, **only a small number of entrepreneurs can afford to use these solutions** due to many constraints, majorly cost and time.
+
+| Category                                              | Limitations of Existing Approach                                                         | Differentiating Features                                                                                                                                                                |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Business Plan Evaluation**                          | Inconsistency in results due to subjective evaluation by experts                         | **NLP-based AI Analysis:** Uses natural language processing to assess logical consistency and business model relevance, providing consistent evaluation                                 |
+| **Quantitative and Qualitative Analysis Integration** | Reliance on evaluators’ experience for qualitative judgment; lack of objective standards | **AI Scoring Algorithm:** Quantifies key business elements through keyword, context analysis; establishes indicators using TF-IDF and BERT-based document embeddings                    |
+| **Real-time Feedback**                                | Requires waiting for consulting feedback; difficult to receive iterative feedback        | **Adaptive Feedback System:** Reflects feedback in real time and provides optimal guidance                                                                                              |
+| **Customized Analysis**                               | Provides only simple diagnostic results; unclear improvement direction                   | **Automatic BMC Generation and Visualization:** AI analyzes the business plan and automatically generates a Business Model Canvas; delivers intuitive graphical dashboard visualization |
+| **Document Optimization & Auto-Improvement**          | Manual, repetitive process needed to apply feedback                                      | **AI-powered Document Enhancement:** Uses GPT-based rewriting and summarization to automatically optimize documents                                                                     |
+| **Data Learning & Application**                       | Learning limited by evaluator’s experience and competence                                | **User Feedback Learning AI:** Continuously improves AI model using user feedback; evolves into tailored analysis models for different entrepreneur types                               |
+
+BizLenz provides the solution for this problem, by:
+
+- Provides **objective, highly reliable business plan evaluation**
+- Enables **consistent evaluation standards** through AI-based, data-driven analysis rather than subjective interpretation
+- Offers **quantitative evaluation indicators** using NLP-based text analysis to enhance evaluation reliability
+- Supports **fast document improvement feedback**, allowing entrepreneurs to refine content immediately without delays
+- Enhances **business plan completeness** through iterative AI feedback cycles
+- Automatically identifies and visualizes **core business elements** as a Business Model Canvas for strategic business understanding
+- Delivers **significant time and cost savings** by enabling self-driven evaluation and revision anytime
+- Creates **new market opportunities** through technical differentiation, domain-specific NLP models, and AI evaluation systems
+- Potential for **patentable innovation** in AI-based automated evaluation and feedback generation technology
+
+### Highlights
+
+Led the team of three for several months, from product design to deployment.
+
+Integrated prompt engineering methods with Gemini‑based AI models to deliver consistent, explainable business plan evaluations.
+The system divides each analysis into discrete, criteria‑aligned sections, minimizing output variance and ensuring transparent scoring logic.
+
+---
+
+### Citations
+
+- 한국대학신문. (2015). _프라임 사업에 사설 컨설팅 업체 ‘활개.’._

@@ -12,6 +12,8 @@ export const softwareDevelopment: Project[] = [
     ],
     tech: ["Typescript", "Next.js", "Python", "FastAPI", "PostgreSQL"],
     tags: ["frontend", "backend", "ai"],
+    slug: "bizlenz",
+    href: "https://github.com/bizlenz",
   },
   {
     title: "modulino",
@@ -25,8 +27,11 @@ export const softwareDevelopment: Project[] = [
       "Leading the software development team for several months",
       "Managing the project in terms of user experience",
     ],
-    tech: ["Typescript", "Svelte", "Socket.IO", "protobuf"],
+    tech: ["Typescript", "Svelte", "Socket.IO"],
     tags: ["frontend", "backend", "hardware"],
+    slug: "modulino",
+    href: "https://github.com/modulino-lab",
+    current: true,
   },
 ];
 
@@ -42,6 +47,8 @@ export const personalProjects: Project[] = [
     ],
     tech: ["Python"],
     tags: ["cli"],
+    slug: "tg-webm-converter",
+    href: "https://github.com/7591yj/tg-webm-converter",
   },
   {
     title: "fireplace",

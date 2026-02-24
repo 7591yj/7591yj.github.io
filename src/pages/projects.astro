@@ -119,6 +119,76 @@ import ProjectGraph from "../components/graph/ProjectGraph";
         margin: 0;
       }
 
+      :global(.graph-node__title--link) {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+        cursor: pointer;
+        position: relative;
+        z-index: 5;
+      }
+
+      :global(.graph-node__title--link:hover) {
+        color: var(--color-accent);
+      }
+
+      :global(.graph-node__arrow) {
+        opacity: 0;
+        transform: translateX(-0.2em);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        font-size: 0.85em;
+      }
+
+      :global(.graph-node__title--link:hover .graph-node__arrow) {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      :global(.graph-node--no-link .graph-node__title) {
+        color: var(--color-text-secondary);
+      }
+
+      /* ---- "Currently working on" pulse ---- */
+
+      @keyframes :global(border-pulse) {
+        0%,
+        100% {
+          background: var(--color-border);
+        }
+        50% {
+          background: var(--color-accent);
+        }
+      }
+
+      @keyframes :global(glow-pulse) {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 0px transparent);
+        }
+        50% {
+          filter: drop-shadow(0 0 6px var(--color-accent));
+        }
+      }
+
+      :global(.graph-node--current) {
+        animation: glow-pulse 2.5s ease-in-out infinite;
+      }
+
+      :global(.graph-node__border--current) {
+        animation: border-pulse 2.5s ease-in-out infinite;
+      }
+
+      :global(.graph-node__border--highlighted) {
+        animation: none !important;
+      }
+
+      :global(.graph-node--current:hover) {
+        animation: none;
+      }
+
       :global(.graph-node__subtitle) {
         color: var(--color-text-secondary);
         font-size: 0.8rem;

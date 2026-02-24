@@ -1,0 +1,140 @@
+---
+layout: ../../layouts/ProjectDetail.astro
+title: "modulino"
+year: 2025
+status: inDev
+heroImage: "https://raw.githubusercontent.com/modulino-lab/.github/refs/heads/main/assets/logo/logo_dark.svg"
+link: "https://github.com/modulino-lab"
+---
+
+### Project Overview
+
+#### Plug-and-play 3D printer accessories, designed for seamless performance and compatibility.
+
+HW/SW solution for managing 3D printer farms. Easy-to-use admin dashboard, infinite compatibility, and infinite scalability.
+
+### Technical Stack
+
+#### Hardware
+
+The hardware, **modulino-hub**, is a plug-and-play integrated control hub that adds smart functionality to existing 3D printers through a simple USB connection.
+
+It provides universal compatibility without complex installation or printer modification,
+and its modular expandable architecture allows for custom feature configuration based on user needs.
+
+The system aims to simultaneously enhance the safety, efficiency, and convenience of 3D printer farm operations.
+
+Peripheral hardware modules designed for the modulino-hub, **modulino-parts** are what makes these special.
+They are the modules that provide additional features to the printers. Plug them into modulino-hub, and right away you have a new feature to your existing printer.
+
+#### Software
+
+The software, **modulino-system**, is a local server-based control program designed to efficiently integrate
+and monitor multiple distributed hub modules (hereafter “devices”) through a single unified interface.
+
+It ensures stable operation even in complex network environments and aims to eliminate device management complexity
+and maximize operational efficiency through an intuitive user experience.
+
+modulino-system is designed as **dashboard-first UI**, providing printer management team a simple but powerful set of features just a click away.
+
+##### Frontend
+
+- **Svelte 5 + SvelteKit 2:** used for building fast, reactive, component-based web UIs with minimal overhead.
+- **Vite:** provides ultra-fast dev server and optimized build pipeline leveraging native ES modules.
+- **Zod:** enables schema-based type-safe validation directly in TypeScript, improving data integrity.
+- **Flowbite-Svelte:** provides a collection of ready-to-use components built with Svelte, Tailwind CSS, and Alpine.js.
+- **TailwindCSS:** provides utility-first CSS framework for rapid UI development.
+- **socket.io-client:** provides real-time, bidirectional and event-based communication between client and server.
+- **TypeScript + ESLint + Prettier + svelte-check:** enforces code consistency, catches type and lint errors early, and maintains formatting across the monorepo.
+
+##### Backend
+
+- **Express:** provides a fast, unopinionated, and minimalist web framework for Node.js.
+- **socket.io-server:** handles real-time event-based communication.
+- **tsx + TypeScript:** allows TypeScript-native execution and modern ECMAScript support without a custom build pipeline.
+
+##### Others
+
+- **Protobuf.js:** provides a fast, efficient, and easy-to-use protocol buffer implementation for JavaScript.
+- **pnpm:** provides workspace management and monorepo support.
+
+### Key Features
+
+- 3D printer farm management on web-based dashboard
+- Ability to add/delete printers to the system with carefully designed PnP experience
+- Ability to fluently add/delete new features to nearly every printer in the market
+- Notifications and automated initial response right at the time when something goes wrong
+
+### Problem Solved
+
+The traditional method of production, which involves manufacturing molds before production, has high initial costs.
+As production volume increases, the unit cost of production decreases, making it suitable for mass production rather than small-batch manufacturing.
+In contrast, the 3D printing method has low initial costs and shows high efficiency in multi-variety, small-lot production.
+
+As a result, the frequency of using maker spaces or outsourced printing services for
+small-scale production and prototyping purposes has increased. With the expansion of this market,
+there has also been a growing trend toward establishing 3D printer farms.
+
+But nothing is perfect. To really make 3D printer farms industry-ready, every farm needs a way of managing the whole farm as one system.
+In the case of maker spaces or outsourced printing services, **a small number of personnel are typically responsible for managing multiple printers**.
+However, since printing is often done with models that have different conditions each time, there are no standardized operating parameters,
+and as a result, a wide range of potential issues can arise.
+
+And the real issue is, that **a farm may require some specific functions**, which in many cases will not be included in the 3D printer,
+especially those that are not the flagships of one brand.
+
+To add that one last piece of the puzzle, there are two options:
+
+- Use a high-end flagship printer
+  - Additional functions can be used immediately without modification, but...
+  - The cost of purchasing the printer is high
+  - Functions are tied to specific models
+  - Financial burden
+
+- Use optional expansion kits
+  - Desired functions can be added separately, but...
+  - Compatibility issues may arise between the expansion kit and the 3D printer
+  - The modification process requires technical expertise
+  - There is a risk of device malfunction during modification
+
+As seen above, **both are not a real trustworthy solution** for maker spaces and outsourced printing services.
+
+Compatibility is a huge problem. It is truly hard to make those changes yourself one by one, and they break the warranty.
+It is hard to manage the printers as one farm. It is hard to troubleshoot if anything goes wrong.
+
+modulino solves this problem of dealing with troublesome printers by:
+
+Managing multiple printers individually wastes time and introduces errors.
+modulino centralizes every printer into a **single dashboard** — track jobs, monitor runtime, assign tasks, and identify issues instantly.
+
+modulino works with your existing printers through a USB hardware module.
+**No proprietary hardware required.** Add functions, automate prints, receive alerts the moment something fails — all from one interface.
+
+### Highlights
+
+- **Universal Compatibility**
+  Works with virtually any 3D printer through a simple USB connection. No firmware modification or technical setup required.
+
+- **Plug-and-Play Modularity**
+  Extend functionality instantly with add-on hardware modules (modulino-parts). Add sensors, automation, and safety features without downtime.
+
+- **Unified Farm Management**
+  Monitor and control multiple printers within a single dashboard. Manage print queues, performance metrics, and alerts across all connected devices.
+
+- **Scalability by Design:**
+  Built to handle one printer or hundreds. modulino adapts seamlessly as operations grow, without changes to existing infrastructure.
+
+- **Real-Time Feedback and Control:**
+  Live communication between backend and devices via Socket.IO ensures instant updates, device status sync, and rapid error detection.
+
+- **Secure Local Control:**
+  Operates on a local network for improved reliability and privacy. Cloud dependency is optional, not required.
+
+- **Performance and Efficiency:**
+  Protobuf-based message handling and real-time communication reduce latency and bandwidth usage, even in dense printer environments.
+
+- **Dashboard-First Architecture:**
+  Optimized for usability and speed. Every printer operation, update, and configuration is one click away.
+
+- **Future-Proof Design:**
+  Modular hardware, extensible software, and open architecture provide longevity, adaptability, and long-term support potential.

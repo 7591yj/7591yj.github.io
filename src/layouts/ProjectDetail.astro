@@ -1,0 +1,170 @@
+---
+import Layout from "./Layout.astro";
+import PageHeading from "../components/PageHeading.astro";
+
+interface Frontmatter {
+  title: string;
+  year?: number;
+  status?: string;
+  link?: string;
+}
+
+const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
+---
+
+<Layout title={`7591yj | ${title}`}>
+  <main>
+    <section class="header">
+      <PageHeading module="MODULE.001///" title={title}>
+        <div class="meta">
+          {
+            year && (
+              <>
+                <span class="meta__label">YEAR</span>
+                <span class="meta__value">{year}</span>
+              </>
+            )
+          }
+          {
+            status && (
+              <>
+                <span class="meta__label">STATUS</span>
+                <span class="meta__value">{status}</span>
+              </>
+            )
+          }
+          {
+            link && (
+              <>
+                <span class="meta__label">LINK</span>
+                <a
+                  class="meta__link"
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link} &#8599;
+                </a>
+              </>
+            )
+          }
+        </div>
+      </PageHeading>
+    </section>
+
+    <section class="container-main detail">
+      <article class="prose">
+        <slot />
+      </article>
+
+      <a class="back" href="/projects">&larr; Back to projects</a>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .header {
+    border: 1px solid var(--color-border);
+  }
+
+  .detail {
+    padding-top: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.3rem 1.5rem;
+    align-items: baseline;
+  }
+
+  .meta__label {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .meta__value {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+  }
+
+  .meta__link {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+
+  .meta__link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ---- MDX prose ---- */
+
+  .prose {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .prose :global(h3) {
+    font-family: "Shippori Mincho", serif;
+    font-size: 1.15rem;
+    color: var(--color-text-primary);
+    margin: 2rem 0 0.75rem;
+  }
+
+  .prose :global(h3:first-child) {
+    margin-top: 0;
+  }
+
+  .prose :global(p) {
+    margin: 0.6rem 0;
+  }
+
+  .prose :global(code) {
+    font-family: monospace;
+    font-size: 0.85em;
+    padding: 0.15em 0.35em;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.25rem;
+    margin: 0.5rem 0;
+  }
+
+  .prose :global(li) {
+    margin: 0.3rem 0;
+  }
+
+  .prose :global(li ul) {
+    margin: 0.2rem 0;
+  }
+
+  .prose :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .back {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .back:hover {
+    color: var(--color-text-primary);
+  }
+</style>
