@@ -1,44 +1,160 @@
 ---
-import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
-import Button from "../components/Button.astro";
+import ProjectGraph from "../components/graph/ProjectGraph";
 ---
 
 <Layout title="7591yj | Projects">
   <main>
     <section>
       <PageHeading module="MODULE.001///" title="Projects" />
-      <div>
-        <nav class="project-nav">
-          <Button variant="icon" class="previous-button">
-            <Icon name="carbon:triangle-left-solid" />
-          </Button>
-          <Button variant="icon" class="next-button">
-            <Icon name="carbon:triangle-right-solid" />
-          </Button>
-        </nav>
-      </div>
+    </section>
+
+    <section class="schematic">
+      <ProjectGraph client:visible />
     </section>
 
     <style>
-      div {
-        border: 1px solid var(--color-border);
-        border-top: 0;
+      .schematic {
+        position: relative;
+        max-width: 80%;
+        margin-inline: auto;
+        padding: 4rem 0;
       }
 
-      a {
-        text-decoration: underline;
+      @media (max-width: 768px) {
+        .schematic {
+          max-width: 90%;
+          padding: 2rem 0;
+        }
       }
 
-      .project-nav {
+      /* ---- REACT Graph node styles ---- */
+
+      :global(.project-graph__dot-grid) {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          circle,
+          var(--color-border) 1px,
+          transparent 1px
+        );
+        background-size: 24px 24px;
+        pointer-events: none;
+      }
+
+      :global(.project-graph--mobile) {
         display: flex;
-        justify-content: flex-end;
+        flex-direction: column;
+        gap: 1.5rem;
       }
 
-      .project-nav > button {
-        margin: 2vh;
-        margin-left: 0vh;
+      /* ---- GraphNode styles ---- */
+
+      :global(.graph-node) {
+        --cut: 0.75rem;
+      }
+
+      :global(.graph-node__border) {
+        background: var(--color-border);
+        clip-path: polygon(
+          var(--cut) 0,
+          100% 0,
+          100% calc(100% - var(--cut)),
+          calc(100% - var(--cut)) 100%,
+          0 100%,
+          0 var(--cut)
+        );
+        padding: 1px;
+        transition: background var(--duration-normal) var(--ease-out-expo);
+      }
+
+      :global(.graph-node:hover .graph-node__border) {
+        background: var(--color-border-hover);
+      }
+
+      :global(.graph-node__inner) {
+        background: var(--color-bg-secondary);
+        clip-path: polygon(
+          var(--cut) 0,
+          100% 0,
+          100% calc(100% - var(--cut)),
+          calc(100% - var(--cut)) 100%,
+          0 100%,
+          0 var(--cut)
+        );
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        height: 100%;
+      }
+
+      :global(.graph-node__header) {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      :global(.graph-node__led) {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      :global(.graph-node__led.led--released) {
+        background-color: var(--color-accent);
+        box-shadow: 0 0 6px var(--color-accent);
+      }
+
+      :global(.graph-node__led.led--indev) {
+        border: 1.5px solid var(--color-text-muted);
+      }
+
+      :global(.graph-node__title) {
+        font-family: "Shippori Mincho", serif;
+        font-size: 1.15rem;
+        color: var(--color-text-primary);
+        margin: 0;
+      }
+
+      :global(.graph-node__subtitle) {
+        color: var(--color-text-secondary);
+        font-size: 0.8rem;
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      :global(.graph-node__tech) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: auto;
+        padding-top: 0.25rem;
+      }
+
+      :global(.graph-node__tech span) {
+        font-family: monospace;
+        font-size: 0.65rem;
+        padding: 0.15em 0.5em;
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+      }
+
+      /* ---- Edge animations ---- */
+
+      @keyframes :global(graph-edge-draw) {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes :global(graph-fade-in) {
+        to {
+          opacity: 1;
+        }
       }
     </style>
   </main>

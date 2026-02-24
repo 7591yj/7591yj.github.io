@@ -1,0 +1,141 @@
+---
+import type { Project } from "../types";
+
+interface Props {
+  project: Project;
+  class?: string;
+}
+
+const { project, class: className } = Astro.props;
+---
+
+<div class:list={["schematic-node", className]} data-animate>
+  <div class="schematic-node__inner">
+    <div class="schematic-node__header">
+      <span
+        class:list={[
+          "schematic-node__led",
+          project.status === "released" ? "led--released" : "led--indev",
+        ]}
+      />
+      <h3 class="font-shippori text-xl">{project.title}</h3>
+    </div>
+    <p class="schematic-node__subtitle">{project.subtitle}</p>
+    <ul class="schematic-node__desc">
+      {project.desc.map((d) => <li>{d}</li>)}
+    </ul>
+    <div class="schematic-node__tech">
+      {project.tech.map((t) => <span>{t}</span>)}
+    </div>
+  </div>
+</div>
+
+<style>
+  .schematic-node {
+    --cut: 0.75rem;
+    position: relative;
+    background: var(--color-border);
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%,
+      0 var(--cut)
+    );
+    padding: 1px;
+    transition: background var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .schematic-node:hover {
+    background: var(--color-border-hover);
+  }
+
+  .schematic-node__inner {
+    background: var(--color-bg-secondary);
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%,
+      0 var(--cut)
+    );
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+  }
+
+  .schematic-node__header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .schematic-node__led {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .led--released {
+    background-color: var(--color-accent);
+    box-shadow: 0 0 6px var(--color-accent);
+  }
+
+  .led--indev {
+    border: 1.5px solid var(--color-text-muted);
+  }
+
+  .schematic-node__subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .schematic-node__desc {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+  }
+
+  .schematic-node__desc li {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    padding-left: 0.9rem;
+    position: relative;
+  }
+
+  .schematic-node__desc li::before {
+    content: ">";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-family: monospace;
+  }
+
+  .schematic-node__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+
+  .schematic-node__tech span {
+    font-family: monospace;
+    font-size: 0.7rem;
+    padding: 0.2em 0.6em;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+</style>
