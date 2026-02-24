@@ -15,7 +15,7 @@ const DEFAULT_CONFIG: SimulationConfig = {
   centerStrength: 0.0001,
   repulsionStrength: 12000,
   springStrength: 0.001,
-  springLength: 320,
+  springLength: 200,
   damping: 0.96,
   driftAmplitude: 0.015,
   padding: 20,
@@ -25,7 +25,7 @@ export function useForceSimulation(
   nodes: GraphNode[],
   edges: GraphEdge[],
   containerSize: { width: number; height: number },
-  nodeSize: { width: number; height: number },
+  nodeSizes: { width: number; height: number }[],
   onTick: (positions: { x: number; y: number }[]) => void,
   enabled: boolean,
 ) {
@@ -78,8 +78,6 @@ export function useForceSimulation(
     const cfg = DEFAULT_CONFIG;
     const cx = containerSize.width / 2;
     const cy = containerSize.height / 2;
-    const nw = nodeSize.width;
-    const nh = nodeSize.height;
 
     const tick = () => {
       const ns = nodesRef.current;
@@ -146,7 +144,7 @@ export function useForceSimulation(
         }
       }
 
-      // Apply velocity + damping + bounds clamping
+      // Apply velocity + damping + per-node bounds clamping
       for (let i = 0; i < ns.length; i++) {
         if (i === draggedRef.current || i === hoveredRef.current) continue;
         const node = ns[i];
@@ -155,9 +153,10 @@ export function useForceSimulation(
         node.x += node.vx;
         node.y += node.vy;
 
-        // Bounds clamping (keep node center within padded container)
-        const halfW = nw / 2;
-        const halfH = nh / 2;
+        // Bounds clamping using per-node size
+        const size = nodeSizes[i] || nodeSizes[0];
+        const halfW = size.width / 2;
+        const halfH = size.height / 2;
         node.x = Math.max(cfg.padding + halfW, Math.min(containerSize.width - cfg.padding - halfW, node.x));
         node.y = Math.max(cfg.padding + halfH, Math.min(containerSize.height - cfg.padding - halfH, node.y));
       }
@@ -182,7 +181,7 @@ export function useForceSimulation(
       cancelAnimationFrame(rafRef.current);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [enabled, containerSize.width, containerSize.height, edges, nodeSize.width, nodeSize.height, onTick]);
+  }, [enabled, containerSize.width, containerSize.height, edges, nodeSizes, onTick]);
 
   return { startDrag, moveDrag, endDrag, setHovered };
 }

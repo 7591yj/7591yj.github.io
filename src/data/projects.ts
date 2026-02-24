@@ -10,13 +10,7 @@ export const softwareDevelopment: Project[] = [
       "Contributed to important logic implementation and refactoring to the backend",
       "Led a team of three engineers for several months",
     ],
-    tech: [
-      "Next.js",
-      "Typescript",
-      "Python",
-      "FastAPI",
-      "PostgreSQL",
-    ],
+    tech: ["Typescript", "Next.js", "Python", "FastAPI", "PostgreSQL"],
     tags: ["frontend", "backend", "ai"],
   },
   {
@@ -31,7 +25,7 @@ export const softwareDevelopment: Project[] = [
       "Leading the software development team for several months",
       "Managing the project in terms of user experience",
     ],
-    tech: ["Svelte", "Socket.IO", "protobuf"],
+    tech: ["Typescript", "Svelte", "Socket.IO", "protobuf"],
     tags: ["frontend", "backend", "hardware"],
   },
 ];
@@ -54,7 +48,7 @@ export const personalProjects: Project[] = [
     status: "released",
     subtitle: "Simple Social Media Webapp Using React and Firebase",
     desc: ["Released with GitHub Pages"],
-    tech: ["React", "Firebase"],
+    tech: ["Typescript", "React"],
     tags: ["frontend"],
   },
 ];

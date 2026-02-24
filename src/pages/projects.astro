@@ -305,6 +305,50 @@ import ProjectGraph from "../components/graph/ProjectGraph";
         color: var(--color-text-secondary);
       }
 
+      /* ---- TechNode styles ---- */
+
+      :global(.tech-node) {
+        position: relative;
+        cursor: grab;
+        --cut: 0.4rem;
+      }
+
+      :global(.tech-node__border) {
+        background: var(--color-border);
+        clip-path: polygon(
+          var(--cut) 0,
+          100% 0,
+          100% calc(100% - var(--cut)),
+          calc(100% - var(--cut)) 100%,
+          0 100%,
+          0 var(--cut)
+        );
+        padding: 1px;
+        transition: background var(--duration-normal) var(--ease-out-expo);
+      }
+
+      :global(.tech-node:hover .tech-node__border) {
+        background: var(--color-border-hover);
+      }
+
+      :global(.tech-node__inner) {
+        background: var(--color-bg-secondary);
+        clip-path: polygon(
+          var(--cut) 0,
+          100% 0,
+          100% calc(100% - var(--cut)),
+          calc(100% - var(--cut)) 100%,
+          0 100%,
+          0 var(--cut)
+        );
+        font-family: monospace;
+        font-size: 0.7rem;
+        padding: 0.2em 0.6em;
+        color: var(--color-text-muted);
+        white-space: nowrap;
+        text-align: center;
+      }
+
       /* ---- Edge animations ---- */
 
       @keyframes :global(graph-edge-draw) {
