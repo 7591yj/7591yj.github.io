@@ -46,9 +46,13 @@ export default function GraphEdge({
       />
       <text
         x={mx}
-        y={my - 8}
+        y={my}
         textAnchor="middle"
+        dominantBaseline="central"
         fill={highlighted ? "var(--color-accent)" : "var(--color-text-muted)"}
+        stroke="var(--color-bg-secondary)"
+        strokeWidth={6}
+        paintOrder="stroke"
         fontFamily="monospace"
         fontSize="0.65rem"
         style={{

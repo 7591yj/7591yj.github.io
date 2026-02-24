@@ -4,4 +4,5 @@ export interface Project {
   subtitle: string;
   desc: string[];
   tech: string[];
+  tags: string[];
 }

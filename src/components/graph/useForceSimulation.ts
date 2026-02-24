@@ -12,12 +12,12 @@ interface SimulationConfig {
 }
 
 const DEFAULT_CONFIG: SimulationConfig = {
-  centerStrength: 0.0003,
+  centerStrength: 0.0001,
   repulsionStrength: 12000,
-  springStrength: 0.002,
+  springStrength: 0.001,
   springLength: 320,
-  damping: 0.9,
-  driftAmplitude: 0.12,
+  damping: 0.96,
+  driftAmplitude: 0.015,
   padding: 20,
 };
 

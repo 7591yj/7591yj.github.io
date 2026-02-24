@@ -15,10 +15,9 @@ export const softwareDevelopment: Project[] = [
       "Typescript",
       "Python",
       "FastAPI",
-      "AWS",
       "PostgreSQL",
-      "Gemini API",
     ],
+    tags: ["frontend", "backend", "ai"],
   },
   {
     title: "modulino",
@@ -32,7 +31,8 @@ export const softwareDevelopment: Project[] = [
       "Leading the software development team for several months",
       "Managing the project in terms of user experience",
     ],
-    tech: ["Svelte", "SvelteKit", "Socket.IO", "protobuf"],
+    tech: ["Svelte", "Socket.IO", "protobuf"],
+    tags: ["frontend", "backend", "hardware"],
   },
 ];
 
@@ -46,55 +46,17 @@ export const personalProjects: Project[] = [
       "Implemented batch conversion management",
       "Released the tool through pypi",
     ],
-    tech: ["Python", "ffmpeg", "PyPI"],
+    tech: ["Python"],
+    tags: ["cli"],
   },
   {
     title: "fireplace",
     status: "released",
     subtitle: "Simple Social Media Webapp Using React and Firebase",
     desc: ["Released with GitHub Pages"],
-    tech: ["React", "Firebase", "GitHub Pages"],
+    tech: ["React", "Firebase"],
+    tags: ["frontend"],
   },
 ];
 
-export const softwareDevelopmentTechStack: string[] = [
-  "Next.js",
-  "Typescript",
-  "Python",
-  "FastAPI",
-  "AWS",
-  "PostgreSQL",
-  "Gemini API",
-  "Svelte",
-  "SvelteKit",
-  "Socket.IO",
-  "protobuf",
-];
-
-export const personalProjectsTechStack: string[] = [
-  "Python",
-  "ffmpeg",
-  "PyPI",
-  "React",
-  "Firebase",
-  "GitHub Pages",
-];
-
-export const allTechStack: string[] = [
-  "Python",
-  "ffmpeg",
-  "PyPI",
-  "React",
-  "Firebase",
-  "GitHub Pages",
-  "Next.js",
-  "Typescript",
-  "FastAPI",
-  "AWS",
-  "PostgreSQL",
-  "Gemini API",
-  "Svelte",
-  "SvelteKit",
-  "Socket.IO",
-  "protobuf",
-];
+export const allProjects = [...softwareDevelopment, ...personalProjects];

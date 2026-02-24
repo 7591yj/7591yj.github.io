@@ -17,15 +17,15 @@ import ProjectGraph from "../components/graph/ProjectGraph";
     <style>
       .schematic {
         position: relative;
-        max-width: 80%;
+        max-width: 100%;
         margin-inline: auto;
-        padding: 4rem 0;
+        padding: 2rem 0;
+        border-top: 1px solid var(--color-border);
       }
 
       @media (max-width: 768px) {
         .schematic {
           max-width: 90%;
-          padding: 2rem 0;
         }
       }
 
@@ -141,6 +141,90 @@ import ProjectGraph from "../components/graph/ProjectGraph";
         background: var(--color-bg-tertiary);
         color: var(--color-text-muted);
         border: 1px solid var(--color-border);
+      }
+
+      /* ---- FilterBar styles ---- */
+
+      :global(.project-filter) {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0 2.5rem;
+        padding-bottom: 1.5rem;
+      }
+
+      :global(.project-filter__groups) {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        flex: 1;
+      }
+
+      :global(.project-filter__group) {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      :global(.project-filter__label) {
+        font-family: monospace;
+        font-size: 0.7rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        flex-shrink: 0;
+        min-width: 5.5rem;
+      }
+
+      :global(.project-filter__chips) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+
+      :global(.project-filter__chip) {
+        font-family: monospace;
+        font-size: 0.65rem;
+        padding: 0.2em 0.6em;
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      :global(.project-filter__chip:hover) {
+        border-color: var(--color-border-hover);
+        color: var(--color-text-secondary);
+      }
+
+      :global(.project-filter__chip--active) {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+      }
+
+      :global(.project-filter__clear) {
+        font-family: monospace;
+        font-size: 0.65rem;
+        padding: 0.2em 0.6em;
+        background: transparent;
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+        cursor: pointer;
+        flex-shrink: 0;
+        align-self: flex-start;
+        margin-top: 0.15rem;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      :global(.project-filter__clear:hover) {
+        border-color: var(--color-border-hover);
+        color: var(--color-text-secondary);
       }
 
       /* ---- Edge animations ---- */
