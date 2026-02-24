@@ -108,6 +108,7 @@ const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
   /* ---- MDX prose ---- */
 
   .prose {
+    font-family: var(--font-sans), "Noto Sans JP", sans-serif;
     color: var(--color-text-secondary);
     font-size: 0.9rem;
     line-height: 1.7;
@@ -118,6 +119,20 @@ const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
     font-size: 1.15rem;
     color: var(--color-text-primary);
     margin: 2rem 0 0.75rem;
+  }
+
+  .prose :global(h4) {
+    font-family: var(--font-sans), "Noto Sans JP", sans-serif;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  .prose :global(h5) {
+    font-family: var(--font-sans), "Noto Sans JP", sans-serif;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+    margin: 1.25rem 0 0.4rem;
   }
 
   .prose :global(h3:first-child) {
@@ -142,17 +157,81 @@ const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
     margin: 0.5rem 0;
   }
 
+  .prose :global(ul) {
+    list-style-type: disc;
+  }
+
+  .prose :global(ol) {
+    list-style-type: decimal;
+  }
+
   .prose :global(li) {
     margin: 0.3rem 0;
   }
 
   .prose :global(li ul) {
     margin: 0.2rem 0;
+    list-style-type: circle;
   }
 
   .prose :global(strong) {
     color: var(--color-text-primary);
     font-weight: 600;
+  }
+
+  /* ---- Horizontal rule ---- */
+
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 2rem 0;
+  }
+
+  /* ---- Table ---- */
+
+  .prose :global(table) {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.85rem;
+  }
+
+  .prose :global(th) {
+    font-family: "Shippori Mincho", serif;
+    text-align: start;
+    padding: 1vh;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .prose :global(td) {
+    padding: 1.2vh;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .prose :global(tr:last-child td) {
+    border-bottom: none;
+  }
+
+  /* ---- Blockquote ---- */
+
+  .prose :global(blockquote) {
+    margin: 1.25rem 0;
+    padding: 0.75rem 1.25rem;
+    border-left: 2px solid var(--color-accent);
+    background: var(--color-bg-tertiary);
+  }
+
+  .prose :global(blockquote p) {
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0.3rem 0;
+  }
+
+  .prose :global(blockquote em) {
+    font-style: normal;
+    color: var(--color-text-muted);
+    font-size: 0.85em;
   }
 
   .back {
