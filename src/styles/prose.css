@@ -1,0 +1,163 @@
+/* ================================================
+ * Shared MDX / Markdown prose styles
+ * ================================================ */
+
+.prose {
+  font-family: var(--font-sans), "Noto Sans JP", sans-serif;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* ---- Headings ---- */
+
+.prose h3,
+.prose h4,
+.prose h5 {
+  font-family: "Shippori Mincho", serif;
+  position: relative;
+  color: var(--color-text-primary);
+  scroll-margin-top: 8vh;
+  cursor: pointer;
+}
+
+.prose h3 {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin: 2rem 0 0.75rem;
+}
+
+.prose h4 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.prose h5 {
+  font-size: 0.9rem;
+  margin: 1.25rem 0 0.4rem;
+}
+
+.prose h3:first-child {
+  margin-top: 0;
+}
+
+/* ---- Heading anchors ---- */
+
+.prose h3:hover,
+.prose h4:hover,
+.prose h5:hover {
+  color: var(--color-accent);
+}
+
+.prose .heading-anchor {
+  opacity: 0;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-left: 0.3em;
+  transition: opacity 0.15s ease;
+}
+
+.prose h3:hover .heading-anchor,
+.prose h4:hover .heading-anchor,
+.prose h5:hover .heading-anchor {
+  opacity: 1;
+}
+
+/* ---- Body text ---- */
+
+.prose p {
+  margin: 0.6rem 0;
+}
+
+.prose code {
+  font-family: monospace;
+  font-size: 0.85em;
+  padding: 0.15em 0.35em;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+}
+
+.prose strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* ---- Lists ---- */
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin: 0.3rem 0;
+}
+
+.prose li ul {
+  margin: 0.2rem 0;
+  list-style-type: circle;
+}
+
+/* ---- Horizontal rule ---- */
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2rem 0;
+}
+
+/* ---- Table ---- */
+
+.prose table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+}
+
+.prose th {
+  font-family: "Shippori Mincho", serif;
+  text-align: start;
+  padding: 1vh;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose td {
+  padding: 1.2vh;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---- Blockquote ---- */
+
+.prose blockquote {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1.25rem;
+  border-left: 2px solid var(--color-accent);
+  background: var(--color-bg-tertiary);
+}
+
+.prose blockquote p {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0.3rem 0;
+}
+
+.prose blockquote em {
+  font-style: normal;
+  color: var(--color-text-muted);
+  font-size: 0.85em;
+}

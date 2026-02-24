@@ -2,6 +2,7 @@
 @import "./tokens.css";
 @import "./animations.css";
 @import "./grid.css";
+@import "./prose.css";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
