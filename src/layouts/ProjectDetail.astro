@@ -62,6 +62,46 @@ const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
   </main>
 </Layout>
 
+<script>
+  function scrollToHash() {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const el = document.querySelector(hash);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function setup() {
+    // Scroll if page loaded with a hash
+    scrollToHash();
+
+    // Intercept heading clicks directly
+    document.querySelectorAll(".heading-anchor").forEach((a) => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        const href = (a as HTMLAnchorElement).getAttribute("href");
+        if (!href) return;
+        history.pushState(null, "", href);
+        const el = document.querySelector(href);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+    document
+      .querySelectorAll(".prose h3[id], .prose h4[id], .prose h5[id]")
+      .forEach((heading) => {
+        heading.addEventListener("click", (e) => {
+          if ((e.target as Element).closest(".heading-anchor")) return;
+          e.preventDefault();
+          const id = heading.id;
+          history.pushState(null, "", `#${id}`);
+          heading.scrollIntoView({ behavior: "smooth" });
+        });
+      });
+  }
+
+  setup();
+  document.addEventListener("astro:page-load", setup);
+</script>
+
 <style>
   .header {
     border: 1px solid var(--color-border);
@@ -114,25 +154,57 @@ const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
     line-height: 1.7;
   }
 
-  .prose :global(h3) {
+  .prose :global(h3),
+  .prose :global(h4),
+  .prose :global(h5) {
     font-family: "Shippori Mincho", serif;
-    font-size: 1.15rem;
+    position: relative;
     color: var(--color-text-primary);
+    scroll-margin-top: 8vh;
+  }
+
+  .prose :global(h3) {
+    font-size: 1.15rem;
+    font-weight: bold;
     margin: 2rem 0 0.75rem;
   }
 
   .prose :global(h4) {
-    font-family: var(--font-sans), "Noto Sans JP", sans-serif;
     font-size: 1rem;
-    color: var(--color-text-primary);
     margin: 1.5rem 0 0.5rem;
   }
 
   .prose :global(h5) {
-    font-family: var(--font-sans), "Noto Sans JP", sans-serif;
     font-size: 0.9rem;
-    color: var(--color-text-primary);
     margin: 1.25rem 0 0.4rem;
+  }
+
+  /* ---- Heading anchors ---- */
+
+  .prose :global(h3),
+  .prose :global(h4),
+  .prose :global(h5) {
+    cursor: pointer;
+  }
+
+  .prose :global(h3:hover),
+  .prose :global(h4:hover),
+  .prose :global(h5:hover) {
+    color: var(--color-accent);
+  }
+
+  .prose :global(.heading-anchor) {
+    opacity: 0;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-left: 0.3em;
+    transition: opacity 0.15s ease;
+  }
+
+  .prose :global(h3:hover .heading-anchor),
+  .prose :global(h4:hover .heading-anchor),
+  .prose :global(h5:hover .heading-anchor) {
+    opacity: 1;
   }
 
   .prose :global(h3:first-child) {

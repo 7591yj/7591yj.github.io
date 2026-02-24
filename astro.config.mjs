@@ -5,6 +5,8 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import react from "@astrojs/react";
 import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 import icon from "astro-icon";
 
@@ -17,6 +19,17 @@ export default defineConfig({
   },
   markdown: {
     remarkPlugins: [remarkGfm],
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: "append",
+          content: { type: "text", value: " #" },
+          properties: { class: "heading-anchor", ariaHidden: true, tabIndex: -1 },
+        },
+      ],
+    ],
   },
   integrations: [
     mdx(),
