@@ -111,7 +111,7 @@ export default function ProjectGraph() {
     return () => window.removeEventListener("resize", measure);
   }, []);
 
-  // Trigger entry animation on mount (works for both mobile and desktop)
+  // Trigger entry animation on mount
   useEffect(() => {
     setEntered(true);
   }, []);
@@ -119,7 +119,11 @@ export default function ProjectGraph() {
   // Initialize node positions once container is measured
   useEffect(() => {
     if (containerSize.width === 0 || isMobile) return;
-    const initPos = initialPositions(projectNodes.length, containerSize.width, containerSize.height);
+    const initPos = initialPositions(
+      projectNodes.length,
+      containerSize.width,
+      containerSize.height,
+    );
     const nodes: GraphNodeType[] = projectNodes.map((p, i) => ({
       ...p,
       x: initPos[i].x,
@@ -168,9 +172,8 @@ export default function ProjectGraph() {
     endDrag();
   };
 
-  // Determine which nodes/edges are highlighted or dimmed (hover + filter)
-  const isNodeHighlighted = (id: string) =>
-    hoveredNode === id;
+  // Determine which nodes/edges are highlighted or dimmed
+  const isNodeHighlighted = (id: string) => hoveredNode === id;
   const isNodeConnected = (id: string) =>
     hoveredNode !== null && adjacency.get(hoveredNode)?.has(id);
   const isNodeDimmed = (id: string) => {
@@ -180,7 +183,8 @@ export default function ProjectGraph() {
     return dimmedByHover || dimmedByFilter;
   };
   const isEdgeHighlighted = (edge: GraphEdgeType) =>
-    hoveredNode !== null && (edge.source === hoveredNode || edge.target === hoveredNode);
+    hoveredNode !== null &&
+    (edge.source === hoveredNode || edge.target === hoveredNode);
   const isEdgeDimmed = (edge: GraphEdgeType) => {
     const dimmedByHover = hoveredNode !== null && !isEdgeHighlighted(edge);
     const dimmedByFilter =
@@ -254,7 +258,12 @@ export default function ProjectGraph() {
           className="project-graph__svg"
           width={containerSize.width}
           height={containerSize.height}
-          style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
         >
           {positions.length > 0 &&
             edges.map((edge, i) => {
@@ -305,8 +314,14 @@ export default function ProjectGraph() {
                 highlighted={isNodeHighlighted(p.id)}
                 style={{}}
                 onPointerDown={handlePointerDown(i)}
-                onPointerEnter={() => { setHoveredNode(p.id); setHovered(i); }}
-                onPointerLeave={() => { setHoveredNode(null); setHovered(null); }}
+                onPointerEnter={() => {
+                  setHoveredNode(p.id);
+                  setHovered(i);
+                }}
+                onPointerLeave={() => {
+                  setHoveredNode(null);
+                  setHovered(null);
+                }}
               />
             </div>
           );

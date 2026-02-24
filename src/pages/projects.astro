@@ -206,6 +206,84 @@ import ProjectGraph from "../components/graph/ProjectGraph";
         color: var(--color-accent);
       }
 
+      /* ---- Tech dropdown ---- */
+
+      :global(.project-filter__dropdown) {
+        position: relative;
+      }
+
+      :global(.project-filter__dropdown-trigger) {
+        font-family: monospace;
+        font-size: 0.65rem;
+        padding: 0.2em 0.6em;
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      :global(.project-filter__dropdown-trigger:hover) {
+        border-color: var(--color-border-hover);
+        color: var(--color-text-secondary);
+      }
+
+      :global(.project-filter__dropdown-trigger--active) {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+      }
+
+      :global(.project-filter__dropdown-menu) {
+        position: absolute;
+        top: calc(100% + 0.3rem);
+        left: 0;
+        min-width: 10rem;
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        max-height: 14rem;
+        overflow-y: auto;
+      }
+
+      :global(.project-filter__dropdown-item) {
+        font-family: monospace;
+        font-size: 0.65rem;
+        padding: 0.35em 0.6em;
+        background: transparent;
+        border: none;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        text-align: left;
+        transition: background 0.15s ease;
+      }
+
+      :global(.project-filter__dropdown-item:hover) {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-secondary);
+      }
+
+      :global(.project-filter__dropdown-check) {
+        width: 0.7em;
+        height: 0.7em;
+        border: 1px solid var(--color-border);
+        flex-shrink: 0;
+      }
+
+      :global(.project-filter__dropdown-check--active) {
+        border-color: var(--color-accent);
+        background: var(--color-accent);
+      }
+
       :global(.project-filter__clear) {
         font-family: monospace;
         font-size: 0.65rem;

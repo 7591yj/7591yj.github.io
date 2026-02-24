@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from "react";
+
 interface Props {
   allTags: string[];
   allTechs: string[];
@@ -18,6 +20,21 @@ export default function FilterBar({
   onClear,
 }: Props) {
   const hasActive = activeTags.size > 0 || activeTechs.size > 0;
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  const techCount = activeTechs.size;
 
   return (
     <div className="project-filter">
@@ -39,16 +56,30 @@ export default function FilterBar({
 
         <div className="project-filter__group">
           <span className="project-filter__label">Tech</span>
-          <div className="project-filter__chips">
-            {allTechs.map((tech) => (
-              <button
-                key={tech}
-                className={`project-filter__chip ${activeTechs.has(tech) ? "project-filter__chip--active" : ""}`}
-                onClick={() => onToggleTech(tech)}
-              >
-                {tech}
-              </button>
-            ))}
+          <div className="project-filter__dropdown" ref={dropdownRef}>
+            <button
+              className={`project-filter__dropdown-trigger ${techCount > 0 ? "project-filter__dropdown-trigger--active" : ""}`}
+              onClick={() => setOpen((v) => !v)}
+            >
+              {techCount > 0 ? `${techCount} selected` : "Select tech…"}
+              <span aria-hidden>▾</span>
+            </button>
+            {open && (
+              <div className="project-filter__dropdown-menu">
+                {allTechs.map((tech) => (
+                  <button
+                    key={tech}
+                    className="project-filter__dropdown-item"
+                    onClick={() => onToggleTech(tech)}
+                  >
+                    <span
+                      className={`project-filter__dropdown-check ${activeTechs.has(tech) ? "project-filter__dropdown-check--active" : ""}`}
+                    />
+                    <span>{tech}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

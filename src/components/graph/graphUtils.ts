@@ -32,7 +32,9 @@ function getNormalizedTech(tech: string[]): Set<string> {
   return set;
 }
 
-export function computeEdges(nodes: { id: string; project: Project }[]): GraphEdge[] {
+export function computeEdges(
+  nodes: { id: string; project: Project }[],
+): GraphEdge[] {
   const edges: GraphEdge[] = [];
   for (let i = 0; i < nodes.length; i++) {
     const techA = getNormalizedTech(nodes[i].project.tech);
