@@ -3,35 +3,49 @@
  * ======================================== */
 :root {
   /* Light Theme (Default) */
-  --color-bg-primary: #f8f8fc;
-  --color-bg-secondary: #f0f0f6;
-  --color-bg-tertiary: #e4e4ec;
-  --color-text-primary: #1a1a2e;
-  --color-text-secondary: #4a4a5e;
-  --color-text-muted: #8a8a9e;
-  --color-accent: #4f46e5;
-  --color-accent-hover: #6366f1;
-  --color-accent-subtle: rgba(79, 70, 229, 0.12);
+  --color-bg-primary: #f8f8f8;
+  --color-bg-secondary: #f0f0f0;
+  --color-bg-tertiary: #e4e4e4;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-muted: #8a8a8a;
+  --color-accent: #f52320;
+  --color-accent-hover: #d91e1b;
+  --color-accent-subtle: rgba(245, 35, 32, 0.1);
   --color-border: rgba(0, 0, 0, 0.08);
   --color-border-hover: rgba(0, 0, 0, 0.16);
 }
 
 [data-theme="dark"] {
   /* Dark Theme */
-  --color-bg-primary: #0a0a0f;
-  --color-bg-secondary: #12121a;
-  --color-bg-tertiary: #1a1a2e;
-  --color-text-primary: #e8e8f0;
-  --color-text-secondary: #a0a0b8;
-  --color-text-muted: #6b6b80;
-  --color-accent: #6366f1;
-  --color-accent-hover: #818cf8;
-  --color-accent-subtle: rgba(99, 102, 241, 0.15);
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.16);
+  --color-bg-primary: #0c0c0c;
+  --color-bg-secondary: #151515;
+  --color-bg-tertiary: #1e1e1e;
+  --color-text-primary: #ececec;
+  --color-text-secondary: #b0b0b0;
+  --color-text-muted: #787878;
+  --color-accent: #00fccb;
+  --color-accent-hover: #33ffd6;
+  --color-accent-subtle: rgba(0, 252, 203, 0.12);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-hover: rgba(255, 255, 255, 0.18);
 }
 
 @theme {
+  /* ========================================
+   * Font Sizes
+   * ======================================== */
+  --font-size-2xs: 0.65rem;
+  --font-size-xs: 0.7rem;
+  --font-size-sm: 0.75rem;
+  --font-size-base: 0.8rem;
+  --font-size-md: 0.85rem;
+  --font-size-lg: 0.9rem;
+  --font-size-xl: 1rem;
+  --font-size-2xl: 1.15rem;
+  --font-size-3xl: 1.25rem;
+  --font-size-4xl: 1.33rem;
+
   /* ========================================
    * Spacing
    * ======================================== */
