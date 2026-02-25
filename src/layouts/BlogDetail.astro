@@ -1,0 +1,154 @@
+---
+import Layout from "./Layout.astro";
+import PageHeading from "../components/PageHeading.astro";
+
+interface Frontmatter {
+  title: string;
+  date: string;
+  description?: string;
+  tags?: string[];
+}
+
+const { title, date, description, tags } =
+  Astro.props.frontmatter as Frontmatter;
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}.${m}.${day}`;
+}
+---
+
+<Layout title={`7591yj | ${title}`}>
+  <main>
+    <section class="header">
+      <PageHeading module="MODULE.002///" title={title}>
+        <div class="meta">
+          <span class="meta__label">DATE</span>
+          <span class="meta__value">{formatDate(date)}</span>
+          {
+            tags && tags.length > 0 && (
+              <>
+                <span class="meta__label">TAGS</span>
+                <div class="meta__tags">
+                  {tags.map((t) => (
+                    <span class="meta__tag">{t}</span>
+                  ))}
+                </div>
+              </>
+            )
+          }
+        </div>
+      </PageHeading>
+    </section>
+
+    <section class="container-main detail">
+      <article class="prose">
+        <slot />
+      </article>
+
+      <a class="back" href="/blog">&larr; Back to blog</a>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  function scrollToHash() {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const el = document.querySelector(hash);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function setup() {
+    scrollToHash();
+
+    document.querySelectorAll(".heading-anchor").forEach((a) => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        const href = (a as HTMLAnchorElement).getAttribute("href");
+        if (!href) return;
+        history.pushState(null, "", href);
+        const el = document.querySelector(href);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+    document
+      .querySelectorAll(".prose h3[id], .prose h4[id], .prose h5[id]")
+      .forEach((heading) => {
+        heading.addEventListener("click", (e) => {
+          if ((e.target as Element).closest(".heading-anchor")) return;
+          e.preventDefault();
+          const id = heading.id;
+          history.pushState(null, "", `#${id}`);
+          heading.scrollIntoView({ behavior: "smooth" });
+        });
+      });
+  }
+
+  setup();
+  document.addEventListener("astro:page-load", setup);
+</script>
+
+<style>
+  .header {
+    border: 1px solid var(--color-border);
+  }
+
+  .detail {
+    padding-top: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.3rem 1.5rem;
+    align-items: baseline;
+  }
+
+  .meta__label {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .meta__value {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+  }
+
+  .meta__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .meta__tag {
+    font-family: monospace;
+    font-size: 0.7rem;
+    padding: 0.2em 0.6em;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+
+  .back {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .back:hover {
+    color: var(--color-text-primary);
+  }
+</style>

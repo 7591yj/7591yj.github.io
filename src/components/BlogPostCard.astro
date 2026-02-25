@@ -1,0 +1,228 @@
+---
+interface Props {
+  url: string;
+  title: string;
+  date: string;
+  description?: string;
+  tags?: string[];
+  isNew?: boolean;
+  index: number;
+  delay?: number;
+}
+
+const { url, title, date, description, tags, isNew, index, delay } =
+  Astro.props;
+const padded = String(index).padStart(3, "0");
+---
+
+<article
+  class="blog-entry"
+  data-animate
+  {...delay ? { "data-animate-delay": String(delay) } : {}}
+>
+  <!-- left gutter: index + wire -->
+  <div class="blog-entry__gutter">
+    <span class="blog-entry__index">{padded}</span>
+    <span class="blog-entry__wire" />
+  </div>
+
+  <!-- card body -->
+  <a class="blog-entry__card" href={url}>
+    <div class="blog-entry__card-inner">
+      <div class="blog-entry__meta">
+        {isNew && <span class="blog-entry__led" />}
+        <span class="blog-entry__date">{date}</span>
+        {
+          tags && tags.length > 0 && (
+            <>
+              <span class="blog-entry__sep">//</span>
+              {tags.map((t) => (
+                <span class="blog-entry__tag">{t}</span>
+              ))}
+            </>
+          )
+        }
+      </div>
+
+      <h3 class="blog-entry__title font-shippori">
+        <span>{title}</span>
+        <span class="blog-entry__arrow" aria-hidden="true">&#8599;</span>
+      </h3>
+
+      {description && <p class="blog-entry__desc">{description}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  /* ---- Entry row ---- */
+  .blog-entry {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  /* ---- Left gutter ---- */
+  .blog-entry__gutter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 3.5rem;
+    flex-shrink: 0;
+    padding-top: 1.2rem;
+    gap: 0.4rem;
+  }
+
+  .blog-entry__index {
+    font-family: monospace;
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .blog-entry__wire {
+    flex: 1;
+    width: 1px;
+    background: var(--color-border);
+  }
+
+  /* ---- Card ---- */
+  .blog-entry__card {
+    --cut: 0.75rem;
+    flex: 1;
+    display: block;
+    position: relative;
+    background: var(--color-border);
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%,
+      0 var(--cut)
+    );
+    padding: 1px;
+    text-decoration: none;
+    transition: background var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .blog-entry__card:hover {
+    background: var(--color-border-hover);
+    color: inherit;
+  }
+
+  .blog-entry__card-inner {
+    --cut: 0.75rem;
+    background: var(--color-bg-secondary);
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%,
+      0 var(--cut)
+    );
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  /* ---- Meta row ---- */
+  .blog-entry__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .blog-entry__led {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    box-shadow: 0 0 6px var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .blog-entry__date {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .blog-entry__sep {
+    font-family: monospace;
+    font-size: 0.65rem;
+    color: var(--color-border-hover);
+  }
+
+  .blog-entry__tag {
+    font-family: monospace;
+    font-size: 0.65rem;
+    padding: 0.15em 0.5em;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    transition: border-color var(--duration-fast) ease;
+  }
+
+  .blog-entry__card:hover .blog-entry__tag {
+    border-color: var(--color-border-hover);
+  }
+
+  /* ---- Title ---- */
+  .blog-entry__title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.35;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+  }
+
+  .blog-entry__arrow {
+    font-size: 0.75em;
+    opacity: 0;
+    transform: translateX(-0.25em);
+    transition:
+      opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
+    color: var(--color-accent);
+  }
+
+  .blog-entry__card:hover .blog-entry__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ---- Description ---- */
+  .blog-entry__desc {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 768px) {
+    .blog-entry__gutter {
+      width: 2.5rem;
+    }
+
+    .blog-entry__card-inner {
+      padding: 1.25rem 1.25rem;
+    }
+
+    .blog-entry__title {
+      font-size: 1.05rem;
+    }
+  }
+</style>
