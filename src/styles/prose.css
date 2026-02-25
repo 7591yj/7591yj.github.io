@@ -5,7 +5,7 @@
 .prose {
   font-family: var(--font-sans), "Noto Sans JP", sans-serif;
   color: var(--color-text-secondary);
-  font-size: 0.9rem;
+  font-size: var(--font-size-lg);
   line-height: 1.7;
 }
 
@@ -22,18 +22,18 @@
 }
 
 .prose h3 {
-  font-size: 1.15rem;
+  font-size: var(--font-size-2xl);
   font-weight: bold;
   margin: 2rem 0 0.75rem;
 }
 
 .prose h4 {
-  font-size: 1rem;
+  font-size: var(--font-size-xl);
   margin: 1.5rem 0 0.5rem;
 }
 
 .prose h5 {
-  font-size: 0.9rem;
+  font-size: var(--font-size-lg);
   margin: 1.25rem 0 0.4rem;
 }
 
@@ -122,7 +122,7 @@
   table-layout: fixed;
   border-collapse: collapse;
   margin: 1rem 0;
-  font-size: 0.85rem;
+  font-size: var(--font-size-md);
 }
 
 .prose th {

@@ -27,13 +27,13 @@
 }
 
 .hero-carousel__title {
-  font-size: 1.25rem;
+  font-size: var(--font-size-3xl);
   font-weight: 700;
   color: #fff;
 }
 
 .hero-carousel__subtitle {
-  font-size: 0.875rem;
+  font-size: var(--font-size-md);
   color: rgba(255, 255, 255, 0.7);
   margin-top: 0.25rem;
 }
@@ -128,7 +128,7 @@
 
 /* Size: md */
 .hero-carousel .btn--md {
-  font-size: 1rem;
+  font-size: var(--font-size-xl);
   padding: 0.7em;
 }
 

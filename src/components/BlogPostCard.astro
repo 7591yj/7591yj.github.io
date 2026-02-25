@@ -75,7 +75,7 @@ const padded = String(index).padStart(3, "0");
 
   .blog-entry__index {
     font-family: monospace;
-    font-size: 0.65rem;
+    font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
     letter-spacing: 0.05em;
   }
@@ -147,20 +147,20 @@ const padded = String(index).padStart(3, "0");
 
   .blog-entry__date {
     font-family: monospace;
-    font-size: 0.7rem;
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     letter-spacing: 0.04em;
   }
 
   .blog-entry__sep {
     font-family: monospace;
-    font-size: 0.65rem;
+    font-size: var(--font-size-2xs);
     color: var(--color-border-hover);
   }
 
   .blog-entry__tag {
     font-family: monospace;
-    font-size: 0.65rem;
+    font-size: var(--font-size-2xs);
     padding: 0.15em 0.5em;
     background: var(--color-bg-tertiary);
     color: var(--color-text-muted);
@@ -174,7 +174,7 @@ const padded = String(index).padStart(3, "0");
 
   /* ---- Title ---- */
   .blog-entry__title {
-    font-size: 1.25rem;
+    font-size: var(--font-size-3xl);
     font-weight: bold;
     color: var(--color-text-primary);
     margin: 0;
@@ -202,7 +202,7 @@ const padded = String(index).padStart(3, "0");
   /* ---- Description ---- */
   .blog-entry__desc {
     color: var(--color-text-secondary);
-    font-size: 0.85rem;
+    font-size: var(--font-size-md);
     line-height: 1.55;
     margin: 0;
     display: -webkit-box;
@@ -222,7 +222,7 @@ const padded = String(index).padStart(3, "0");
     }
 
     .blog-entry__title {
-      font-size: 1.05rem;
+      font-size: var(--font-size-xl);
     }
   }
 </style>
