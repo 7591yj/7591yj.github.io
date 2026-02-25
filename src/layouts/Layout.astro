@@ -7,9 +7,10 @@ import { Font } from "astro:assets";
 
 interface Props {
   title?: string;
+  transparentHeader?: boolean;
 }
 
-const { title = "7591yj" } = Astro.props;
+const { title = "7591yj", transparentHeader = false } = Astro.props;
 ---
 
 <Font cssVariable="--font-shippori" preload />
@@ -18,7 +19,6 @@ const { title = "7591yj" } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
@@ -40,10 +40,11 @@ const { title = "7591yj" } = Astro.props;
     </script>
   </head>
   <body>
-    <Header />
+    <Header transparentHeader={transparentHeader} />
     <slot />
     <Footer />
     <script src="../scripts/scroll-animate.ts"></script>
+    <script src="../scripts/header-scroll.ts"></script>
     <script src="../scripts/scramble-text.ts"></script>
     <script>
       import { initTheme, watchSystemPreference } from "../scripts/theme";

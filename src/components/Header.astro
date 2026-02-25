@@ -1,6 +1,12 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
 import LanguageSelect from "./LanguageSelect.astro";
+
+interface Props {
+  transparentHeader?: boolean;
+}
+
+const { transparentHeader = false } = Astro.props;
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
@@ -10,7 +16,10 @@ const navItems = [
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="header">
+<header
+  class:list={["header", { "header--transparent": transparentHeader }]}
+  {...transparentHeader ? { "data-transparent-header": "" } : {}}
+>
   <div class="header-inner container-header">
     <nav>
       <div class="nav-main">
@@ -42,6 +51,62 @@ const currentPath = Astro.url.pathname;
       backdrop-filter: blur(0.64vw);
       background: var(--color-bg-primary);
       border-bottom: 1px solid var(--color-border);
+      transition:
+        background var(--duration-normal) var(--ease-out-expo),
+        border-color var(--duration-normal) var(--ease-out-expo),
+        backdrop-filter var(--duration-normal) var(--ease-out-expo);
+    }
+
+    /* Transparent mode (over hero carousel) */
+    .header--transparent {
+      background: transparent;
+      border-bottom-color: transparent;
+      backdrop-filter: none;
+    }
+
+    .header--transparent .logo {
+      color: #fff;
+    }
+
+    .header--transparent .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .header--transparent .nav-link:hover {
+      color: #fff;
+    }
+
+    .header--transparent .nav-link.active {
+      color: #fff;
+    }
+
+    .header--transparent .nav-main {
+      border-right-color: transparent;
+    }
+
+    .header--transparent :global(.theme-toggle) {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .header--transparent :global(.theme-toggle:hover) {
+      color: #fff;
+    }
+
+    .header--transparent :global(.lang-select .nav-link) {
+      color: rgba(255, 255, 255, 0.7);
+      border-left-color: transparent;
+      border-right-color: transparent;
+    }
+
+    .header--transparent :global(.lang-select .nav-link:hover) {
+      color: #fff;
+    }
+
+    /* Scrolled state (restores solid header) */
+    .header--scrolled {
+      background: var(--color-bg-primary);
+      border-bottom-color: var(--color-border);
+      backdrop-filter: blur(0.64vw);
     }
     .header-inner {
       display: flex;

@@ -15,9 +15,10 @@ interface Slide {
 
 interface Props {
   slides: Slide[];
+  fullscreen?: boolean;
 }
 
-export default function HeroCarousel({ slides }: Props) {
+export default function HeroCarousel({ slides, fullscreen }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
   const [playing, setPlaying] = useState(true);
@@ -56,7 +57,7 @@ export default function HeroCarousel({ slides }: Props) {
   }
 
   return (
-    <div className="hero-carousel">
+    <div className={`hero-carousel${fullscreen ? " hero-carousel--fullscreen" : ""}`}>
       {/* Image preload hints */}
       {slides.map((slide) => (
         <link key={slide.image} rel="preload" as="image" href={slide.image} />
@@ -117,6 +118,22 @@ export default function HeroCarousel({ slides }: Props) {
           </svg>
         </button>
       </nav>
+
+      {fullscreen && (
+        <div className="hero-carousel__scroll-indicator">
+          <span className="hero-carousel__scroll-label">SCROLL</span>
+          <svg
+            className="hero-carousel__scroll-chevron"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path d="M3 4l5 5 5-5" />
+            <path d="M3 8l5 5 5-5" />
+          </svg>
+        </div>
+      )}
     </div>
   );
 }
