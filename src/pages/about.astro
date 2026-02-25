@@ -11,33 +11,27 @@ import Button from "../components/Button.astro";
   <main>
     <section>
       <PageHeading module="MODULE.003///" title="About Me">
-        <h2 class="text-xl text-center pb-6">Yeongjin Kim</h2>
-        <ul>
-          <li>
-            <Icon name="cake" />
-            <span>2002. 07. 20</span>
-          </li>
-          <li>
-            <Icon name="at" />
-            <a href="mailto:yeongjin.kim@proton.me"
-              >yeongjin.kim@proton.me</a
-            >
-          </li>
-          <li>
-            <Icon name="map-pin-house" />
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Jeonju,%20South%20Korea"
-              >Jeonju, South Korea</a
-            >
-          </li>
-          <li>
-            <Icon name="map-pin" />
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Tokyo,%20Japan"
-              >Tokyo, Japan</a
-            >
-          </li>
-        </ul>
+        <div class="meta">
+          <span class="meta__label"><Icon name="me" /> NAME</span>
+          <span class="meta__value">Yeongjin Kim</span>
+          <span class="meta__label"><Icon name="cake" /> BORN</span>
+          <span class="meta__value">2002. 07. 20</span>
+          <span class="meta__label"><Icon name="at" /> EMAIL</span>
+          <a
+            class="meta__link"
+            href="mailto:yeongjin.kim@proton.me"
+          >yeongjin.kim@proton.me &#8599;</a>
+          <span class="meta__label"><Icon name="map-pin-house" /> HOME</span>
+          <a
+            class="meta__link"
+            href="https://www.google.com/maps/search/?api=1&query=Jeonju,%20South%20Korea"
+          >Jeonju, South Korea &#8599;</a>
+          <span class="meta__label"><Icon name="map-pin" /> LOCATION</span>
+          <a
+            class="meta__link"
+            href="https://www.google.com/maps/search/?api=1&query=Tokyo,%20Japan"
+          >Tokyo, Japan &#8599;</a>
+        </div>
       </PageHeading>
       <SectionBlock title="EDUCATION///">
         <div class="gallery">
@@ -208,15 +202,44 @@ import Button from "../components/Button.astro";
 
   <style>
 
-    li {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding-bottom: 0.6rem;
+    .meta {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.3rem 1.5rem;
+      align-items: baseline;
     }
 
-    [data-icon] {
+    .meta__label {
+      font-family: monospace;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .meta__label [data-icon] {
+      width: 1em;
+      height: 1em;
       color: var(--color-text-primary);
+    }
+
+    .meta__value {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-md);
+    }
+
+    .meta__link {
+      font-family: monospace;
+      font-size: var(--font-size-base);
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+
+    .meta__link:hover {
+      color: var(--color-accent);
     }
 
     .gallery {
