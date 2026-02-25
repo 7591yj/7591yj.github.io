@@ -6,9 +6,42 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* PlemolJP – self-hosted (IBM Plex Mono + IBM Plex Sans JP composite) */
+@font-face {
+  font-family: "PlemolJP";
+  src: url("/fonts/PlemolJP-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PlemolJP";
+  src: url("/fonts/PlemolJP-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PlemolJP";
+  src: url("/fonts/PlemolJP-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PlemolJP";
+  src: url("/fonts/PlemolJP-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 @theme {
-  --font-plex: var(--font-plex);
   --font-shippori: var(--font-shippori);
+  --font-plemol: "PlemolJP";
 }
 
 /* Base styles */

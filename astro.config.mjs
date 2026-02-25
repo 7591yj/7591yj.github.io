@@ -46,18 +46,8 @@ export default defineConfig({
     fonts: [
       {
         provider: fontProviders.google(),
-        name: "IBM Plex Mono",
-        cssVariable: "--font-plex",
-      },
-      {
-        provider: fontProviders.google(),
         name: "Shippori Mincho",
         cssVariable: "--font-shippori",
-      },
-      {
-        provider: fontProviders.google(),
-        name: "Noto Sans JP",
-        cssVariable: "--font-sans",
       },
     ],
   },
