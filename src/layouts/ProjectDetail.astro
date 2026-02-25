@@ -114,37 +114,6 @@ const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
     gap: 1.5rem;
   }
 
-  .meta {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.3rem 1.5rem;
-    align-items: baseline;
-  }
-
-  .meta__label {
-    font-family: monospace;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .meta__value {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-md);
-  }
-
-  .meta__link {
-    font-family: monospace;
-    font-size: var(--font-size-base);
-    color: var(--color-text-primary);
-    text-decoration: none;
-  }
-
-  .meta__link:hover {
-    color: var(--color-accent);
-  }
-
   .back {
     display: inline-block;
     margin-top: 1rem;

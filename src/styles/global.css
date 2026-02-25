@@ -58,3 +58,44 @@ a:hover {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
+
+/* Meta grid (shared by about & project-detail) */
+.meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 1.5rem;
+  align-items: baseline;
+}
+
+.meta__label {
+  font-family: monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.meta__label [data-icon] {
+  width: 1em;
+  height: 1em;
+  color: var(--color-text-primary);
+}
+
+.meta__value {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+}
+
+.meta__link {
+  font-family: monospace;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  text-decoration: none;
+}
+
+.meta__link:hover {
+  color: var(--color-accent);
+}
