@@ -1,7 +1,7 @@
 /* Scroll-triggered animations (data-animate pattern) */
 [data-animate] {
   opacity: 0;
-  transform: translateY(2.22vh);
+  transform: translateY(1.25rem);
   transition:
     opacity var(--duration-slow) var(--ease-out-expo),
     transform var(--duration-slow) var(--ease-out-expo);
@@ -33,7 +33,7 @@
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(2.22vh);
+    transform: translateY(1.25rem);
   }
   to {
     opacity: 1;

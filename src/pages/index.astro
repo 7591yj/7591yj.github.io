@@ -1,11 +1,19 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
+import FadeInSection from "../components/motion/FadeInSection.tsx";
+import Button from "../components/Button.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="7591yj">
+  <main class="container-main">
+    <section class="py-32 text-center">
+      <FadeInSection client:load>
+        <h1 class="text-5xl font-bold mb-4 tracking-tight">7591yj</h1>
+        <p class="text-xl text-[var(--color-text-secondary)] mb-8 mx-auto">
+          Astro site with animations, grids, and rich content components.
+        </p>
+        <Button href="/demo"> View Demo </Button>
+      </FadeInSection>
+    </section>
+  </main>
 </Layout>

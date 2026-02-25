@@ -17,7 +17,7 @@
   font-family: "Shippori Mincho", serif;
   position: relative;
   color: var(--color-text-primary);
-  scroll-margin-top: 8vh;
+  scroll-margin-top: 5rem;
   cursor: pointer;
 }
 
@@ -128,12 +128,12 @@
 .prose th {
   font-family: "Shippori Mincho", serif;
   text-align: start;
-  padding: 1vh;
+  padding: 0.6rem;
   border-bottom: 1px solid var(--color-border);
 }
 
 .prose td {
-  padding: 1.2vh;
+  padding: 0.75rem;
   border-bottom: 1px solid var(--color-border);
 }
 
