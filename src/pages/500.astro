@@ -13,7 +13,6 @@ import Button from "../components/Button.astro";
           <p class="text-xl text-[var(--color-text-secondary)] mb-8 mx-auto">
             Oops! Server is Currently Unable to Handle This Request.
           </p>
-          <p>{error instanceof Error ? error.message : "Unknown error"}</p>
           <Button variant="reverse" href="/"> Back to Home </Button>
         </div>
       </FadeInSection>
