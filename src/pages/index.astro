@@ -24,7 +24,7 @@ const slides = softwareDevelopment.map((project, i) => ({
     tech: project.tech,
     status: project.status,
     current: project.current,
-    href: project.href,
+    href: project.slug ? `/projects/${project.slug}` : project.href,
   },
 }));
 
@@ -202,14 +202,15 @@ const archivePosts = latestPosts.slice(1);
                   <span class="operator-meta__label">HANDLE</span>
                   <span class="operator-meta__value">7591yj</span>
 
-                  <span class="operator-meta__label">FOCUS</span>
-                  <span class="operator-meta__value">Frontend & Full-Stack</span
-                  >
+                  <span class="operator-meta__label">INTERESTS</span>
+                  <span class="operator-meta__value">
+                    Web, Containerization, Linux, UI/UX
+                  </span>
 
                   <span class="operator-meta__label">STACK</span>
-                  <span class="operator-meta__value"
-                    >TS / React / Svelte / Python</span
-                  >
+                  <span class="operator-meta__value">
+                    TS / React / Svelte / Python
+                  </span>
 
                   <span class="operator-meta__label">STATUS</span>
                   <span

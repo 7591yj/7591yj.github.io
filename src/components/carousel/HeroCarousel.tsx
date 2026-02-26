@@ -127,12 +127,11 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
                   <a
                     className="hero-carousel__project-card"
                     href={slide.project.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
                   >
                     <div className="hero-carousel__project-header">
                       <h3 className="hero-carousel__project-title">
                         {slide.project.title}
+                        <span className="hero-carousel__project-arrow">&rarr;</span>
                       </h3>
                     </div>
                     <p className="hero-carousel__project-subtitle">
