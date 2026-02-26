@@ -24,19 +24,23 @@ const { title = SITE_NAME, transparentHeader = false } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
-    <script is:inline define:vars={{ THEME_KEY: "theme" }}>
+    <script is:inline>
       (function () {
-        const stored = localStorage.getItem(THEME_KEY);
-        const systemDark = window.matchMedia(
-          "(prefers-color-scheme: dark)",
-        ).matches;
-        const theme =
-          stored === "system" || !stored
+        function resolveTheme() {
+          var stored = localStorage.getItem("theme");
+          var systemDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          return stored === "system" || !stored
             ? systemDark
               ? "dark"
               : "light"
             : stored;
-        document.documentElement.setAttribute("data-theme", theme);
+        }
+        document.documentElement.setAttribute("data-theme", resolveTheme());
+        document.addEventListener("astro:after-swap", function () {
+          document.documentElement.setAttribute("data-theme", resolveTheme());
+        });
       })();
     </script>
   </head>

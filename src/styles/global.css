@@ -7,7 +7,7 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* PlemolJP – self-hosted (IBM Plex Mono + IBM Plex Sans JP composite) */
+/* PlemolJP – self-hosted */
 @font-face {
   font-family: "PlemolJP";
   src: url("/fonts/PlemolJP-Regular.woff2") format("woff2");
@@ -43,6 +43,26 @@
 @theme {
   --font-shippori: var(--font-shippori);
   --font-plemol: "PlemolJP";
+}
+
+/* Theme transition */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: none;
+  }
+
+  ::view-transition-new(root) {
+    animation: theme-circle-reveal var(--duration-slow) var(--ease-out-expo);
+  }
+
+  @keyframes theme-circle-reveal {
+    from {
+      clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%));
+    }
+    to {
+      clip-path: circle(200% at var(--vt-x, 50%) var(--vt-y, 50%));
+    }
+  }
 }
 
 /* Base styles */

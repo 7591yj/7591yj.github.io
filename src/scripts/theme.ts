@@ -17,7 +17,13 @@ function getStoredTheme(): ThemePreference | null {
 }
 
 function applyTheme(theme: Theme): void {
-  document.documentElement.setAttribute("data-theme", theme);
+  if (!document.startViewTransition) {
+    document.documentElement.setAttribute("data-theme", theme);
+    return;
+  }
+  document.startViewTransition(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  });
 }
 
 export function initTheme(): void {
