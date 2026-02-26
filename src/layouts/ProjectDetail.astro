@@ -1,7 +1,5 @@
 ---
-import Layout from "./Layout.astro";
-import PageHeading from "../components/PageHeading.astro";
-import TableOfContents from "../components/content/TableOfContents.astro";
+import DetailLayout from "./DetailLayout.astro";
 
 interface Frontmatter {
   title: string;
@@ -14,134 +12,47 @@ const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
 const headings = Astro.props.headings ?? [];
 ---
 
-<Layout title={`7591yj | ${title}`}>
-  <main>
-    <section class="header">
-      <PageHeading module="MODULE.001///" title={title}>
-        <div class="meta">
-          {
-            year && (
-              <>
-                <span class="meta__label">YEAR</span>
-                <span class="meta__value">{year}</span>
-              </>
-            )
-          }
-          {
-            status && (
-              <>
-                <span class="meta__label">STATUS</span>
-                <span class="meta__value">{status}</span>
-              </>
-            )
-          }
-          {
-            link && (
-              <>
-                <span class="meta__label">LINK</span>
-                <a
-                  class="meta__link"
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link} &#8599;
-                </a>
-              </>
-            )
-          }
-        </div>
-      </PageHeading>
-    </section>
-
-    <section class="container-main detail">
-      <div class="detail__main">
-        <article class="prose">
-          <slot />
-        </article>
-
-        <a class="back-link" href="/projects">&larr; Back to projects</a>
-      </div>
-
-      {headings.length > 0 && (
-        <aside class="detail__sidebar">
-          <TableOfContents headings={headings} />
-        </aside>
-      )}
-    </section>
-  </main>
-</Layout>
-
-<script>
-  function scrollToHash() {
-    const hash = window.location.hash;
-    if (!hash) return;
-    const el = document.querySelector(hash);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  }
-
-  function setup() {
-    // Scroll if page loaded with a hash
-    scrollToHash();
-
-    // Intercept heading clicks directly
-    document.querySelectorAll(".heading-anchor").forEach((a) => {
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        const href = (a as HTMLAnchorElement).getAttribute("href");
-        if (!href) return;
-        history.pushState(null, "", href);
-        const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      });
-    });
-    document
-      .querySelectorAll(".prose h3[id], .prose h4[id], .prose h5[id]")
-      .forEach((heading) => {
-        heading.addEventListener("click", (e) => {
-          if ((e.target as Element).closest(".heading-anchor")) return;
-          e.preventDefault();
-          const id = heading.id;
-          history.pushState(null, "", `#${id}`);
-          heading.scrollIntoView({ behavior: "smooth" });
-        });
-      });
-  }
-
-  setup();
-  document.addEventListener("astro:page-load", setup);
-</script>
-
-<style>
-  .header {
-    border: 1px solid var(--color-border);
-  }
-
-  .detail {
-    padding-top: 2em;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .detail__main {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    min-width: 0;
-  }
-
-  .detail__sidebar {
-    display: none;
-  }
-
-  @media (min-width: 1024px) {
-    .detail {
-      grid-template-columns: 1fr 14rem;
+<DetailLayout
+  title={`7591yj | ${title}`}
+  module="MODULE.001///"
+  headingTitle={title}
+  backLinkHref="/projects"
+  backLinkLabel="Back to projects"
+  headings={headings}
+>
+  <div class="meta" slot="meta">
+    {
+      year && (
+        <>
+          <span class="meta__label">YEAR</span>
+          <span class="meta__value">{year}</span>
+        </>
+      )
     }
-
-    .detail__sidebar {
-      display: block;
+    {
+      status && (
+        <>
+          <span class="meta__label">STATUS</span>
+          <span class="meta__value">{status}</span>
+        </>
+      )
     }
-  }
-</style>
+    {
+      link && (
+        <>
+          <span class="meta__label">LINK</span>
+          <a
+            class="meta__link"
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {link} &#8599;
+          </a>
+        </>
+      )
+    }
+  </div>
+
+  <slot />
+</DetailLayout>
