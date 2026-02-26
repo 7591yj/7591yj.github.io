@@ -1,46 +1,99 @@
-# Astro Starter Kit: Basics
+# 7591yj.github.io
 
-```sh
-bun create astro@latest -- --template basics
-```
+Personal portfolio and blog — built with [Astro](https://astro.build), styled
+with [Tailwind CSS](https://tailwindcss.com), and enhanced with
+[React](https://react.dev) for interactive components.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Live at **[7591yj.com](https://www.7591yj.com/)**
 
-## 🚀 Project Structure
+## Tech Stack
 
-Inside of your Astro project, you'll see the following folders and files:
+| Layer         | Technology                                                                                                                             |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework     | [Astro](https://astro.build) 5 with [View Transitions](https://docs.astro.build/en/guides/view-transitions/)                          |
+| Styling       | [Tailwind CSS](https://tailwindcss.com) 4 + custom design tokens                                                                      |
+| Interactivity | [React](https://react.dev) 19, [Framer Motion](https://motion.dev), [Swiper](https://swiperjs.com)                                   |
+| Content       | [MDX](https://mdxjs.com) with remark-gfm, rehype-slug, rehype-autolink-headings                                                       |
+| Icons         | [astro-icon](https://github.com/natemoo-re/astro-icon) with [Carbon](https://carbondesignsystem.com/elements/icons/library/) icon set |
+| Animations    | [Lottie](https://airbnb.io/lottie/) via lottie-react                                                                                  |
+| Package mgr   | [Bun](https://bun.sh) via [Nix](https://nixos.org/)                                                                                   |
+
+## Project Structure
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+src/
+├── components/
+│   ├── carousel/          # Swiper-based hero carousel
+│   ├── content/           # MDX content components (Accordion, ImageGrid, etc.)
+│   ├── graph/             # Force-simulation project graph
+│   ├── motion/            # Framer Motion wrappers (FadeInSection, StaggerGrid)
+│   ├── Header.astro       # Sticky nav with hamburger menu
+│   ├── Footer.astro
+│   ├── ThemeToggle.astro  # Light / dark mode
+│   └── ...
+├── icons/                 # Custom SVG icons
+├── layouts/
+│   ├── Layout.astro       # Base layout with theme management
+│   ├── DetailLayout.astro # Two-column layout with sidebar TOC
+│   ├── BlogDetail.astro   # Blog post layout
+│   └── ProjectDetail.astro
+├── pages/
+│   ├── index.astro        # Home
+│   ├── projects.astro     # Interactive project explorer
+│   ├── blog.astro         # Blog listing
+│   ├── about.astro
+│   ├── projects/*.mdx     # Individual project write-ups
+│   ├── blog/*.mdx         # Blog posts
+│   ├── 404.astro
+│   └── 500.astro
+├── scripts/               # Client-side scripts
+│   ├── theme.ts           # Theme persistence (localStorage + system pref)
+│   ├── header-scroll.ts   # Header transparency on scroll
+│   ├── scramble-text.ts   # Text scramble animation
+│   └── scroll-animate.ts  # Scroll-triggered entrance animations
+├── styles/
+│   ├── global.css         # Tailwind imports & global resets
+│   ├── tokens.css         # Design tokens (colors, spacing, timing)
+│   ├── animations.css     # Keyframes & transition classes
+│   ├── grid.css           # Grid layout utilities
+│   ├── prose.css          # Typography for long-form content
+│   └── shared.css         # Shared patterns (LED indicators, ticker strips, dot grids)
+├── consts.ts              # Site-wide constants (name, socials, etc.)
+└── types.ts               # Shared TypeScript interfaces
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Getting Started
 
-## 🧞 Commands
+> `flake.nix` is provided for Nix. Use `nix develop` to enter the development
+> shell.
 
-All commands are run from the root of the project, from a terminal:
+### Prerequisites
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+- [Bun](https://bun.sh) (or Node.js 22+)
 
-## 👀 Want to learn more?
+### Commands
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Command           | Action                                     |
+| :---------------- | :----------------------------------------- |
+| `bun install`     | Install dependencies                       |
+| `bun run dev`     | Start local dev server at `localhost:4321`  |
+| `bun run build`   | Build production site to `./dist/`         |
+| `bun run preview` | Preview production build locally           |
+
+## Fonts
+
+This project uses [PlemolJP](https://github.com/yuru7/PlemolJP) as the primary
+typeface, self-hosted in `public/fonts/`. PlemolJP is licensed under the **SIL
+Open Font License, Version 1.1** — see
+[`public/fonts/LICENSE_PlemolJP`](public/fonts/LICENSE_PlemolJP) for the full
+license text.
+
+[Shippori Mincho](https://fonts.google.com/specimen/Shippori+Mincho) is loaded
+via Astro's experimental Google Fonts integration.
+
+## License
+
+Site content and code are personal work. Third-party dependencies are subject to
+their own licenses. Font licensing is documented above.
+
+Free image hosting by: [imgCDN.dev](https://imgcdn.dev/)
