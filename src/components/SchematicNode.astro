@@ -35,14 +35,7 @@ const { project, class: className } = Astro.props;
     --cut: 0.75rem;
     position: relative;
     background: var(--color-border);
-    clip-path: polygon(
-      var(--cut) 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%,
-      0 var(--cut)
-    );
+    clip-path: var(--clip-cutoff);
     padding: 1px;
     transition: background var(--duration-normal) var(--ease-out-expo);
   }
@@ -53,14 +46,7 @@ const { project, class: className } = Astro.props;
 
   .schematic-node__inner {
     background: var(--color-bg-secondary);
-    clip-path: polygon(
-      var(--cut) 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%,
-      0 var(--cut)
-    );
+    clip-path: var(--clip-cutoff);
     padding: 1.5rem;
     display: flex;
     flex-direction: column;

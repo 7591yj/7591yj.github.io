@@ -76,7 +76,7 @@ const archivePosts = latestPosts.slice(1);
             featuredPost && (
               <div class="blog-featured">
                 <div class="blog-featured__badge">
-                  <span class="led led--active led-sm" />
+                  <span class="led led--active led--sm" />
                   <span>LATEST TRANSMISSION</span>
                 </div>
                 <div class="blog-featured__card">
@@ -139,21 +139,21 @@ const archivePosts = latestPosts.slice(1);
     <section class="preview-section">
       <SectionBlock title="ABOUT///">
         <!-- Ticker strip -->
-        <div class="section-ticker" aria-hidden="true">
-          <div class="section-ticker__track">
+        <div class="ticker" aria-hidden="true">
+          <div class="ticker__track">
             {
               [0, 1].map(() => (
-                <span class="section-ticker__half">
+                <span class="ticker__segment">
                   {[0, 1, 2].map(() => (
                     <>
                       <span>WHO IS THIS</span>
-                      <span class="section-ticker__dot" />
+                      <span class="ticker__dot" />
                       <span>PROFILE LOADED</span>
-                      <span class="section-ticker__dot" />
+                      <span class="ticker__dot" />
                       <span>CLEARANCE OK</span>
-                      <span class="section-ticker__dot" />
+                      <span class="ticker__dot" />
                       <span>DOSSIER READY</span>
-                      <span class="section-ticker__dot" />
+                      <span class="ticker__dot" />
                     </>
                   ))}
                 </span>
@@ -164,12 +164,12 @@ const archivePosts = latestPosts.slice(1);
 
         <!-- About HUD display -->
         <div class="about-hud">
-          <div class="dot-grid-bg dot-grid-bg--faint"></div>
+          <div class="dot-grid dot-grid--faint"></div>
           <div class="about-hud__inner">
             <!-- Terminal block -->
             <div class="terminal-block" data-animate>
               <div class="terminal-block__header">
-                <span class="led led--active led-sm"></span>
+                <span class="led led--active led--sm"></span>
                 <span>UNRESOLVED TICKETS // 3 OPEN</span>
               </div>
               <div class="terminal-block__body">
@@ -193,30 +193,30 @@ const archivePosts = latestPosts.slice(1);
             </div>
 
             <!-- Profile card -->
-            <div class="operator-card" data-animate>
-              <div class="operator-card__header">
+            <div class="profile-card" data-animate>
+              <div class="profile-card__header">
                 <span>PROFILE</span>
               </div>
-              <div class="operator-card__body">
-                <div class="operator-meta">
-                  <span class="operator-meta__label">HANDLE</span>
-                  <span class="operator-meta__value">7591yj</span>
+              <div class="profile-card__body">
+                <div class="profile-meta">
+                  <span class="profile-meta__label">HANDLE</span>
+                  <span class="profile-meta__value">7591yj</span>
 
-                  <span class="operator-meta__label">INTERESTS</span>
-                  <span class="operator-meta__value">
+                  <span class="profile-meta__label">INTERESTS</span>
+                  <span class="profile-meta__value">
                     Web, Containerization, Linux, UI/UX
                   </span>
 
-                  <span class="operator-meta__label">STACK</span>
-                  <span class="operator-meta__value">
+                  <span class="profile-meta__label">STACK</span>
+                  <span class="profile-meta__value">
                     TS / React / Svelte / Python
                   </span>
 
-                  <span class="operator-meta__label">STATUS</span>
+                  <span class="profile-meta__label">STATUS</span>
                   <span
-                    class="operator-meta__value operator-meta__value--status"
+                    class="profile-meta__value profile-meta__value--status"
                   >
-                    <span class="led led--active led-sm"></span>
+                    <span class="led led--active led--sm"></span>
                     ACTIVE
                   </span>
                 </div>
@@ -248,97 +248,6 @@ const archivePosts = latestPosts.slice(1);
     justify-content: flex-end;
     padding: var(--spacing-xl);
     padding-top: var(--spacing-md);
-  }
-
-  /* ========================================
-   * Shared: Ticker Strip (About only)
-   * ======================================== */
-  .section-ticker {
-    overflow: hidden;
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-bg-secondary);
-    padding: 0.6rem 0;
-  }
-
-  .section-ticker__track {
-    display: flex;
-    width: max-content;
-    animation: ticker-scroll 40s linear infinite;
-  }
-
-  .section-ticker__track:hover {
-    animation-play-state: paused;
-  }
-
-  .section-ticker__half {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding-right: 1.5rem;
-    font-family: monospace;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .section-ticker__dot {
-    width: 0.25rem;
-    height: 0.25rem;
-    border-radius: 50%;
-    background: var(--color-text-muted);
-    opacity: 0.4;
-    flex-shrink: 0;
-  }
-
-  @keyframes ticker-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
-  /* ========================================
-   * Shared: LED Indicators
-   * ======================================== */
-  .led {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .led--active {
-    background-color: var(--color-accent);
-    box-shadow: 0 0 6px var(--color-accent);
-  }
-
-  .led-sm {
-    width: 0.4rem;
-    height: 0.4rem;
-  }
-
-  /* ========================================
-   * Shared: Dot Grid Background (About only)
-   * ======================================== */
-  .dot-grid-bg {
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(
-      circle,
-      var(--color-border) 1px,
-      transparent 1px
-    );
-    background-size: 24px 24px;
-    pointer-events: none;
-    opacity: 0.5;
-  }
-
-  .dot-grid-bg--faint {
-    opacity: 0.3;
   }
 
   /* ========================================
@@ -376,29 +285,12 @@ const archivePosts = latestPosts.slice(1);
     font-weight: 700;
   }
 
-  /* Scanline background */
-  .scanline-bg {
-    position: absolute;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 3px,
-      var(--color-border) 3px,
-      var(--color-border) 4px
-    );
-    pointer-events: none;
-    opacity: 0.25;
-  }
-
-  /* Broadcast feed */
   .blog-feed {
     position: relative;
     padding: 2rem var(--spacing-xl);
     padding-left: calc(var(--spacing-xl) - 3.5rem);
   }
 
-  /* Featured post */
   .blog-featured {
     position: relative;
     margin-bottom: 1.5rem;
@@ -427,7 +319,6 @@ const archivePosts = latestPosts.slice(1);
     font-size: var(--font-size-4xl);
   }
 
-  /* Archive divider */
   .blog-divider {
     display: flex;
     align-items: center;
@@ -449,7 +340,6 @@ const archivePosts = latestPosts.slice(1);
     border-top: 1px solid var(--color-border);
   }
 
-  /* Archive list */
   .blog-archive {
     position: relative;
     display: flex;
@@ -476,14 +366,7 @@ const archivePosts = latestPosts.slice(1);
   .terminal-block {
     --cut: 0.75rem;
     background: var(--color-border);
-    clip-path: polygon(
-      var(--cut) 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%,
-      0 var(--cut)
-    );
+    clip-path: var(--clip-cutoff);
     padding: 1px;
   }
 
@@ -552,8 +435,8 @@ const archivePosts = latestPosts.slice(1);
     }
   }
 
-  /* Operator profile card */
-  .operator-card {
+  /* Profile card */
+  .profile-card {
     --cut: 0.75rem;
     background: var(--color-border);
     clip-path: polygon(
@@ -568,17 +451,16 @@ const archivePosts = latestPosts.slice(1);
     flex-direction: column;
   }
 
-  .operator-card__header {
+  .profile-card__header {
     padding: 0.6rem 1.2rem;
     background: var(--color-bg-tertiary);
     font-family: monospace;
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     letter-spacing: 0.05em;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 
-  .operator-card__body {
+  .profile-card__body {
     background: var(--color-bg-secondary);
     padding: 1.5rem;
     flex: 1;
@@ -591,26 +473,26 @@ const archivePosts = latestPosts.slice(1);
     );
   }
 
-  .operator-meta {
+  .profile-meta {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0.6rem 1.2rem;
     align-items: baseline;
   }
 
-  .operator-meta__label {
+  .profile-meta__label {
     font-family: monospace;
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     letter-spacing: 0.05em;
   }
 
-  .operator-meta__value {
+  .profile-meta__value {
     color: var(--color-text-secondary);
     font-size: var(--font-size-md);
   }
 
-  .operator-meta__value--status {
+  .profile-meta__value--status {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;

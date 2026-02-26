@@ -1,0 +1,384 @@
+/* ========================================
+ * Project Graph — Dot Grid
+ * ======================================== */
+.project-graph__dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    var(--color-border) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+/* ========================================
+ * Project Graph — Mobile Layout
+ * ======================================== */
+.project-graph--mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ========================================
+ * Graph Node
+ * ======================================== */
+.graph-node {
+  --cut: 0.75rem;
+}
+
+.graph-node__border {
+  background: var(--color-border);
+  clip-path: var(--clip-cutoff);
+  padding: 1px;
+  transition: background var(--duration-normal) var(--ease-out-expo);
+}
+
+.graph-node:hover .graph-node__border {
+  background: var(--color-border-hover);
+}
+
+.graph-node__inner {
+  background: var(--color-bg-secondary);
+  clip-path: var(--clip-cutoff);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 100%;
+}
+
+.graph-node__header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.graph-node__led {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.graph-node__led.led--released {
+  background-color: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+}
+
+.graph-node__led.led--indev {
+  border: 1.5px solid var(--color-text-muted);
+}
+
+.graph-node__title {
+  font-family: "Shippori Mincho", serif;
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.graph-node__title--link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
+}
+
+.graph-node__title--link:hover {
+  color: var(--color-accent);
+}
+
+.graph-node__arrow {
+  opacity: 0;
+  transform: translateX(-0.2em);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  font-size: 0.85em;
+}
+
+.graph-node__title--link:hover .graph-node__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.graph-node--no-link .graph-node__title {
+  color: var(--color-text-secondary);
+}
+
+.graph-node__subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.graph-node__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+.graph-node__tech span {
+  font-family: monospace;
+  font-size: var(--font-size-2xs);
+  padding: 0.15em 0.5em;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+/* ========================================
+ * Graph Node — "Currently working on" Pulse
+ * ======================================== */
+@keyframes border-pulse {
+  0%,
+  100% {
+    background: var(--color-border);
+  }
+  50% {
+    background: var(--color-accent);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  50% {
+    filter: drop-shadow(0 0 6px var(--color-accent));
+  }
+}
+
+.graph-node--current {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+.graph-node__border--current {
+  animation: border-pulse 2.5s ease-in-out infinite;
+}
+
+.graph-node__border--highlighted {
+  animation: none !important;
+}
+
+.graph-node--current:hover {
+  animation: none;
+}
+
+/* ========================================
+ * Tech Node
+ * ======================================== */
+.tech-node {
+  position: relative;
+  cursor: grab;
+  --cut: 0.4rem;
+}
+
+.tech-node__border {
+  background: var(--color-border);
+  clip-path: var(--clip-cutoff);
+  padding: 1px;
+  transition: background var(--duration-normal) var(--ease-out-expo);
+}
+
+.tech-node:hover .tech-node__border {
+  background: var(--color-border-hover);
+}
+
+.tech-node__inner {
+  background: var(--color-bg-secondary);
+  clip-path: var(--clip-cutoff);
+  font-family: monospace;
+  font-size: var(--font-size-xs);
+  padding: 0.2em 0.6em;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* ========================================
+ * Filter Bar
+ * ======================================== */
+.project-filter {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0 2.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.project-filter__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.project-filter__group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-filter__label {
+  font-family: monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  min-width: 5.5rem;
+}
+
+.project-filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.project-filter__chip {
+  font-family: monospace;
+  font-size: var(--font-size-2xs);
+  padding: 0.2em 0.6em;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.project-filter__chip:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-secondary);
+}
+
+.project-filter__chip--active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ---- Tech Dropdown ---- */
+
+.project-filter__dropdown {
+  position: relative;
+}
+
+.project-filter__dropdown-trigger {
+  font-family: monospace;
+  font-size: var(--font-size-2xs);
+  padding: 0.2em 0.6em;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.project-filter__dropdown-trigger:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-secondary);
+}
+
+.project-filter__dropdown-trigger--active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.project-filter__dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.3rem);
+  left: 0;
+  min-width: 10rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.project-filter__dropdown-item {
+  font-family: monospace;
+  font-size: var(--font-size-2xs);
+  padding: 0.35em 0.6em;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.project-filter__dropdown-item:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.project-filter__dropdown-check {
+  width: 0.7em;
+  height: 0.7em;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.project-filter__dropdown-check--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.project-filter__clear {
+  font-family: monospace;
+  font-size: var(--font-size-2xs);
+  padding: 0.2em 0.6em;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 0.15rem;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.project-filter__clear:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-secondary);
+}
+
+/* ========================================
+ * Edge Animations
+ * ======================================== */
+@keyframes graph-edge-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes graph-fade-in {
+  to {
+    opacity: 1;
+  }
+}

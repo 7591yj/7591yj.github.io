@@ -45,14 +45,6 @@ const hasLabel = Astro.slots.has("default");
   .btn {
     --cut: 0.45em;
     --border-w: 1px;
-    --clip: polygon(
-      var(--cut) 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%,
-      0 var(--cut)
-    );
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -64,7 +56,7 @@ const hasLabel = Astro.slots.has("default");
     border: none;
     text-decoration: none;
     background: var(--color-border);
-    clip-path: var(--clip);
+    clip-path: var(--clip-cutoff);
     transition: color var(--duration-normal) var(--ease-out-expo);
   }
 
@@ -73,7 +65,7 @@ const hasLabel = Astro.slots.has("default");
     content: "";
     position: absolute;
     inset: 0;
-    clip-path: var(--clip);
+    clip-path: var(--clip-cutoff);
     background: var(--color-border-hover);
     opacity: 0;
     z-index: 0;
@@ -89,7 +81,7 @@ const hasLabel = Astro.slots.has("default");
     content: "";
     position: absolute;
     inset: var(--border-w);
-    clip-path: var(--clip);
+    clip-path: var(--clip-cutoff);
     z-index: 1;
     pointer-events: none;
   }
@@ -98,7 +90,7 @@ const hasLabel = Astro.slots.has("default");
   .btn__fill {
     position: absolute;
     inset: var(--border-w);
-    clip-path: var(--clip);
+    clip-path: var(--clip-cutoff);
     z-index: 2;
     transform: scaleX(0);
     transform-origin: left;

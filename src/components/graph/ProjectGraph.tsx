@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import "./graph.css";
 import { allProjects } from "../../data/projects";
 import {
   computeTechEdges,

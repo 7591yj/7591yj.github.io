@@ -60,7 +60,7 @@ const headings = Astro.props.headings ?? [];
           <slot />
         </article>
 
-        <a class="back" href="/projects">&larr; Back to projects</a>
+        <a class="back-link" href="/projects">&larr; Back to projects</a>
       </div>
 
       {headings.length > 0 && (
@@ -143,18 +143,5 @@ const headings = Astro.props.headings ?? [];
     .detail__sidebar {
       display: block;
     }
-  }
-
-  .back {
-    display: inline-block;
-    margin-top: 1rem;
-    font-family: monospace;
-    font-size: var(--font-size-base);
-    color: var(--color-text-muted);
-    text-decoration: none;
-  }
-
-  .back:hover {
-    color: var(--color-text-primary);
   }
 </style>

@@ -93,14 +93,7 @@ const padded = String(index).padStart(3, "0");
     display: block;
     position: relative;
     background: var(--color-border);
-    clip-path: polygon(
-      var(--cut) 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%,
-      0 var(--cut)
-    );
+    clip-path: var(--clip-cutoff);
     padding: 1px;
     text-decoration: none;
     transition: background var(--duration-normal) var(--ease-out-expo);
@@ -114,14 +107,7 @@ const padded = String(index).padStart(3, "0");
   .blog-entry__card-inner {
     --cut: 0.75rem;
     background: var(--color-bg-secondary);
-    clip-path: polygon(
-      var(--cut) 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%,
-      0 var(--cut)
-    );
+    clip-path: var(--clip-cutoff);
     padding: 1.5rem 2rem;
     display: flex;
     flex-direction: column;

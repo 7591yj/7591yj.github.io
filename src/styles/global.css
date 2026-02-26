@@ -3,6 +3,7 @@
 @import "./animations.css";
 @import "./grid.css";
 @import "./prose.css";
+@import "./shared.css";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 

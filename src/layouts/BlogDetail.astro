@@ -49,7 +49,7 @@ function formatDate(dateStr: string) {
         <slot />
       </article>
 
-      <a class="back" href="/blog">&larr; Back to blog</a>
+      <a class="back-link" href="/blog">&larr; Back to blog</a>
     </section>
   </main>
 </Layout>
@@ -104,26 +104,6 @@ function formatDate(dateStr: string) {
     gap: 1.5rem;
   }
 
-  .meta {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.3rem 1.5rem;
-    align-items: baseline;
-  }
-
-  .meta__label {
-    font-family: monospace;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .meta__value {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-md);
-  }
-
   .meta__tags {
     display: flex;
     flex-wrap: wrap;
@@ -137,18 +117,5 @@ function formatDate(dateStr: string) {
     background: var(--color-bg-tertiary);
     color: var(--color-text-muted);
     border: 1px solid var(--color-border);
-  }
-
-  .back {
-    display: inline-block;
-    margin-top: 1rem;
-    font-family: monospace;
-    font-size: var(--font-size-base);
-    color: var(--color-text-muted);
-    text-decoration: none;
-  }
-
-  .back:hover {
-    color: var(--color-text-primary);
   }
 </style>
