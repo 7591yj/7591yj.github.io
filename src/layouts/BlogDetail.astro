@@ -1,6 +1,7 @@
 ---
 import Layout from "./Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
+import TableOfContents from "../components/content/TableOfContents.astro";
 
 interface Frontmatter {
   title: string;
@@ -11,6 +12,7 @@ interface Frontmatter {
 
 const { title, date, description, tags } =
   Astro.props.frontmatter as Frontmatter;
+const headings = Astro.props.headings ?? [];
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -45,11 +47,19 @@ function formatDate(dateStr: string) {
     </section>
 
     <section class="container-main detail">
-      <article class="prose">
-        <slot />
-      </article>
+      <div class="detail__main">
+        <article class="prose">
+          <slot />
+        </article>
 
-      <a class="back-link" href="/blog">&larr; Back to blog</a>
+        <a class="back-link" href="/blog">&larr; Back to blog</a>
+      </div>
+
+      {headings.length > 0 && (
+        <aside class="detail__sidebar">
+          <TableOfContents headings={headings} />
+        </aside>
+      )}
     </section>
   </main>
 </Layout>
@@ -99,9 +109,30 @@ function formatDate(dateStr: string) {
 
   .detail {
     padding-top: 2em;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .detail__main {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    min-width: 0;
+  }
+
+  .detail__sidebar {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .detail {
+      grid-template-columns: 1fr 14rem;
+    }
+
+    .detail__sidebar {
+      display: block;
+    }
   }
 
   .meta__tags {
