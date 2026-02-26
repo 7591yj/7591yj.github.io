@@ -6,11 +6,21 @@ import "swiper/css/effect-fade";
 
 import "./HeroCarousel.css";
 
+interface ProjectData {
+  title: string;
+  subtitle: string;
+  tech: string[];
+  status: string;
+  current?: boolean;
+  href?: string;
+}
+
 interface Slide {
   image: string;
   alt: string;
   title?: string;
   subtitle?: string;
+  project?: ProjectData;
 }
 
 interface Props {
@@ -65,14 +75,23 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
 
       <div ref={containerRef} className="swiper hero-carousel__swiper">
         <div className="swiper-wrapper">
-          {slides.map((slide) => (
+          {slides.map((slide, i) => (
             <div className="swiper-slide" key={slide.image}>
               <img
                 src={slide.image}
                 alt={slide.alt}
                 className="hero-carousel__image"
               />
-              {(slide.title || slide.subtitle) && (
+
+              {/* Watermark index */}
+              {slide.project && (
+                <span className="hero-carousel__watermark">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              )}
+
+              {/* Simple title/subtitle overlay (non-project slides) */}
+              {!slide.project && (slide.title || slide.subtitle) && (
                 <div className="hero-carousel__overlay">
                   {slide.title && (
                     <h3 className="hero-carousel__title">{slide.title}</h3>
@@ -80,6 +99,52 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
                   {slide.subtitle && (
                     <p className="hero-carousel__subtitle">{slide.subtitle}</p>
                   )}
+                </div>
+              )}
+
+              {/* Project info overlay */}
+              {slide.project && (
+                <div className="hero-carousel__project-overlay">
+                  <div
+                    className={`hero-carousel__project-badge${
+                      slide.project.current
+                        ? " hero-carousel__project-badge--current"
+                        : ""
+                    }`}
+                  >
+                    <span
+                      className={`hero-carousel__project-led${
+                        slide.project.current
+                          ? " hero-carousel__project-led--active"
+                          : " hero-carousel__project-led--hollow"
+                      }`}
+                    />
+                    <span>
+                      {slide.project.current ? "CURRENTLY BUILDING" : "RELEASED"}
+                    </span>
+                  </div>
+
+                  <a
+                    className="hero-carousel__project-card"
+                    href={slide.project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div className="hero-carousel__project-header">
+                      <h3 className="hero-carousel__project-title">
+                        {slide.project.title}
+                      </h3>
+                    </div>
+                    <p className="hero-carousel__project-subtitle">
+                      <span className="hero-carousel__project-chevron">&gt;</span>
+                      {slide.project.subtitle}
+                    </p>
+                    <div className="hero-carousel__project-tech">
+                      {slide.project.tech.map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </div>
+                  </a>
                 </div>
               )}
             </div>
