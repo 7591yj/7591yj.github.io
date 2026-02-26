@@ -1,0 +1,144 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const minDepth = Math.min(...headings.map((h) => h.depth));
+---
+
+<nav class="toc" aria-label="Table of contents">
+  <span class="toc__label">CONTENTS</span>
+  <ul class="toc__list">
+    {
+      headings.map((h) => (
+        <li
+          class="toc__item"
+          style={`--indent: ${h.depth - minDepth}`}
+        >
+          <a class="toc__link" href={`#${h.slug}`} data-slug={h.slug}>
+            {h.text}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  function initToc() {
+    const links = document.querySelectorAll<HTMLAnchorElement>(".toc__link");
+    if (!links.length) return;
+
+    const slugs = Array.from(links).map((l) => l.dataset.slug!);
+    const headingEls = slugs
+      .map((s) => document.getElementById(s))
+      .filter(Boolean) as HTMLElement[];
+
+    if (!headingEls.length) return;
+
+    let activeSlug = "";
+
+    function setActive(slug: string) {
+      if (slug === activeSlug) return;
+      activeSlug = slug;
+      links.forEach((l) => {
+        l.classList.toggle("active", l.dataset.slug === slug);
+      });
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the topmost visible heading
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length) {
+          setActive(visible[0].target.id);
+        }
+      },
+      { rootMargin: "-80px 0px -60% 0px", threshold: 0 },
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+
+    // Handle TOC link clicks with smooth scroll
+    links.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const slug = link.dataset.slug!;
+        const target = document.getElementById(slug);
+        if (!target) return;
+        history.pushState(null, "", `#${slug}`);
+        target.scrollIntoView({ behavior: "smooth" });
+        setActive(slug);
+      });
+    });
+
+    // Set initial active state
+    if (headingEls.length) setActive(headingEls[0].id);
+  }
+
+  initToc();
+  document.addEventListener("astro:page-load", initToc);
+</script>
+
+<style>
+  .toc {
+    position: sticky;
+    top: 5rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+  }
+
+  .toc__label {
+    font-family: monospace;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .toc__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .toc__item {
+    padding-left: calc(0.75rem + var(--indent, 0) * 0.75rem);
+  }
+
+  .toc__link {
+    display: block;
+    padding: 0.3rem 0;
+    font-family: "PlemolJP", monospace;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color var(--duration-fast) ease;
+    border-left: 2px solid transparent;
+    margin-left: -1px;
+    padding-left: 0.5rem;
+  }
+
+  .toc__link:hover {
+    color: var(--color-text-primary);
+  }
+
+  .toc__link.active,
+  .toc__link:global(.active) {
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+  }
+</style>
