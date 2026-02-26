@@ -93,10 +93,13 @@
   background-position: 0 0;
 }
 
-/* text scramble 
+/* text scramble
    scripts/scramble-text.ts
    <span data-scramble>Label</span> */
 [data-scramble] {
   display: inline-block;
+}
+
+header [data-scramble] {
   cursor: pointer;
 }
