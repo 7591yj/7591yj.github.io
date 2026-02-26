@@ -70,11 +70,19 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.85);
 }
 
-[data-theme="dark"] .hero-carousel__image {
-  filter: brightness(0.7);
+/* Gradient scrim — darkens the bottom for project overlay readability */
+.hero-carousel .swiper-slide::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .hero-carousel__dot-grid {
@@ -92,7 +100,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  background: color-mix(in srgb, var(--color-bg-secondary) 70%, black);
+  background: var(--color-bg-secondary);
 }
 
 .hero-carousel__fallback-title {
@@ -282,7 +290,6 @@
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   letter-spacing: 0.06em;
-  margin-bottom: 0.5rem;
 }
 
 .hero-carousel__project-badge--current {
@@ -325,6 +332,7 @@
   min-height: 14rem;
   text-decoration: none;
   color: inherit;
+  box-shadow: inset 0 0 0 1px var(--color-border);
   transition: transform var(--duration-normal) var(--ease-out-expo),
               background var(--duration-normal) var(--ease-out-expo);
 }

@@ -147,29 +147,28 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
               {/* Project info overlay */}
               {slide.project && (
                 <div className="hero-carousel__project-overlay">
-                  <div
-                    className={`hero-carousel__project-badge${
-                      slide.project.current
-                        ? " hero-carousel__project-badge--current"
-                        : ""
-                    }`}
-                  >
-                    <span
-                      className={`hero-carousel__project-led${
-                        slide.project.current
-                          ? " hero-carousel__project-led--active"
-                          : " hero-carousel__project-led--hollow"
-                      }`}
-                    />
-                    <span>
-                      {slide.project.current ? "CURRENTLY BUILDING" : "RELEASED"}
-                    </span>
-                  </div>
-
                   <a
                     className="hero-carousel__project-card"
                     href={slide.project.href}
                   >
+                    <div
+                      className={`hero-carousel__project-badge${
+                        slide.project.current
+                          ? " hero-carousel__project-badge--current"
+                          : ""
+                      }`}
+                    >
+                      <span
+                        className={`hero-carousel__project-led${
+                          slide.project.current
+                            ? " hero-carousel__project-led--active"
+                            : " hero-carousel__project-led--hollow"
+                        }`}
+                      />
+                      <span>
+                        {slide.project.current ? "CURRENTLY BUILDING" : "RELEASED"}
+                      </span>
+                    </div>
                     <div className="hero-carousel__project-header">
                       <h3 className="hero-carousel__project-title">
                         {slide.project.title}

@@ -12,8 +12,8 @@
   --color-accent: #f52320;
   --color-accent-hover: #d91e1b;
   --color-accent-subtle: rgba(245, 35, 32, 0.1);
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-hover: rgba(0, 0, 0, 0.16);
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-border-hover: rgba(0, 0, 0, 0.22);
 }
 
 [data-theme="dark"] {
@@ -27,8 +27,8 @@
   --color-accent: #00fccb;
   --color-accent-hover: #33ffd6;
   --color-accent-subtle: rgba(0, 252, 203, 0.12);
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-hover: rgba(255, 255, 255, 0.18);
+  --color-border: rgba(255, 255, 255, 0.14);
+  --color-border-hover: rgba(255, 255, 255, 0.24);
 }
 
 @theme {
