@@ -2,9 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
 import ProjectGraph from "../components/graph/ProjectGraph";
+import { SITE_NAME } from "../consts";
 ---
 
-<Layout title="7591yj | Projects">
+<Layout title={`${SITE_NAME} | Projects`}>
   <main>
     <section>
       <PageHeading module="MODULE.001///" title="Projects" />

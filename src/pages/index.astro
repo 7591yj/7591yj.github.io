@@ -5,6 +5,7 @@ import SectionBlock from "../components/SectionBlock.astro";
 import BlogPostCard from "../components/BlogPostCard.astro";
 import Button from "../components/Button.astro";
 import { softwareDevelopment } from "../data/projects";
+import { SITE_NAME } from "../consts";
 
 const posts = await Astro.glob("./blog/*.mdx");
 const latestPosts = posts
@@ -53,7 +54,7 @@ const featuredPost = latestPosts[0];
 const archivePosts = latestPosts.slice(1);
 ---
 
-<Layout title="7591yj" transparentHeader>
+<Layout transparentHeader>
   <main>
     <section class="hero-section">
       <HeroCarousel slides={slides} fullscreen client:load />
@@ -206,7 +207,7 @@ const archivePosts = latestPosts.slice(1);
               <div class="profile-card__body">
                 <div class="profile-meta">
                   <span class="profile-meta__label">HANDLE</span>
-                  <span class="profile-meta__value">7591yj</span>
+                  <span class="profile-meta__value">{SITE_NAME}</span>
 
                   <span class="profile-meta__label">INTERESTS</span>
                   <span class="profile-meta__value">

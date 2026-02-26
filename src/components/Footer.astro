@@ -1,20 +1,21 @@
 ---
 import { Icon } from "astro-icon/components";
+import { SITE_NAME, EMAIL, SOCIAL } from "../consts";
 
 const socialLinks = [
   {
     icon: "carbon:logo-github",
-    href: "https://github.com/7591yj",
+    href: SOCIAL.github,
     label: "GitHub",
   },
   {
     icon: "carbon:logo-linkedin",
-    href: "https://www.linkedin.com/in/yeongjin-kim-58b2ab351",
+    href: SOCIAL.linkedin,
     label: "LinkedIn",
   },
   {
     icon: "carbon:email",
-    href: "mailto:yeongjin.kim@proton.me",
+    href: `mailto:${EMAIL}`,
     label: "Email",
   },
 ];
@@ -55,7 +56,7 @@ const projectLinks = [
     </div>
   </div>
   <p class="footer-copy text-center">
-    &copy; {new Date().getFullYear()} 7591yj &middot; Built with Astro
+    &copy; {new Date().getFullYear()} {SITE_NAME} &middot; Built with Astro
   </p>
 </footer>
 

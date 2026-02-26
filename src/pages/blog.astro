@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
 import BlogPostCard from "../components/BlogPostCard.astro";
+import { SITE_NAME } from "../consts";
 
 const posts = await Astro.glob("./blog/*.mdx");
 
@@ -28,7 +29,7 @@ const latestDate =
   sorted.length > 0 ? formatDate(sorted[0].frontmatter.date) : "----.--.--";
 ---
 
-<Layout title="7591yj | Blog">
+<Layout title={`${SITE_NAME} | Blog`}>
   <main>
     <section>
       <PageHeading module="MODULE.002///" title="Blog" />

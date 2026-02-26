@@ -1,5 +1,6 @@
 ---
 import DetailLayout from "./DetailLayout.astro";
+import { SITE_NAME } from "../consts";
 
 interface Frontmatter {
   title: string;
@@ -14,7 +15,7 @@ const headings = Astro.props.headings ?? [];
 ---
 
 <DetailLayout
-  title={`7591yj | ${title}`}
+  title={`${SITE_NAME} | ${title}`}
   module="MODULE.001///"
   headingTitle={title}
   backLinkHref="/projects"

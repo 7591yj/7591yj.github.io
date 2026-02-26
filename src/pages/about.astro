@@ -5,9 +5,10 @@ import PageHeading from "../components/PageHeading.astro";
 import SectionBlock from "../components/SectionBlock.astro";
 import EducationCard from "../components/EducationCard.astro";
 import Button from "../components/Button.astro";
+import { SITE_NAME, EMAIL } from "../consts";
 ---
 
-<Layout title="7591yj | About">
+<Layout title={`${SITE_NAME} | About`}>
   <main>
     <section>
       <PageHeading module="MODULE.003///" title="About Me">
@@ -19,8 +20,8 @@ import Button from "../components/Button.astro";
           <span class="meta__label"><Icon name="at" /> EMAIL</span>
           <a
             class="meta__link"
-            href="mailto:yeongjin.kim@proton.me"
-          >yeongjin.kim@proton.me &#8599;</a>
+            href={`mailto:${EMAIL}`}
+          >{EMAIL} &#8599;</a>
           <span class="meta__label"><Icon name="map-pin-house" /> HOME</span>
           <a
             class="meta__link"

@@ -1,5 +1,6 @@
 ---
 import DetailLayout from "./DetailLayout.astro";
+import { SITE_NAME } from "../consts";
 
 interface Frontmatter {
   title: string;
@@ -22,7 +23,7 @@ function formatDate(dateStr: string) {
 ---
 
 <DetailLayout
-  title={`7591yj | ${title}`}
+  title={`${SITE_NAME} | ${title}`}
   module="MODULE.002///"
   headingTitle={title}
   backLinkHref="/blog"

@@ -4,13 +4,14 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 import { Font } from "astro:assets";
+import { SITE_NAME } from "../consts";
 
 interface Props {
   title?: string;
   transparentHeader?: boolean;
 }
 
-const { title = "7591yj", transparentHeader = false } = Astro.props;
+const { title = SITE_NAME, transparentHeader = false } = Astro.props;
 ---
 
 <Font cssVariable="--font-shippori" preload />

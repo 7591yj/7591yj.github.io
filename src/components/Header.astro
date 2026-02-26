@@ -1,6 +1,7 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
 import LanguageSelect from "./LanguageSelect.astro";
+import { SITE_NAME } from "../consts";
 
 interface Props {
   transparentHeader?: boolean;
@@ -41,7 +42,7 @@ const currentPath = Astro.url.pathname;
         }
       </div>
     </nav>
-    <a href="/" class="logo">7591yj</a>
+    <a href="/" class="logo">{SITE_NAME}</a>
     <nav class="nav-sub justify-end">
       <LanguageSelect />
       <ThemeToggle />
