@@ -3,6 +3,25 @@ import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
 import ProjectGraph from "../components/graph/ProjectGraph";
 import { SITE_NAME } from "../consts";
+import type { Project } from "../types";
+
+const mdxModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
+  "./projects/*.mdx",
+  { eager: true },
+);
+const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
+  title: p.frontmatter.title,
+  subtitle: p.frontmatter.subtitle,
+  status: p.frontmatter.status,
+  desc: p.frontmatter.desc ?? [],
+  tech: p.frontmatter.tech ?? [],
+  tags: p.frontmatter.tags ?? [],
+  images: p.frontmatter.images,
+  current: p.frontmatter.current,
+  category: p.frontmatter.category,
+  slug: p.url!.split("/").pop()!,
+  href: p.frontmatter.link,
+}));
 ---
 
 <Layout title={`${SITE_NAME} | Projects`}>
@@ -12,7 +31,7 @@ import { SITE_NAME } from "../consts";
     </section>
 
     <section class="schematic">
-      <ProjectGraph client:visible />
+      <ProjectGraph projects={allProjects} client:visible />
     </section>
 
     <style>

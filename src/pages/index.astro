@@ -4,10 +4,13 @@ import HeroCarousel from "../components/carousel/HeroCarousel.tsx";
 import SectionBlock from "../components/SectionBlock.astro";
 import BlogPostCard from "../components/BlogPostCard.astro";
 import Button from "../components/Button.astro";
-import { softwareDevelopment } from "../data/projects";
 import { SITE_NAME } from "../consts";
 
-const posts = await Astro.glob("./blog/*.mdx");
+const blogModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
+  "./blog/*.mdx",
+  { eager: true },
+);
+const posts = Object.values(blogModules);
 const latestPosts = posts
   .sort(
     (a, b) =>
@@ -16,22 +19,29 @@ const latestPosts = posts
   )
   .slice(0, 3);
 
-const sortedProjects = [...softwareDevelopment].sort((a, b) => {
-  const aHas = a.images && a.images.length > 0 ? 0 : 1;
-  const bHas = b.images && b.images.length > 0 ? 0 : 1;
+const projectModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
+  "./projects/*.mdx",
+  { eager: true },
+);
+const softwareProjects = Object.values(projectModules)
+  .filter((p) => p.frontmatter.category === "software");
+
+const sortedProjects = [...softwareProjects].sort((a, b) => {
+  const aHas = a.frontmatter.images && a.frontmatter.images.length > 0 ? 0 : 1;
+  const bHas = b.frontmatter.images && b.frontmatter.images.length > 0 ? 0 : 1;
   return aHas - bHas;
 });
 
-const slides = sortedProjects.map((project) => ({
-  image: project.images?.[0],
-  alt: project.title,
+const slides = sortedProjects.map((p) => ({
+  image: p.frontmatter.images?.[0],
+  alt: p.frontmatter.title,
   project: {
-    title: project.title,
-    subtitle: project.subtitle,
-    tech: project.tech,
-    status: project.status,
-    current: project.current,
-    href: project.slug ? `/projects/${project.slug}` : project.href,
+    title: p.frontmatter.title,
+    subtitle: p.frontmatter.subtitle,
+    tech: p.frontmatter.tech,
+    status: p.frontmatter.status,
+    current: p.frontmatter.current,
+    href: `/projects/${p.url!.split("/").pop()!}`,
   },
 }));
 

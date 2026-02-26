@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import "./graph.css";
-import { allProjects } from "../../data/projects";
+import type { Project } from "../../types";
 import {
   computeTechEdges,
   initialPositions,
@@ -13,62 +13,17 @@ import TechNode from "./TechNode";
 import GraphEdge from "./GraphEdge";
 import FilterBar from "./FilterBar";
 
-const projectNodes = allProjects.map((p, i) => ({
-  id: ["bizlenz", "modulino", "tg-webm", "fireplace"][i],
-  project: p,
-}));
-
 const NODE_WIDTH = 240;
 const NODE_HEIGHT = 160;
 const TECH_WIDTH = 90;
 const TECH_HEIGHT = 28;
 const GRAPH_HEIGHT = 700;
 
-// Only show techs shared by projects
-const techCounts = new Map<string, number>();
-for (const p of allProjects) {
-  for (const t of p.tech) {
-    techCounts.set(t, (techCounts.get(t) || 0) + 1);
-  }
-}
-const uniqueTechs = [...techCounts.entries()]
-  .filter(([, count]) => count >= 2)
-  .map(([t]) => t)
-  .sort();
-const techIdSet = new Set(uniqueTechs.map((t) => `tech:${t}`));
-const techIds = [...techIdSet];
-
-const allEdges: GraphEdgeType[] = computeTechEdges(projectNodes);
-const edges = allEdges.filter((e) => techIdSet.has(e.target));
-
-/** Build adjacency set for fast hover lookups */
-function buildAdjacency(edgeList: GraphEdgeType[]): Map<string, Set<string>> {
-  const adj = new Map<string, Set<string>>();
-  for (const e of edgeList) {
-    if (!adj.has(e.source)) adj.set(e.source, new Set());
-    if (!adj.has(e.target)) adj.set(e.target, new Set());
-    adj.get(e.source)!.add(e.target);
-    adj.get(e.target)!.add(e.source);
-  }
-  return adj;
+interface Props {
+  projects: Project[];
 }
 
-const adjacency = buildAdjacency(edges);
-
-/** Derive unique sorted tags and techs from project data */
-const allTags = [...new Set(allProjects.flatMap((p) => p.tags))].sort();
-const allTechs = [...new Set(allProjects.flatMap((p) => p.tech))].sort();
-
-/** Total node count: projects first, then techs */
-const totalNodeCount = projectNodes.length + uniqueTechs.length;
-
-/** Per-node sizes array (projects first, then techs) */
-const nodeSizes = [
-  ...projectNodes.map(() => ({ width: NODE_WIDTH, height: NODE_HEIGHT })),
-  ...uniqueTechs.map(() => ({ width: TECH_WIDTH, height: TECH_HEIGHT })),
-];
-
-export default function ProjectGraph() {
+export default function ProjectGraph({ projects }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [positions, setPositions] = useState<{ x: number; y: number }[]>([]);
@@ -82,6 +37,69 @@ export default function ProjectGraph() {
   // Filter state
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
   const [activeTechs, setActiveTechs] = useState<Set<string>>(new Set());
+
+  // Derive all graph data from projects prop
+  const {
+    projectNodes,
+    uniqueTechs,
+    techIdSet,
+    techIds,
+    edges,
+    adjacency,
+    allTags,
+    allTechs,
+    nodeSizes,
+  } = useMemo(() => {
+    const projectNodes = projects.map((p) => ({
+      id: p.slug,
+      project: p,
+    }));
+
+    const techCounts = new Map<string, number>();
+    for (const p of projects) {
+      for (const t of p.tech) {
+        techCounts.set(t, (techCounts.get(t) || 0) + 1);
+      }
+    }
+    const uniqueTechs = [...techCounts.entries()]
+      .filter(([, count]) => count >= 2)
+      .map(([t]) => t)
+      .sort();
+    const techIdSet = new Set(uniqueTechs.map((t) => `tech:${t}`));
+    const techIds = [...techIdSet];
+
+    const allEdges: GraphEdgeType[] = computeTechEdges(projectNodes);
+    const edges = allEdges.filter((e) => techIdSet.has(e.target));
+
+    // Build adjacency set for fast hover lookups
+    const adj = new Map<string, Set<string>>();
+    for (const e of edges) {
+      if (!adj.has(e.source)) adj.set(e.source, new Set());
+      if (!adj.has(e.target)) adj.set(e.target, new Set());
+      adj.get(e.source)!.add(e.target);
+      adj.get(e.target)!.add(e.source);
+    }
+
+    const allTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
+    const allTechs = [...new Set(projects.flatMap((p) => p.tech))].sort();
+
+    const nodeSizes = [
+      ...projectNodes.map(() => ({ width: NODE_WIDTH, height: NODE_HEIGHT })),
+      ...uniqueTechs.map(() => ({ width: TECH_WIDTH, height: TECH_HEIGHT })),
+    ];
+
+    return {
+      projectNodes,
+      uniqueTechs,
+      techIdSet,
+      techIds,
+      edges,
+      adjacency: adj,
+      allTags,
+      allTechs,
+      nodeSizes,
+    };
+  }, [projects]);
 
   const toggleTag = useCallback((tag: string) => {
     setActiveTags((prev) => {
@@ -121,7 +139,7 @@ export default function ProjectGraph() {
       if (matchesTag && matchesTech) ids.add(node.id);
     }
     return ids;
-  }, [activeTags, activeTechs]);
+  }, [activeTags, activeTechs, projectNodes]);
 
   // Measure container + track mobile breakpoint
   useEffect(() => {
@@ -180,7 +198,7 @@ export default function ProjectGraph() {
     // Start physics after entry animation completes
     const timer = setTimeout(() => setSimulationReady(true), 500);
     return () => clearTimeout(timer);
-  }, [containerSize.width, containerSize.height, isMobile]);
+  }, [containerSize.width, containerSize.height, isMobile, projectNodes, techIds, uniqueTechs]);
 
   const onTick = useCallback((pos: { x: number; y: number }[]) => {
     setPositions(pos.map((p) => ({ ...p })));
@@ -259,7 +277,7 @@ export default function ProjectGraph() {
       map.set(`tech:${t}`, projectNodes.length + i),
     );
     return map;
-  }, []);
+  }, [projectNodes, uniqueTechs]);
 
   const filterBar = (
     <FilterBar

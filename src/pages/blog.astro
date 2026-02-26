@@ -4,7 +4,11 @@ import PageHeading from "../components/PageHeading.astro";
 import BlogPostCard from "../components/BlogPostCard.astro";
 import { SITE_NAME } from "../consts";
 
-const posts = await Astro.glob("./blog/*.mdx");
+const blogModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
+  "./blog/*.mdx",
+  { eager: true },
+);
+const posts = Object.values(blogModules);
 
 const sorted = posts
   .filter((p) => p.frontmatter.title)
