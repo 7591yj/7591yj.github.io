@@ -96,6 +96,12 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
                 </>
               ) : (
                 <div className="hero-carousel__fallback">
+                  <InteractiveDotGrid
+                    className="hero-carousel__dot-grid"
+                    gridSpacing={16}
+                    dotSize={1}
+                    dotColor="rgba(0, 0, 0, 0.8)"
+                  />
                   <span className="hero-carousel__fallback-title">
                     {slide.project?.title ?? slide.alt}
                   </span>
