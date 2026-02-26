@@ -4,6 +4,7 @@ import { Autoplay, EffectFade, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
+import InteractiveDotGrid from "../InteractiveDotGrid";
 import "./HeroCarousel.css";
 
 interface ProjectData {
@@ -16,7 +17,7 @@ interface ProjectData {
 }
 
 interface Slide {
-  image: string;
+  image?: string;
   alt: string;
   title?: string;
   subtitle?: string;
@@ -69,19 +70,54 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
   return (
     <div className={`hero-carousel${fullscreen ? " hero-carousel--fullscreen" : ""}`}>
       {/* Image preload hints */}
-      {slides.map((slide) => (
-        <link key={slide.image} rel="preload" as="image" href={slide.image} />
-      ))}
+      {slides.map((slide) =>
+        slide.image ? (
+          <link key={slide.image} rel="preload" as="image" href={slide.image} />
+        ) : null,
+      )}
 
       <div ref={containerRef} className="swiper hero-carousel__swiper">
         <div className="swiper-wrapper">
           {slides.map((slide, i) => (
-            <div className="swiper-slide" key={slide.image}>
-              <img
-                src={slide.image}
-                alt={slide.alt}
-                className="hero-carousel__image"
-              />
+            <div className="swiper-slide" key={slide.image ?? `fallback-${i}`}>
+              {slide.image ? (
+                <>
+                  <img
+                    src={slide.image}
+                    alt={slide.alt}
+                    className="hero-carousel__image"
+                  />
+                  <InteractiveDotGrid
+                    className="hero-carousel__dot-grid"
+                    gridSpacing={16}
+                    dotSize={1}
+                    dotColor="rgba(0, 0, 0, 0.8)"
+                  />
+                </>
+              ) : (
+                <div className="hero-carousel__fallback">
+                  <span className="hero-carousel__fallback-title">
+                    {slide.project?.title ?? slide.alt}
+                  </span>
+                  {slide.project && (
+                    <span className="hero-carousel__fallback-subtitle">
+                      {slide.project.subtitle}
+                    </span>
+                  )}
+                  {slide.project && (
+                    <div className="hero-carousel__fallback-tech">
+                      {slide.project.tech.map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </div>
+                  )}
+                  {slide.project && (
+                    <span className="hero-carousel__fallback-status">
+                      {slide.project.current ? "IN DEVELOPMENT" : "RELEASED"}
+                    </span>
+                  )}
+                </div>
+              )}
 
               {/* Watermark index */}
               {slide.project && (

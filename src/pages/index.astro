@@ -15,8 +15,14 @@ const latestPosts = posts
   )
   .slice(0, 3);
 
-const slides = softwareDevelopment.map((project, i) => ({
-  image: `/images/card-${i + 1}.svg`,
+const sortedProjects = [...softwareDevelopment].sort((a, b) => {
+  const aHas = a.images && a.images.length > 0 ? 0 : 1;
+  const bHas = b.images && b.images.length > 0 ? 0 : 1;
+  return aHas - bHas;
+});
+
+const slides = sortedProjects.map((project) => ({
+  image: project.images?.[0],
   alt: project.title,
   project: {
     title: project.title,

@@ -82,9 +82,9 @@ const currentPath = Astro.url.pathname;
 
   /* Transparent mode (over hero carousel) */
   .header--transparent {
-    background: transparent;
-    border-bottom-color: transparent;
-    backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom-color: var(--color-border);
+    backdrop-filter: blur(6px);
   }
 
   .header--transparent .logo {
@@ -104,7 +104,7 @@ const currentPath = Astro.url.pathname;
   }
 
   .header--transparent .nav-main {
-    border-right-color: transparent;
+    border-right-color: var(--color-border);
   }
 
   .header--transparent :global(.theme-toggle) {
@@ -117,8 +117,8 @@ const currentPath = Astro.url.pathname;
 
   .header--transparent :global(.lang-select .nav-link) {
     color: rgba(255, 255, 255, 0.7);
-    border-left-color: transparent;
-    border-right-color: transparent;
+    border-left-color: var(--color-border);
+    border-right-color: var(--color-border);
   }
 
   .header--transparent :global(.lang-select .nav-link:hover) {

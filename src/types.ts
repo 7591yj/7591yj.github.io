@@ -5,6 +5,7 @@ export interface Project {
   desc: string[];
   tech: string[];
   tags: string[];
+  images?: string[];
   slug?: string;
   href?: string;
   current?: boolean;

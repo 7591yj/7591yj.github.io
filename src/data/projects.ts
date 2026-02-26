@@ -17,7 +17,7 @@ export const softwareDevelopment: Project[] = [
   },
   {
     title: "modulino",
-    status: "inDev",
+    status: "in development",
     subtitle:
       "3D-printer farm management/upgrade platform with dedicated hardware",
     desc: [
@@ -29,6 +29,7 @@ export const softwareDevelopment: Project[] = [
     ],
     tech: ["Typescript", "Svelte", "Socket.IO"],
     tags: ["frontend", "backend", "hardware"],
+    images: ["/images/modulino/0.jpg", "/images/modulino/1.jpg"],
     slug: "modulino",
     href: "https://github.com/modulino-lab",
     current: true,
