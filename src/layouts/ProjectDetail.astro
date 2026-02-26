@@ -8,7 +8,8 @@ interface Frontmatter {
   link?: string;
 }
 
-const { title, year, status, link } = Astro.props.frontmatter as Frontmatter;
+const { title, year, status, link } =
+  Astro.props.frontmatter as Frontmatter;
 const headings = Astro.props.headings ?? [];
 ---
 

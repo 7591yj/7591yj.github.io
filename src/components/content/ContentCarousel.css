@@ -1,0 +1,130 @@
+/* ========================================
+ * Content Carousel — Layout
+ * ======================================== */
+.content-carousel {
+  --cut: 0.45em;
+  --border-w: 1px;
+  border: 1px solid var(--color-border);
+  margin: 1.5rem auto;
+  overflow: hidden;
+}
+
+/* ========================================
+ * Size Variants
+ * ======================================== */
+.content-carousel--xs { max-width: 320px; }
+.content-carousel--sm { max-width: 480px; }
+.content-carousel--md { max-width: 640px; }
+.content-carousel--lg { max-width: 800px; }
+.content-carousel--xl { max-width: 100%; }
+
+/* ========================================
+ * Image Area
+ * ======================================== */
+.content-carousel__swiper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+}
+
+.content-carousel__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ========================================
+ * Bottom Bar
+ * ======================================== */
+.content-carousel__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-border);
+  padding: 0.4rem 0.75rem;
+  background: var(--color-bg-secondary);
+}
+
+.content-carousel__counter {
+  font-family: monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+  user-select: none;
+}
+
+.content-carousel__controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* ========================================
+ * Buttons (cut-corner style)
+ * ======================================== */
+.content-carousel__btn {
+  --clip: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45em;
+  font-size: var(--font-size-base);
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  clip-path: var(--clip);
+  color: var(--color-text-muted);
+  transition: color var(--duration-normal) var(--ease-out-expo);
+}
+
+/* Border layer */
+.content-carousel__btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: var(--clip);
+  background: var(--color-border);
+  z-index: 0;
+  pointer-events: none;
+  transition: background var(--duration-normal) var(--ease-out-expo);
+}
+
+/* Inner fill */
+.content-carousel__btn::after {
+  content: "";
+  position: absolute;
+  inset: var(--border-w);
+  clip-path: var(--clip);
+  background: var(--color-bg-secondary);
+  z-index: 1;
+  pointer-events: none;
+  transition: background var(--duration-normal) var(--ease-out-expo);
+}
+
+.content-carousel__btn:hover {
+  color: var(--color-text-primary);
+}
+
+.content-carousel__btn:hover::before {
+  background: var(--color-border-hover);
+}
+
+.content-carousel__btn:hover::after {
+  background: var(--color-bg-tertiary);
+}
+
+.content-carousel__btn-icon {
+  position: relative;
+  z-index: 3;
+  width: 1em;
+  height: 1em;
+}
