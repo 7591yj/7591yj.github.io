@@ -29,7 +29,7 @@ export const softwareDevelopment: Project[] = [
     ],
     tech: ["Typescript", "Svelte", "Socket.IO"],
     tags: ["frontend", "backend", "hardware"],
-    images: ["/images/modulino/0.jpg", "/images/modulino/1.jpg"],
+    images: ["https://s6.imgcdn.dev/YGbuGM.jpg", "https://s6.imgcdn.dev/YGb4bd.jpg"],
     slug: "modulino",
     href: "https://github.com/modulino-lab",
     current: true,
