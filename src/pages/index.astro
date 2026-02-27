@@ -6,10 +6,10 @@ import BlogPostCard from "../components/BlogPostCard.astro";
 import Button from "../components/Button.astro";
 import { SITE_NAME } from "../consts";
 
-const blogModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
-  "./blog/*.mdx",
-  { eager: true },
-);
+const blogModules = import.meta.glob<{
+  frontmatter: Record<string, any>;
+  url: string;
+}>("./blog/*.mdx", { eager: true });
 const posts = Object.values(blogModules);
 const latestPosts = posts
   .sort(
@@ -19,12 +19,13 @@ const latestPosts = posts
   )
   .slice(0, 3);
 
-const projectModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
-  "./projects/*.mdx",
-  { eager: true },
+const projectModules = import.meta.glob<{
+  frontmatter: Record<string, any>;
+  url: string;
+}>("./projects/*.mdx", { eager: true });
+const softwareProjects = Object.values(projectModules).filter(
+  (p) => p.frontmatter.category === "software",
 );
-const softwareProjects = Object.values(projectModules)
-  .filter((p) => p.frontmatter.category === "software");
 
 const sortedProjects = [...softwareProjects].sort((a, b) => {
   const aHas = a.frontmatter.images && a.frontmatter.images.length > 0 ? 0 : 1;
@@ -93,8 +94,7 @@ const archivePosts = latestPosts.slice(1);
             featuredPost && (
               <div class="blog-featured">
                 <div class="blog-featured__badge">
-                  <span class="led led--active led--sm" />
-                  <span>LATEST TRANSMISSION</span>
+                  <span>LATEST</span>
                 </div>
                 <div class="blog-featured__card">
                   <BlogPostCard
@@ -112,7 +112,7 @@ const archivePosts = latestPosts.slice(1);
                   />
                 </div>
               </div>
-            )
+            )https://astro.build/
           }
 
           <!-- Archive divider -->
@@ -230,9 +230,7 @@ const archivePosts = latestPosts.slice(1);
                   </span>
 
                   <span class="profile-meta__label">STATUS</span>
-                  <span
-                    class="profile-meta__value profile-meta__value--status"
-                  >
+                  <span class="profile-meta__value profile-meta__value--status">
                     <span class="led led--active led--sm"></span>
                     ACTIVE
                   </span>
