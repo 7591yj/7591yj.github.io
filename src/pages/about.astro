@@ -61,7 +61,7 @@ import { SITE_NAME, EMAIL } from "../consts";
         </div>
       </SectionBlock>
       <SectionBlock title="CERTIFICATES///">
-        <div class="container-main pt-6 pb-6">
+        <div class="container-main pt-6 pb-6 overflow-x-auto">
           <table class="info-table w-full">
             <tr class="font-shippori text-xl">
               <th>Date</th>
@@ -93,7 +93,7 @@ import { SITE_NAME, EMAIL } from "../consts";
       </SectionBlock>
       <SectionBlock title="PAPERS///">
         <div class="container-main pt-6 pb-6">
-          <div class="p-4 flex gap-4">
+          <div class="p-4 flex flex-col gap-2 sm:flex-row sm:gap-4">
             <p class="pb-6 flex-10">
               The 25th International Conference on Electronics, Information, and
               Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026)
@@ -102,7 +102,7 @@ import { SITE_NAME, EMAIL } from "../consts";
               et.al 8
             </p>
             <Button
-              class="m-4"
+              class="m-0 sm:m-4"
               size="md"
               href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
               >See<br />Paper</Button
@@ -111,7 +111,7 @@ import { SITE_NAME, EMAIL } from "../consts";
         </div>
       </SectionBlock>
       <SectionBlock title="CLUBS///">
-        <div class="container-main pt-6 pb-6">
+        <div class="container-main pt-6 pb-6 overflow-x-auto">
           <table class="info-table w-full">
             <tr class="font-shippori text-xl flex-1">
               <th>Period</th>
@@ -150,7 +150,7 @@ import { SITE_NAME, EMAIL } from "../consts";
         </div>
       </SectionBlock>
       <SectionBlock title="AWARDS///">
-        <div class="container-main pt-6 pb-6">
+        <div class="container-main pt-6 pb-6 overflow-x-auto">
           <table class="info-table award-table w-full">
             <colgroup>
               <col />
@@ -207,6 +207,10 @@ import { SITE_NAME, EMAIL } from "../consts";
       width: 100%;
       display: flex;
       justify-content: space-between;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
     }
 
     .gallery > * {
@@ -215,6 +219,15 @@ import { SITE_NAME, EMAIL } from "../consts";
 
     .info-table {
       table-layout: fixed;
+
+      @media (max-width: 768px) {
+        table-layout: auto;
+        font-size: var(--font-size-md);
+
+        th {
+          font-size: var(--font-size-md);
+        }
+      }
     }
 
     .info-table tr {
@@ -237,6 +250,10 @@ import { SITE_NAME, EMAIL } from "../consts";
     .award-table td:first-child,
     .award-table th:first-child {
       white-space: nowrap;
+
+      @media (max-width: 768px) {
+        white-space: normal;
+      }
     }
 
   </style>

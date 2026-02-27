@@ -236,3 +236,28 @@
   color: var(--color-text-muted);
   font-size: 0.85em;
 }
+
+@media (max-width: 768px) {
+  .prose pre {
+    padding: 1rem;
+  }
+
+  .prose table {
+    table-layout: auto;
+  }
+
+  .prose pre {
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .prose pre code {
+    display: block !important;
+    overflow-x: auto;
+    padding: 1rem !important;
+  }
+
+  .prose .copy-btn {
+    opacity: 1;
+  }
+}

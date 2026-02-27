@@ -368,6 +368,17 @@
   color: var(--color-text-secondary);
 }
 
+@media (max-width: 768px) {
+  .project-filter {
+    padding: 0 1rem;
+    flex-direction: column;
+  }
+
+  .project-filter__label {
+    min-width: 4.5rem;
+  }
+}
+
 /* ========================================
  * Edge Animations
  * ======================================== */

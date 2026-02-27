@@ -33,4 +33,11 @@ const { module, title } = Astro.props;
     padding: var(--spacing-xl);
     padding-bottom: var(--spacing-lg);
   }
+
+  @media (max-width: 768px) {
+    .heading {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
 </style>

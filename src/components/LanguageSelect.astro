@@ -112,6 +112,12 @@ const currentLocale = Astro.currentLocale || "en";
   .lang-icon.flipped {
     transform: rotate(180deg);
   }
+
+  @media (max-width: 768px) {
+    .nav-link {
+      padding: 0.35rem 0.75rem;
+    }
+  }
 </style>
 
 <script>
