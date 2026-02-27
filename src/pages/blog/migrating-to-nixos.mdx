@@ -1,0 +1,198 @@
+---
+layout: ../../layouts/BlogDetail.astro
+title: "Migrating to NixOS"
+date: "2026-02-25"
+description: "My Linux Journey and the Choice to Move to NixOS"
+tags: ["linux"]
+---
+
+import ImageContainer from "../../components/ImageContainer.astro";
+import ImageGrid from "../../components/content/ImageGrid.astro";
+import ContentImage from "../../components/content/ContentImage.astro";
+import Accordion from "../../components/content/Accordion.astro";
+import ColorText from "../../components/content/ColorText.astro";
+import TerminalBlock from "../../components/content/TerminalBlock.astro";
+import NixOSLogo from "../../components/content/NixOSLogo.astro";
+
+> **QUICK DISCLAIMER:**
+>
+> I am by no means a NixOS expert, and I am still in the middle of migrating my
+> hosts to NixOS.
+>
+> I expect A LOT of time needed before this migration completes, but
+> if you are curious: [this](https://github.com/7591yj/nixos-dotfiles) is my repository
+> for my NixOS configurations.
+>
+> I am pretty sure there are a lot of room for improvement, and would love to see
+> that pointed out if you have the time and will. Thanks in advance.
+
+### My Linux Journey
+
+I have long been an <a href="https://archlinux.org/">Arch</a> and <a href="https://www.fedoraproject.org/">
+Fedora</a> user.
+
+For desktops and laptops, I went with Arch. I loved the capabilities Arch provides,
+without too much of a hassle - with GNOME or i3 most of the time.
+And for servers, I went with Fedora as that was the distro providing me new
+packages fast enough while being easily prone to breaking if active maintenence
+is not in place.
+
+There were still some exceptions. I used <a href="https://www.gentoo.org/">Gentoo</a> for my LG laptop
+that is _antic_, I shall say - to the point where I'm still not sure what the actual model name is.
+I can pull stuff out to make that poor thing run packages even at the cost of loosing some functions.
+
+But those were the two distributions I mainly used, before starting my migration to NixOS.
+
+#### Why Though?
+
+I always loved the idea of using old tech as home servers from long ago, and am still
+running lots of them - one for Jellyfin, one for testing out stuff, one for a
+janky NAS - and the list goes on.
+
+<ImageGrid columns={2}>
+  <ImageContainer
+    src="https://7591yj.x02.me/i/BW8A.jpg"
+    alt="The jank machine"
+  />
+  <ImageContainer
+    src="https://7591yj.x02.me/i/CGBE.png"
+    alt="Using Jellyfin server"
+  />
+</ImageGrid>
+
+I won't say they were not manageable. They were, _kind of_.
+
+But managing heterogeneous systems accumulated over years introduced friction.
+Each machine, at some point in time, had its own:
+
+- Package manager quirks and update cadences
+- Init system differences - since Gentoo used OpenRC
+- Undocumented dependencies I installed then forgot about
+
+Reproducing a setup meant following notes that were never up to date, or cloning
+disks and hoping for the best. The "works on my machine" syndrome was real.
+
+The breaking point came when one of my Fedora servers died for some reason.
+I had backups of data, but not the configuration — services, firewall rules,
+systemd timers, random packages installed to fix issues, etc.
+Rebuilding meant relearning all the stuff I had gone through already.
+
+That was the moment I decided enough is enough.
+
+### Entering NixOS
+
+<NixOSLogo />
+
+So after that painful rebuild, I finally made the decision to try out NixOS.
+
+NixOS inverts the typical Linux administration model. Instead of running commands
+that mutate system state, you declare the desired state in a configuration file.
+The system then drives the steps to reach that state.
+
+A NixOS configuration file, or a set of files, describes:
+
+- Installed packages
+- Enabled services and their configurations
+- Users and permissions
+- Firewall rules
+- Kernel parameters
+- Bootloader settings
+
+... so, basically almost the whole system.
+
+Rebuilding a machine just becomes one command:
+
+<TerminalBlock
+  user="user"
+  host="nixos"
+  path="~/nixos-dotfiles"
+  command="nixos-rebuild switch --flake .#hostname"
+  output={[
+    "Checking switch inhibitors... done",
+    "activating the configuration...",
+    "setting up /etc...",
+    "reloading user units for user...",
+    "restarting sysinit-reactivation.target",
+    "Done. The new configuration is /nix/store/whateverhashcreated-26.05",
+  ]}
+/>
+
+Rollback is just a reboot away, configuration lives in version control, and
+the entire system state is reproducible.
+
+While that sounds _really_ attractive, that meant I had to go through and write
+those files to actually make use of them. That was the one restraint blocking
+me almost two years after hearing about NixOS and trying it out.
+
+### The Migration
+
+I'll be honest here - the transition was _not_ seamless.
+
+Well, and I expected that to begin with. So this was my approach:
+
+1. Start with new or non-critical machines
+2. Desktop/laptop first, server later - I don't want my servers breaking
+3. Incrementally translated existing configs
+4. Accepted that some conveniences - AUR - had Nix equivalents or required manual packaging
+5. Embraced flakes and home-manager early
+6. Separate files more than what seems optimal - even if that meant merging files later on
+
+So the configuration, even to this date, is messy with a ton of files and
+mistakes here and there. But the payoff was pretty awesome. Adding new services
+means adding just one more file. Changes across all machines? One file edit.
+
+<span class="hover-sweep-text-inv">
+  The configuration itself is the documentation.
+</span>
+
+#### Pains
+
+The Nix language itself was the first wall. It's a whole purely functional language.
+Understanding how `let...in`, attribute sets, and function application work took time.
+
+Then came module system subtleties: the difference between `pkgs.writeShellScript`
+vs `pkgs.writeShellApplication`, when to use `config`, `options`, and `lib` - it
+all accumulates fast.
+
+```nix
+{ config, pkgs, ... }: {
+  services.nginx.enable = true;
+  environment.systemPackages = with pkgs; [ vim git ];
+}
+```
+
+The documentation, while improving, is still scattered across the NixOS manual,
+nixpkgs source, and community wikis.
+
+In short: I'd say it was steep, but not at all unclimbable.
+
+### Where I am
+
+I have moved my primary laptop to NixOS, using the unstable branch. I love
+the updates coming quick and fast, and since this _is_ my main machine I
+actively maintain it so I haven't had an issue yet - and I hope that day never comes.
+
+<ImageGrid columns={2}>
+  <ImageContainer
+    src="https://7591yj.x02.me/i/ZV9GJY.png"
+    alt="My primary laptop, running NixOS"
+  />
+  <ImageContainer
+    src="https://7591yj.x02.me/i/SQHU2.png"
+    alt="Home server setup, wip"
+  />
+</ImageGrid>
+
+For servers, it's a mixed bag. I still have most of them running Fedora or
+whatever is running right now. However I am in the middle of configuring a new
+system that will be used as a server with NixOS, and success
+for that machine means me starting the migration for my servers fully - so I am
+looking forward to that.
+
+While Nix introduces a huge learning curve, I can really see its potential now
+and am happy committing to it. Writing configurations, while a HUGE time
+consuming job, is only happening once.
+
+Oh, and for the old LG laptop? That's still running Gentoo.
+It just didn't have enough power to handle NixOS properly.
+I'll probably have to let that machine go not faraway from right now, I guess.
