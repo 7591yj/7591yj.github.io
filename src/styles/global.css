@@ -84,6 +84,10 @@ body {
   width: 100%;
   max-width: 80%;
   margin-inline: auto;
+
+  @media (max-width: 768px) {
+    max-width: 92%;
+  }
 }
 
 .container-header {
