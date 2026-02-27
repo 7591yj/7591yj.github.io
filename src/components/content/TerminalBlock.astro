@@ -1,0 +1,204 @@
+---
+interface Props {
+  user?: string;
+  host?: string;
+  path?: string;
+  command: string;
+  output?: string[];
+}
+
+const {
+  user = "user",
+  host = "nixos",
+  path = "~",
+  command,
+  output = [],
+} = Astro.props;
+---
+
+<div class="term" data-command={command}>
+  <div class="term__bar">
+    <span class="term__title">{user}@{host}: {path}</span>
+  </div>
+  <div class="term__body">
+    <div class="term__row">
+      <span class="term__ps">
+        <span class="term__user">{user}@{host}</span>:<span class="term__path"
+          >{path}</span
+        >$&nbsp;
+      </span>
+      <span class="term__typed"></span><span class="term__cursor">▋</span>
+    </div>
+    {
+      output.length > 0 && (
+        <div class="term__output">
+          {output.map((line) => (
+            <div class="term__out-line">{line}</div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  function setupTerminals() {
+    document
+      .querySelectorAll<HTMLElement>(".term:not([data-ready])")
+      .forEach((term) => {
+        term.setAttribute("data-ready", "");
+
+        const typed = term.querySelector<HTMLElement>(".term__typed");
+        const cursor = term.querySelector<HTMLElement>(".term__cursor");
+        const outputEl = term.querySelector<HTMLElement>(".term__output");
+        const command = term.dataset.command ?? "";
+        let started = false;
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            if (!entries[0].isIntersecting || started) return;
+            started = true;
+            io.disconnect();
+
+            let i = 0;
+            const tick = () => {
+              if (!typed) return;
+              typed.textContent = command.slice(0, i);
+              i++;
+              if (i <= command.length) {
+                setTimeout(tick, 38 + Math.random() * 32);
+              } else {
+                setTimeout(() => {
+                  if (cursor) cursor.style.display = "none";
+                  if (outputEl) outputEl.classList.add("is-visible");
+                }, 280);
+              }
+            };
+
+            setTimeout(tick, 500);
+          },
+          { threshold: 0.5 },
+        );
+
+        io.observe(term);
+      });
+  }
+
+  setupTerminals();
+  document.addEventListener("astro:page-load", setupTerminals);
+</script>
+
+<style>
+  /* github-light token colors (default) */
+  .term {
+    --term-bg: #ffffff;
+    --term-bar-bg: #f6f8fa;
+    --term-border: #d0d7de;
+    --term-text: #24292f;
+    --term-muted: #6e7781;
+    --term-user: #0550ae;
+    --term-path: #116329;
+  }
+
+  /* github-dark token colors */
+  :global([data-theme="dark"]) .term {
+    --term-bg: #0d1117;
+    --term-bar-bg: #161b22;
+    --term-border: #30363d;
+    --term-text: #e6edf3;
+    --term-muted: #8b949e;
+    --term-user: #79c0ff;
+    --term-path: #3fb950;
+  }
+
+  .term {
+    margin: 1.25rem 0;
+    border: 1px solid var(--term-border);
+    overflow: hidden;
+    font-family: "PlemolJP", monospace;
+    font-size: var(--font-size-md);
+  }
+
+  .term__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    background: var(--term-bar-bg);
+    border-bottom: 1px solid var(--term-border);
+  }
+
+  .term__title {
+    flex: 1;
+    text-align: center;
+    font-size: var(--font-size-xs);
+    color: var(--term-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .term__body {
+    padding: 1rem 1.25rem;
+    background: var(--term-bg);
+    color: var(--term-text);
+  }
+
+  .term__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+
+  .term__ps {
+    color: var(--term-text);
+    user-select: none;
+  }
+  .term__user {
+    color: var(--term-user);
+  }
+  .term__path {
+    color: var(--term-path);
+  }
+
+  .term__cursor {
+    display: inline-block;
+    animation: blink 1s step-end infinite;
+    color: var(--term-text);
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* Output */
+  .term__output {
+    margin-top: 0.6rem;
+    color: var(--term-muted);
+    display: none;
+  }
+
+  .term__output.is-visible {
+    display: block;
+    animation: fade-in 0.35s ease;
+  }
+
+  .term__out-line {
+    line-height: 1.7;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
