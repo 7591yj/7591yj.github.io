@@ -49,10 +49,10 @@
   /* ========================================
    * Spacing
    * ======================================== */
-  --spacing-xs: 0.48vw;
-  --spacing-sm: 0.84vw;
-  --spacing-md: 1.25vw;
-  --spacing-lg: 2.5vw;
+  --spacing-xs: max(0.48vw, 2px);
+  --spacing-sm: max(0.84vw, 4px);
+  --spacing-md: max(1.25vw, 6px);
+  --spacing-lg: max(2.5vw, 10px);
   --spacing-xl: 3.33vw;
   --spacing-2xl: 4.25vw;
   --spacing-3xl: 5vw;
