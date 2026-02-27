@@ -74,9 +74,43 @@ const { title, module, headingTitle, backLinkHref, backLinkLabel, headings } =
     });
   }
 
+  function setupSweeps() {
+    document.querySelectorAll("[data-sweep]:not([data-sweep-ready])").forEach((el) => {
+      el.setAttribute("data-sweep-ready", "");
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          io.disconnect();
+          el.classList.add("is-swept");
+        },
+        { threshold: 1.0 }
+      );
+      io.observe(el);
+    });
+  }
+
+  function setupSweepInv() {
+    document
+      .querySelectorAll(".hover-sweep-text-inv:not([data-sweep-inv-ready])")
+      .forEach((el) => {
+        el.setAttribute("data-sweep-inv-ready", "");
+        const io = new IntersectionObserver(
+          ([entry]) => {
+            if (!entry.isIntersecting) return;
+            io.disconnect();
+            el.classList.add("is-swept");
+          },
+          { threshold: 0.5 }
+        );
+        io.observe(el);
+      });
+  }
+
   function setup() {
     scrollToHash();
     setupCopyButtons();
+    setupSweeps();
+    setupSweepInv();
 
     document.querySelectorAll(".heading-anchor").forEach((a) => {
       a.addEventListener("click", (e) => {
