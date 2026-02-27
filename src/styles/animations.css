@@ -93,6 +93,45 @@
   background-position: 0 0;
 }
 
+/* text color sweep inverted */
+.hover-sweep-text-inv {
+  --sweep-pos: 0 0;
+  background: linear-gradient(
+    to right,
+    currentColor 50%,
+    var(--color-accent) 50%
+  );
+  background-size: 200% 100%;
+  background-position: var(--sweep-pos);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position var(--duration-slower) var(--ease-out-expo);
+}
+
+.hover-sweep-text-inv p {
+  background: linear-gradient(
+    to right,
+    currentColor 50%,
+    var(--color-accent) 50%
+  );
+  background-size: 200% 100%;
+  background-position: var(--sweep-pos);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-position var(--duration-slower) var(--ease-out-expo);
+}
+
+.hover-sweep-text-inv.is-swept {
+  --sweep-pos: 100% 0;
+}
+
+/* always revert to currentColor even when is-swept */
+.hover-sweep-text-inv:hover,
+.hover-sweep-text-inv.is-swept:hover {
+  --sweep-pos: 0 0;
+}
+
 /* text scramble
    scripts/scramble-text.ts
    <span data-scramble>Label</span> */
