@@ -6,12 +6,14 @@ import Button from "../components/Button.astro";
 
 <Layout>
   <main class="container-main">
-    <section class="py-32 text-center">
+    <section class="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] text-center">
       <FadeInSection client:load>
         <div class="content-container">
-          <h1 class="text-5xl font-bold mb-4 tracking-tight">500 Error</h1>
-          <p class="text-xl text-[var(--color-text-secondary)] mb-8 mx-auto">
-            Oops! Server is Currently Unable to Handle This Request.
+          <h1 class="font-shippori text-[clamp(12rem,40vw,28rem)] font-bold leading-none tracking-[0.3em] pl-[0.3em]">
+            500
+          </h1>
+          <p class="text-xl text-[var(--color-text-secondary)] mb-8">
+            Internal Server Error
           </p>
           <Button variant="reverse" href="/"> Back to Home </Button>
         </div>
