@@ -18,6 +18,12 @@ export default defineConfig({
     defaultLocale: "en",
   },
   markdown: {
+    shikiConfig: {
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+    },
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
       rehypeSlug,

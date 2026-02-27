@@ -79,6 +79,62 @@
   border: 1px solid var(--color-border);
 }
 
+/* ---- Code blocks ---- */
+
+.prose pre {
+  position: relative;
+  overflow-x: auto;
+  margin: 1rem 0;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-border);
+  font-size: var(--font-size-md);
+}
+
+.prose pre code {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: inherit;
+}
+
+/* Switch Shiki dual-theme to dark variant when site is in dark mode */
+[data-theme="dark"] .prose pre,
+[data-theme="dark"] .prose pre span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.prose .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: "PlemolJP", monospace;
+  font-size: var(--font-size-xs);
+  padding: 0.2em 0.6em;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.prose pre:hover .copy-btn {
+  opacity: 1;
+}
+
+.prose .copy-btn:hover {
+  color: var(--color-text-primary);
+}
+
+.prose .copy-btn.copied {
+  color: var(--color-accent);
+  opacity: 1;
+}
+
 .prose strong {
   color: var(--color-text-primary);
   font-weight: 600;
@@ -97,7 +153,24 @@
 }
 
 .prose ol {
-  list-style-type: decimal;
+  list-style-type: none;
+  counter-reset: list-counter;
+  padding-left: 2rem;
+}
+
+.prose ol > li {
+  counter-increment: list-counter;
+  position: relative;
+}
+
+.prose ol > li::before {
+  content: counter(list-counter) ".";
+  font-weight: bold;
+  color: var(--color-text-primary);
+  position: absolute;
+  left: -2rem;
+  width: 1.75rem;
+  text-align: right;
 }
 
 .prose li {
