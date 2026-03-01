@@ -1,0 +1,122 @@
+---
+// Animated Bizlenz logo — stroke-dashoffset draw on scroll
+---
+
+<div class="bizlenz-logo-wrap">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1116 1116"
+    fill="none"
+    role="img"
+    aria-label="Bizlenz logo"
+  >
+    <!-- 4 bars in left-to-right order for staggered draw-in -->
+    <rect class="bizlenz-bar"
+      x="221" y="433" width="150" height="550" rx="10" fill="currentColor"
+    />
+    <rect class="bizlenz-bar"
+      x="408" y="333" width="150" height="550" rx="10" fill="currentColor"
+    />
+    <rect class="bizlenz-bar"
+      x="595" y="233" width="150" height="550" rx="10" fill="currentColor"
+    />
+    <rect class="bizlenz-bar"
+      x="782" y="133" width="150" height="550" rx="10" fill="currentColor"
+    />
+    <!-- Diagonal swoosh — draws in after bars -->
+    <path class="bizlenz-swoosh"
+      d="M98.1115 797.457C-20.0554 823.745 121.607 729.547 207.209 679.163C311.069 609.428 589.276 447.175 871.225 356.044C1153.17 264.914 1061.44 342.901 980.323 393.285C735.488 517.056 216.278 771.169 98.1115 797.457Z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="30"
+    />
+  </svg>
+</div>
+
+<script>
+  function setupBizlenzLogos() {
+    document
+      .querySelectorAll<HTMLElement>(".bizlenz-logo-wrap:not([data-ready])")
+      .forEach((wrap) => {
+        wrap.setAttribute("data-ready", "");
+
+        const bars   = wrap.querySelectorAll<SVGGeometryElement>(".bizlenz-bar");
+        const swoosh = wrap.querySelector<SVGGeometryElement>(".bizlenz-swoosh");
+
+        // Prime each bar with its full perimeter as the dash gap
+        bars.forEach((bar) => {
+          const len = bar.getTotalLength();
+          bar.style.strokeDasharray  = String(len);
+          bar.style.strokeDashoffset = String(len);
+        });
+
+        // Prime swoosh
+        if (swoosh) {
+          const len = swoosh.getTotalLength();
+          swoosh.style.strokeDasharray  = String(len);
+          swoosh.style.strokeDashoffset = String(len);
+        }
+
+        const io = new IntersectionObserver(
+          ([entry]) => {
+            if (!entry.isIntersecting) return;
+            io.disconnect();
+
+            // Bars: draw in left-to-right, then fill fades in
+            bars.forEach((bar, i) => {
+              const drawDelay = i * 100;
+              const fillDelay = drawDelay + 420;
+              bar.style.transition = [
+                `stroke-dashoffset 450ms ease ${drawDelay}ms`,
+                `fill-opacity 360ms ease ${fillDelay}ms`,
+                `stroke-opacity 300ms ease ${fillDelay + 180}ms`,
+              ].join(", ");
+              bar.style.strokeDashoffset = "0";
+              bar.style.fillOpacity      = "1";
+              bar.style.strokeOpacity    = "0";
+            });
+
+            // Swoosh: draw in after bars have started
+            if (swoosh) {
+              swoosh.style.transition = "stroke-dashoffset 650ms ease 480ms";
+              swoosh.style.strokeDashoffset = "0";
+            }
+          },
+          { threshold: 0.3 }
+        );
+
+        io.observe(wrap);
+      });
+  }
+
+  setupBizlenzLogos();
+  document.addEventListener("astro:page-load", setupBizlenzLogos);
+</script>
+
+<style>
+  .bizlenz-logo-wrap {
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .bizlenz-logo-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Initial state: invisible fill, stroke ready to animate */
+  .bizlenz-bar {
+    fill-opacity: 0;
+    stroke-opacity: 1;
+    stroke: currentColor;
+    stroke-width: 10;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .bizlenz-swoosh {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

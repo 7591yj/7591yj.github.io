@@ -2,6 +2,7 @@
 import Layout from "./Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
 import TableOfContents from "../components/content/TableOfContents.astro";
+import ProjectSlogan from "../components/content/ProjectSlogan.astro";
 
 interface Props {
   title: string;
@@ -10,9 +11,10 @@ interface Props {
   backLinkHref: string;
   backLinkLabel: string;
   headings: { depth: number; slug: string; text: string }[];
+  subtitle?: string;
 }
 
-const { title, module, headingTitle, backLinkHref, backLinkLabel, headings } =
+const { title, module, headingTitle, backLinkHref, backLinkLabel, headings, subtitle } =
   Astro.props;
 ---
 
@@ -22,6 +24,7 @@ const { title, module, headingTitle, backLinkHref, backLinkLabel, headings } =
       <PageHeading module={module} title={headingTitle}>
         <slot name="meta" />
       </PageHeading>
+      {subtitle && <ProjectSlogan text={subtitle} />}
     </section>
 
     <section class="container-main detail">

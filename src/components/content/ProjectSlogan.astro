@@ -1,0 +1,54 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+// Repeat 4 times per segment so the strip stays full across any viewport width
+const segment = Array(4).fill(text).join("  ·  ");
+---
+
+<div class="slogan-strip" aria-label={text}>
+  <div class="slogan-track">
+    <span class="slogan-seg" aria-hidden="true">{segment}</span>
+    <span class="slogan-seg" aria-hidden="true">{segment}</span>
+  </div>
+</div>
+
+<style>
+  .slogan-strip {
+    overflow: hidden;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-secondary);
+    padding: 0.65rem 0;
+  }
+
+  .slogan-track {
+    display: flex;
+    width: max-content;
+    animation: slogan-scroll 55s linear infinite;
+  }
+
+  .slogan-track:hover {
+    animation-play-state: paused;
+  }
+
+  .slogan-seg {
+    font-family: "PlemolJP", monospace;
+    font-size: var(--font-size-xl);
+    font-style: italic;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    padding-right: 4rem;
+    letter-spacing: 0.04em;
+  }
+
+  @keyframes slogan-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+</style>
