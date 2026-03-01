@@ -3,7 +3,7 @@ set -e
 
 NIX="nix develop --command"
 SESSION="7591yj_github_io"
-PROJECT_DIR="$HOME/Developer/7591yj.github.io_dev"
+PROJECT_DIR="$HOME/Developer/7591yj.github.io"
 
 if tmux has-session -t "$SESSION" 2>/dev/null; then
   tmux attach-session -t "$SESSION"
