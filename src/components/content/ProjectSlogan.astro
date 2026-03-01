@@ -4,8 +4,9 @@ interface Props {
 }
 
 const { text } = Astro.props;
-// Repeat 4 times per segment so the strip stays full across any viewport width
-const segment = Array(4).fill(text).join("  ·  ");
+// Two identical segments fill the track; animating by -50% creates a seamless loop.
+// Trailing separator on each repetition keeps the boundary indistinguishable.
+const segment = Array(4).fill(text + "  ·  ").join("");
 ---
 
 <div class="slogan-strip" aria-label={text}>
@@ -39,7 +40,6 @@ const segment = Array(4).fill(text).join("  ·  ");
     font-style: italic;
     color: var(--color-text-primary);
     white-space: nowrap;
-    padding-right: 4rem;
     letter-spacing: 0.04em;
   }
 
