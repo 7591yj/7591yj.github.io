@@ -4,15 +4,22 @@ interface Props {
 }
 
 const { text } = Astro.props;
-// Two identical segments fill the track; animating by -50% creates a seamless loop.
-// Trailing separator on each repetition keeps the boundary indistinguishable.
-const segment = Array(4).fill(text + "  ·  ").join("");
 ---
 
 <div class="slogan-strip" aria-label={text}>
   <div class="slogan-track">
-    <span class="slogan-seg" aria-hidden="true">{segment}</span>
-    <span class="slogan-seg" aria-hidden="true">{segment}</span>
+    {
+      [0, 1].map(() => (
+        <span class="slogan-seg" aria-hidden="true">
+          {[0, 1, 2, 3].map(() => (
+            <>
+              <span>{text}</span>
+              <span class="slogan-dot">·</span>
+            </>
+          ))}
+        </span>
+      ))
+    }
   </div>
 </div>
 
@@ -35,12 +42,20 @@ const segment = Array(4).fill(text + "  ·  ").join("");
   }
 
   .slogan-seg {
+    display: flex;
+    align-items: center;
     font-family: "PlemolJP", monospace;
     font-size: var(--font-size-xl);
     font-style: italic;
     color: var(--color-text-primary);
     white-space: nowrap;
     letter-spacing: 0.04em;
+  }
+
+  .slogan-dot {
+    margin: 0 1rem;
+    color: var(--color-text-muted);
+    font-style: normal;
   }
 
   @keyframes slogan-scroll {
