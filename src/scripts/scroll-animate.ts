@@ -18,3 +18,5 @@ function init() {
 
 // Re-run on Astro page transitions
 document.addEventListener("astro:page-load", init);
+
+export {};
