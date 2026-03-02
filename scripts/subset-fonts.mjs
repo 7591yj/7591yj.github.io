@@ -12,7 +12,7 @@
  *   or the combined alias: bun run build:optimized
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from "fs";
 import { join, resolve } from "path";
 import subsetFont from "subset-font";
 
@@ -27,6 +27,16 @@ const FONT_FILES = [
   "PlemolJP-Bold.woff2",
   "PlemolJP-BoldItalic.woff2",
 ];
+
+if (!existsSync(DIST)) {
+  console.error("Error: dist/ not found. Run 'astro build' first.");
+  process.exit(1);
+}
+
+if (!existsSync(SOURCES_DIR)) {
+  console.error("Error: font-sources/ not found. It should be committed to the repo.");
+  process.exit(1);
+}
 
 // Collect all HTML files from dist/
 
@@ -62,17 +72,28 @@ console.log(`Unique characters to include: ${uniqueChars.length}`);
 
 // Subset each font file
 
+mkdirSync(FONTS_DIR, { recursive: true });
+
 for (const filename of FONT_FILES) {
   const sourcePath = join(SOURCES_DIR, filename);
-  const fontPath = join(FONTS_DIR, filename);
+
+  if (!existsSync(sourcePath)) {
+    console.error(`Error: Missing source font: ${sourcePath}`);
+    process.exit(1);
+  }
+
   const original = readFileSync(sourcePath);
   const originalKB = (original.length / 1024).toFixed(1);
 
-  const subset = await subsetFont(original, uniqueChars, {
-    targetFormat: "woff2",
-  });
+  let subset;
+  try {
+    subset = await subsetFont(original, uniqueChars, { targetFormat: "woff2" });
+  } catch (err) {
+    console.error(`Error subsetting ${filename}: ${err.message}`);
+    process.exit(1);
+  }
 
-  writeFileSync(fontPath, subset);
+  writeFileSync(join(FONTS_DIR, filename), subset);
   const subsetKB = (subset.length / 1024).toFixed(1);
   const saving = (
     ((original.length - subset.length) / original.length) *
