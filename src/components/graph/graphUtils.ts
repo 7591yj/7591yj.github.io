@@ -33,7 +33,7 @@ export function initialPositions(
   techIds: string[],
   width: number,
   height: number,
-): { x: number; y: number }[] {
+): Map<string, { x: number; y: number }> {
   const cx = width / 2;
   const cy = height / 2;
   const radius = Math.min(width, height) * 0.35;
@@ -57,14 +57,17 @@ export function initialPositions(
     if (connected.length === 0) return { x: cx, y: cy };
 
     const avgX =
-      connected.reduce((sum, { i }) => sum + projectPositions[i].x, 0) /
+      connected.reduce((sum, { i }) => sum + projectPositions[i]!.x, 0) /
       connected.length;
     const avgY =
-      connected.reduce((sum, { i }) => sum + projectPositions[i].y, 0) /
+      connected.reduce((sum, { i }) => sum + projectPositions[i]!.y, 0) /
       connected.length;
 
     return { x: avgX, y: avgY };
   });
 
-  return [...projectPositions, ...techPositions];
+  const result = new Map<string, { x: number; y: number }>();
+  projectNodes.forEach((p, i) => result.set(p.id, projectPositions[i]!));
+  techIds.forEach((id, i) => result.set(id, techPositions[i]!));
+  return result;
 }
