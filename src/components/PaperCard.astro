@@ -1,0 +1,25 @@
+---
+import Button from "./Button.astro";
+
+interface Props {
+  href?: string;
+  disabled?: boolean;
+}
+
+const { href = "#", disabled } = Astro.props;
+---
+
+<div class="paper-item p-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+  <p class="flex-10">
+    <slot />
+  </p>
+  <Button class="m-0 sm:m-4" size="md" href={href} disabled={disabled}>
+    See<br />Paper
+  </Button>
+</div>
+
+<style>
+  .paper-item:not(:last-child) {
+    border-bottom: 1px solid var(--color-border);
+  }
+</style>

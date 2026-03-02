@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
 import SectionBlock from "../components/SectionBlock.astro";
 import EducationCard from "../components/EducationCard.astro";
-import Button from "../components/Button.astro";
+import PaperCard from "../components/PaperCard.astro";
 import { SITE_NAME, EMAIL } from "../consts";
 ---
 
@@ -18,20 +18,19 @@ import { SITE_NAME, EMAIL } from "../consts";
           <span class="meta__label"><Icon name="cake" /> BORN</span>
           <span class="meta__value">2002. 07. 20</span>
           <span class="meta__label"><Icon name="at" /> EMAIL</span>
-          <a
-            class="meta__link"
-            href={`mailto:${EMAIL}`}
-          >{EMAIL} &#8599;</a>
+          <a class="meta__link" href={`mailto:${EMAIL}`}>{EMAIL} &#8599;</a>
           <span class="meta__label"><Icon name="map-pin-house" /> HOME</span>
           <a
             class="meta__link"
             href="https://www.google.com/maps/search/?api=1&query=Jeonju,%20South%20Korea"
-          >Jeonju, South Korea &#8599;</a>
+            >Jeonju, South Korea &#8599;</a
+          >
           <span class="meta__label"><Icon name="map-pin" /> LOCATION</span>
           <a
             class="meta__link"
             href="https://www.google.com/maps/search/?api=1&query=Tokyo,%20Japan"
-          >Tokyo, Japan &#8599;</a>
+            >Tokyo, Japan &#8599;</a
+          >
         </div>
       </PageHeading>
       <SectionBlock title="EDUCATION///">
@@ -93,21 +92,20 @@ import { SITE_NAME, EMAIL } from "../consts";
       </SectionBlock>
       <SectionBlock title="PAPERS///">
         <div class="container-main pt-6 pb-6">
-          <div class="p-4 flex flex-col gap-2 sm:flex-row sm:gap-4">
-            <p class="pb-6 flex-10">
-              The 25th International Conference on Electronics, Information, and
-              Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026)
-              (Published) “Automated Korean-English Bilingual Highlighted Text
-              Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim
-              et.al 8
-            </p>
-            <Button
-              class="m-0 sm:m-4"
-              size="md"
-              href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
-              >See<br />Paper</Button
-            >
-          </div>
+          <PaperCard href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation">
+            The 25th International Conference on Electronics, Information, and
+            Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026)
+            (Published) “Automated Korean-English Bilingual Highlighted Text
+            Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim
+            et.al 8
+          </PaperCard>
+          <PaperCard disabled>
+            The 13th IEEE International Conference on Consumer Electronics –
+            Taoyuan, Taiwan 2026 (IEEE ICCE-TW 2026) (Submitted)
+            “Illumination-Adaptive Part Detection for Automated FDM 3D
+            Printing Dataset Collection” Seungyun Choi, Seungjun Lee, Yeongjin
+            Kim, Namjoon Kim, Hyukjae Lee
+          </PaperCard>
         </div>
       </SectionBlock>
       <SectionBlock title="CLUBS///">
@@ -202,7 +200,6 @@ import { SITE_NAME, EMAIL } from "../consts";
   </main>
 
   <style>
-
     .gallery {
       width: 100%;
       display: flex;
@@ -255,6 +252,5 @@ import { SITE_NAME, EMAIL } from "../consts";
         white-space: normal;
       }
     }
-
   </style>
 </Layout>
