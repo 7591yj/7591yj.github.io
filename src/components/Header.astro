@@ -380,6 +380,16 @@ const currentPath = Astro.url.pathname;
     });
   }
 
+  // Close the menu before the DOM is captured for the view transition
+  document.addEventListener("astro:before-swap", () => {
+    const hamburger = document.querySelector(".hamburger");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    const header = document.querySelector(".header");
+    hamburger?.setAttribute("aria-expanded", "false");
+    mobileMenu?.classList.remove("open");
+    header?.classList.remove("header--menu-open");
+  });
+
   // Run on initial load and on Astro page transitions
   initHamburger();
   document.addEventListener("astro:after-swap", initHamburger);
