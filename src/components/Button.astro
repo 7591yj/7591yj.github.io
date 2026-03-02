@@ -7,6 +7,7 @@ interface Props {
   icon?: string;
   href?: string;
   class?: string;
+  disabled?: boolean;
   [key: string]: any;
 }
 
@@ -16,6 +17,7 @@ const {
   icon,
   href,
   class: className,
+  disabled,
   ...rest
 } = Astro.props;
 const Tag = href ? "a" : "button";
@@ -25,6 +27,7 @@ const hasLabel = Astro.slots.has("default");
 <Tag
   class:list={["btn", `btn--${variant}`, `btn--${size}`, className]}
   href={href}
+  aria-disabled={disabled ? "true" : undefined}
   {...rest}
 >
   {variant !== "icon" && <span class="btn__fill" aria-hidden="true" />}
@@ -58,6 +61,21 @@ const hasLabel = Astro.slots.has("default");
     background: var(--color-border);
     clip-path: var(--clip-cutoff);
     transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .btn[aria-disabled="true"] {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .btn[aria-disabled="true"]:hover::before {
+    opacity: 0;
+  }
+
+  .btn[aria-disabled="true"]:hover .btn__fill {
+    transform: scaleX(0);
   }
 
   /* Hover border fade-in */
