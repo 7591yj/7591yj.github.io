@@ -3,10 +3,12 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "node scripts/setup-fonts.mjs && astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "subset-fonts": "node scripts/subset-fonts.mjs",
+    "build:optimized": "astro build && node scripts/subset-fonts.mjs && astro build"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
@@ -28,6 +30,7 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.2.18"
+    "@iconify-json/carbon": "^1.2.18",
+    "subset-font": "^2.4.0"
   }
 }
