@@ -7,25 +7,20 @@ import "swiper/css/effect-fade";
 import InteractiveDotGrid from "../InteractiveDotGrid";
 import "./HeroCarousel.css";
 
-interface ProjectData {
-  title: string;
-  subtitle: string;
-  tech: string[];
-  status: string;
-  current?: boolean;
-  href?: string;
-}
-
-interface Slide {
+interface ProjectSlide {
   image?: string;
-  alt: string;
-  title?: string;
-  subtitle?: string;
-  project?: ProjectData;
+  project: {
+    title: string;
+    subtitle: string;
+    tech: string[];
+    status?: string;
+    current?: boolean;
+    href?: string;
+  };
 }
 
 interface Props {
-  slides: Slide[];
+  slides: ProjectSlide[];
   fullscreen?: boolean;
 }
 
@@ -84,7 +79,7 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
                 <>
                   <img
                     src={slide.image}
-                    alt={slide.alt}
+                    alt={slide.project.title}
                     className="hero-carousel__image"
                   />
                   <InteractiveDotGrid
@@ -103,90 +98,68 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
                     dotColor="rgba(0, 0, 0, 0.8)"
                   />
                   <span className="hero-carousel__fallback-title">
-                    {slide.project?.title ?? slide.alt}
+                    {slide.project.title}
                   </span>
-                  {slide.project && (
-                    <span className="hero-carousel__fallback-subtitle">
-                      {slide.project.subtitle}
-                    </span>
-                  )}
-                  {slide.project && (
-                    <div className="hero-carousel__fallback-tech">
-                      {slide.project.tech.map((t) => (
-                        <span key={t}>{t}</span>
-                      ))}
-                    </div>
-                  )}
-                  {slide.project && (
-                    <span className="hero-carousel__fallback-status">
-                      {slide.project.current ? "IN DEVELOPMENT" : "RELEASED"}
-                    </span>
-                  )}
+                  <span className="hero-carousel__fallback-subtitle">
+                    {slide.project.subtitle}
+                  </span>
+                  <div className="hero-carousel__fallback-tech">
+                    {slide.project.tech.map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                  </div>
+                  <span className="hero-carousel__fallback-status">
+                    {slide.project.current ? "IN DEVELOPMENT" : "RELEASED"}
+                  </span>
                 </div>
               )}
 
               {/* Watermark index */}
-              {slide.project && (
-                <span className="hero-carousel__watermark">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              )}
-
-              {/* Simple title/subtitle overlay (non-project slides) */}
-              {!slide.project && (slide.title || slide.subtitle) && (
-                <div className="hero-carousel__overlay">
-                  {slide.title && (
-                    <h3 className="hero-carousel__title">{slide.title}</h3>
-                  )}
-                  {slide.subtitle && (
-                    <p className="hero-carousel__subtitle">{slide.subtitle}</p>
-                  )}
-                </div>
-              )}
+              <span className="hero-carousel__watermark">
+                {String(i + 1).padStart(2, "0")}
+              </span>
 
               {/* Project info overlay */}
-              {slide.project && (
-                <div className="hero-carousel__project-overlay">
-                  <a
-                    className="hero-carousel__project-card"
-                    href={slide.project.href}
+              <div className="hero-carousel__project-overlay">
+                <a
+                  className="hero-carousel__project-card"
+                  href={slide.project.href}
+                >
+                  <div
+                    className={`hero-carousel__project-badge${
+                      slide.project.current
+                        ? " hero-carousel__project-badge--current"
+                        : ""
+                    }`}
                   >
-                    <div
-                      className={`hero-carousel__project-badge${
+                    <span
+                      className={`hero-carousel__project-led${
                         slide.project.current
-                          ? " hero-carousel__project-badge--current"
-                          : ""
+                          ? " hero-carousel__project-led--active"
+                          : " hero-carousel__project-led--hollow"
                       }`}
-                    >
-                      <span
-                        className={`hero-carousel__project-led${
-                          slide.project.current
-                            ? " hero-carousel__project-led--active"
-                            : " hero-carousel__project-led--hollow"
-                        }`}
-                      />
-                      <span>
-                        {slide.project.current ? "CURRENTLY BUILDING" : "RELEASED"}
-                      </span>
-                    </div>
-                    <div className="hero-carousel__project-header">
-                      <h3 className="hero-carousel__project-title">
-                        {slide.project.title}
-                        <span className="hero-carousel__project-arrow">&rarr;</span>
-                      </h3>
-                    </div>
-                    <p className="hero-carousel__project-subtitle">
-                      <span className="hero-carousel__project-chevron">&gt;</span>
-                      {slide.project.subtitle}
-                    </p>
-                    <div className="hero-carousel__project-tech">
-                      {slide.project.tech.map((t) => (
-                        <span key={t}>{t}</span>
-                      ))}
-                    </div>
-                  </a>
-                </div>
-              )}
+                    />
+                    <span>
+                      {slide.project.current ? "CURRENTLY BUILDING" : "RELEASED"}
+                    </span>
+                  </div>
+                  <div className="hero-carousel__project-header">
+                    <h3 className="hero-carousel__project-title">
+                      {slide.project.title}
+                      <span className="hero-carousel__project-arrow">&rarr;</span>
+                    </h3>
+                  </div>
+                  <p className="hero-carousel__project-subtitle">
+                    <span className="hero-carousel__project-chevron">&gt;</span>
+                    {slide.project.subtitle}
+                  </p>
+                  <div className="hero-carousel__project-tech">
+                    {slide.project.tech.map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                  </div>
+                </a>
+              </div>
             </div>
           ))}
         </div>

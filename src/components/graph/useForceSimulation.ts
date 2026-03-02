@@ -26,7 +26,7 @@ export function useForceSimulation(
   edges: GraphEdge[],
   containerSize: { width: number; height: number },
   nodeSizes: { width: number; height: number }[],
-  onTick: (positions: { x: number; y: number }[]) => void,
+  onTick: (positions: Map<string, { x: number; y: number }>) => void,
   enabled: boolean,
 ) {
   const nodesRef = useRef(nodes);
@@ -60,16 +60,11 @@ export function useForceSimulation(
     draggedRef.current = null;
   }, []);
 
-  const setHovered = useCallback((index: number | null) => {
-    hoveredRef.current = index;
-    // Kill velocity so it stops in place immediately
-    if (index !== null) {
-      const n = nodesRef.current[index];
-      if (n) {
-        n.vx = 0;
-        n.vy = 0;
-      }
-    }
+  const setHovered = useCallback((id: string | null) => {
+    if (id === null) { hoveredRef.current = null; return; }
+    const idx = nodesRef.current.findIndex((n) => n.id === id);
+    hoveredRef.current = idx >= 0 ? idx : null;
+    if (idx >= 0) { const n = nodesRef.current[idx]; if (n) { n.vx = 0; n.vy = 0; } }
   }, []);
 
   useEffect(() => {
@@ -161,7 +156,7 @@ export function useForceSimulation(
         node.y = Math.max(cfg.padding + halfH, Math.min(containerSize.height - cfg.padding - halfH, node.y));
       }
 
-      onTick(ns.map((n) => ({ x: n.x, y: n.y })));
+      onTick(new Map(ns.map((n) => [n.id, { x: n.x, y: n.y }])));
       rafRef.current = requestAnimationFrame(tick);
     };
 

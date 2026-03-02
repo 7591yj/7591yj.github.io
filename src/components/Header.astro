@@ -75,6 +75,7 @@ const currentPath = Astro.url.pathname;
     backdrop-filter: blur(0.64vw);
     background: var(--color-bg-primary);
     border-bottom: 1px solid var(--color-border);
+    view-transition-name: site-header;
     transition:
       background var(--duration-normal) var(--ease-out-expo),
       border-color var(--duration-normal) var(--ease-out-expo),
@@ -378,6 +379,16 @@ const currentPath = Astro.url.pathname;
       if (window.innerWidth > 768) close();
     });
   }
+
+  // Close the menu before the DOM is captured for the view transition
+  document.addEventListener("astro:before-swap", () => {
+    const hamburger = document.querySelector(".hamburger");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    const header = document.querySelector(".header");
+    hamburger?.setAttribute("aria-expanded", "false");
+    mobileMenu?.classList.remove("open");
+    header?.classList.remove("header--menu-open");
+  });
 
   // Run on initial load and on Astro page transitions
   initHamburger();

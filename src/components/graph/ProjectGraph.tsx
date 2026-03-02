@@ -23,10 +23,53 @@ interface Props {
   projects: Project[];
 }
 
+function computeGraphVisibility(
+  hoveredNode: string | null,
+  matchedIds: Set<string> | null,
+  adjacency: Map<string, Set<string>>,
+) {
+  const isNodeHighlighted = (id: string) => hoveredNode === id;
+  const isNodeConnected = (id: string) =>
+    hoveredNode !== null && adjacency.get(hoveredNode)?.has(id);
+
+  const isProjectDimmedByFilter = (id: string) =>
+    matchedIds !== null && !matchedIds.has(id);
+
+  const isTechDimmedByFilter = (techId: string) => {
+    if (matchedIds === null) return false;
+    const connectedProjects = adjacency.get(techId);
+    if (!connectedProjects) return true;
+    return [...connectedProjects].every((pid) => !matchedIds.has(pid));
+  };
+
+  const isNodeDimmed = (id: string) => {
+    const dimmedByHover =
+      hoveredNode !== null && hoveredNode !== id && !isNodeConnected(id);
+    const dimmedByFilter = id.startsWith("tech:")
+      ? isTechDimmedByFilter(id)
+      : isProjectDimmedByFilter(id);
+    return dimmedByHover || dimmedByFilter;
+  };
+
+  const isEdgeHighlighted = (edge: GraphEdgeType) =>
+    hoveredNode !== null &&
+    (edge.source === hoveredNode || edge.target === hoveredNode);
+
+  const isEdgeDimmed = (edge: GraphEdgeType) => {
+    const dimmedByHover = hoveredNode !== null && !isEdgeHighlighted(edge);
+    const dimmedByFilter =
+      matchedIds !== null &&
+      (!matchedIds.has(edge.source) || isTechDimmedByFilter(edge.target));
+    return dimmedByHover || dimmedByFilter;
+  };
+
+  return { isNodeHighlighted, isNodeDimmed, isEdgeHighlighted, isEdgeDimmed };
+}
+
 export default function ProjectGraph({ projects }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [positions, setPositions] = useState<{ x: number; y: number }[]>([]);
+  const [positions, setPositions] = useState<Map<string, { x: number; y: number }>>(new Map());
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [entered, setEntered] = useState(false);
@@ -173,21 +216,21 @@ export default function ProjectGraph({ projects }: Props) {
     );
 
     const nodes: GraphNodeType[] = [
-      ...projectNodes.map((p, i) => ({
+      ...projectNodes.map((p) => ({
         id: p.id,
         type: "project" as const,
         project: p.project,
-        x: initPos[i].x,
-        y: initPos[i].y,
+        x: initPos.get(p.id)!.x,
+        y: initPos.get(p.id)!.y,
         vx: 0,
         vy: 0,
       })),
-      ...uniqueTechs.map((t, i) => ({
+      ...uniqueTechs.map((t) => ({
         id: `tech:${t}`,
         type: "tech" as const,
         label: t,
-        x: initPos[projectNodes.length + i].x,
-        y: initPos[projectNodes.length + i].y,
+        x: initPos.get(`tech:${t}`)!.x,
+        y: initPos.get(`tech:${t}`)!.y,
         vx: 0,
         vy: 0,
       })),
@@ -200,8 +243,8 @@ export default function ProjectGraph({ projects }: Props) {
     return () => clearTimeout(timer);
   }, [containerSize.width, containerSize.height, isMobile, projectNodes, techIds, uniqueTechs]);
 
-  const onTick = useCallback((pos: { x: number; y: number }[]) => {
-    setPositions(pos.map((p) => ({ ...p })));
+  const onTick = useCallback((pos: Map<string, { x: number; y: number }>) => {
+    setPositions(new Map(pos));
   }, []);
 
   const { startDrag, moveDrag, endDrag, setHovered } = useForceSimulation(
@@ -212,6 +255,11 @@ export default function ProjectGraph({ projects }: Props) {
     onTick,
     simulationReady && !isMobile,
   );
+
+  const hoverNode = useCallback((id: string | null) => {
+    setHoveredNode(id);
+    setHovered(id);
+  }, [setHovered]);
 
   const handlePointerDown = (index: number) => (e: React.PointerEvent) => {
     if (isMobile) return;
@@ -233,51 +281,8 @@ export default function ProjectGraph({ projects }: Props) {
     endDrag();
   };
 
-  // Determine which nodes/edges are highlighted or dimmed
-  const isNodeHighlighted = (id: string) => hoveredNode === id;
-  const isNodeConnected = (id: string) =>
-    hoveredNode !== null && adjacency.get(hoveredNode)?.has(id);
-
-  const isProjectDimmedByFilter = (id: string) =>
-    matchedIds !== null && !matchedIds.has(id);
-
-  const isTechDimmedByFilter = (techId: string) => {
-    if (matchedIds === null) return false;
-    // A tech node is dimmed if ALL its connected projects are dimmed
-    const connectedProjects = adjacency.get(techId);
-    if (!connectedProjects) return true;
-    return [...connectedProjects].every((pid) => !matchedIds.has(pid));
-  };
-
-  const isNodeDimmed = (id: string) => {
-    const dimmedByHover =
-      hoveredNode !== null && hoveredNode !== id && !isNodeConnected(id);
-    const dimmedByFilter = id.startsWith("tech:")
-      ? isTechDimmedByFilter(id)
-      : isProjectDimmedByFilter(id);
-    return dimmedByHover || dimmedByFilter;
-  };
-
-  const isEdgeHighlighted = (edge: GraphEdgeType) =>
-    hoveredNode !== null &&
-    (edge.source === hoveredNode || edge.target === hoveredNode);
-  const isEdgeDimmed = (edge: GraphEdgeType) => {
-    const dimmedByHover = hoveredNode !== null && !isEdgeHighlighted(edge);
-    const dimmedByFilter =
-      matchedIds !== null &&
-      (!matchedIds.has(edge.source) || isTechDimmedByFilter(edge.target));
-    return dimmedByHover || dimmedByFilter;
-  };
-
-  /** Map from node id to its index in positions array */
-  const nodeIndex = useMemo(() => {
-    const map = new Map<string, number>();
-    projectNodes.forEach((p, i) => map.set(p.id, i));
-    uniqueTechs.forEach((t, i) =>
-      map.set(`tech:${t}`, projectNodes.length + i),
-    );
-    return map;
-  }, [projectNodes, uniqueTechs]);
+  const { isNodeHighlighted, isNodeDimmed, isEdgeHighlighted, isEdgeDimmed } =
+    computeGraphVisibility(hoveredNode, matchedIds, adjacency);
 
   const filterBar = (
     <FilterBar
@@ -351,19 +356,18 @@ export default function ProjectGraph({ projects }: Props) {
             zIndex: 1,
           }}
         >
-          {positions.length > 0 &&
+          {positions.size > 0 &&
             edges.map((edge, i) => {
-              const si = nodeIndex.get(edge.source);
-              const ti = nodeIndex.get(edge.target);
-              if (si === undefined || ti === undefined) return null;
-              if (!positions[si] || !positions[ti]) return null;
+              const sp = positions.get(edge.source);
+              const tp = positions.get(edge.target);
+              if (!sp || !tp) return null;
               return (
                 <GraphEdge
                   key={`${edge.source}-${edge.target}`}
-                  x1={positions[si].x}
-                  y1={positions[si].y}
-                  x2={positions[ti].x}
-                  y2={positions[ti].y}
+                  x1={sp.x}
+                  y1={sp.y}
+                  x2={tp.x}
+                  y2={tp.y}
                   highlighted={isEdgeHighlighted(edge)}
                   dimmed={isEdgeDimmed(edge)}
                   animationDelay={0.3 + i * 0.08}
@@ -373,9 +377,9 @@ export default function ProjectGraph({ projects }: Props) {
         </svg>
 
         {/* Project node layer */}
-        {positions.length > 0 &&
+        {positions.size > 0 &&
           projectNodes.map((p, i) => {
-            const pos = positions[i];
+            const pos = positions.get(p.id);
             if (!pos) return null;
             return (
               <div
@@ -402,26 +406,20 @@ export default function ProjectGraph({ projects }: Props) {
                   highlighted={isNodeHighlighted(p.id)}
                   style={{}}
                   onPointerDown={handlePointerDown(i)}
-                  onPointerEnter={() => {
-                    setHoveredNode(p.id);
-                    setHovered(i);
-                  }}
-                  onPointerLeave={() => {
-                    setHoveredNode(null);
-                    setHovered(null);
-                  }}
+                  onPointerEnter={() => hoverNode(p.id)}
+                  onPointerLeave={() => hoverNode(null)}
                 />
               </div>
             );
           })}
 
         {/* Tech node layer */}
-        {positions.length > 0 &&
+        {positions.size > 0 &&
           uniqueTechs.map((t, i) => {
             const idx = projectNodes.length + i;
-            const pos = positions[idx];
-            if (!pos) return null;
             const techId = `tech:${t}`;
+            const pos = positions.get(techId);
+            if (!pos) return null;
             return (
               <div
                 key={techId}
@@ -446,14 +444,8 @@ export default function ProjectGraph({ projects }: Props) {
                   dimmed={isNodeDimmed(techId)}
                   highlighted={isNodeHighlighted(techId)}
                   onPointerDown={handlePointerDown(idx)}
-                  onPointerEnter={() => {
-                    setHoveredNode(techId);
-                    setHovered(idx);
-                  }}
-                  onPointerLeave={() => {
-                    setHoveredNode(null);
-                    setHovered(null);
-                  }}
+                  onPointerEnter={() => hoverNode(techId)}
+                  onPointerLeave={() => hoverNode(null)}
                 />
               </div>
             );

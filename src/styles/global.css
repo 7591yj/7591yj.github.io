@@ -65,6 +65,16 @@
   }
 }
 
+/* Keep the header persistent across page transitions */
+::view-transition-old(site-header) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
 /* Base styles */
 html {
   color: var(--color-text-primary);

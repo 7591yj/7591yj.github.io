@@ -20,6 +20,12 @@ export default function InteractiveDotGrid({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // No hover interaction on touch devices — skip entirely
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    // Respect user's motion preference
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -27,6 +33,7 @@ export default function InteractiveDotGrid({
     if (!ctx) return;
 
     let animId = 0;
+    let running = false;
     let mouseX = -9999;
     let mouseY = -9999;
 
@@ -147,7 +154,19 @@ export default function InteractiveDotGrid({
         }
       }
 
+      if (running) animId = requestAnimationFrame(draw);
+    }
+
+    function startLoop() {
+      if (running) return;
+      running = true;
       animId = requestAnimationFrame(draw);
+    }
+
+    function stopLoop() {
+      running = false;
+      cancelAnimationFrame(animId);
+      animId = 0;
     }
 
     resize();
@@ -155,14 +174,23 @@ export default function InteractiveDotGrid({
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
 
+    // Pause the rAF loop when the canvas is scrolled out of view
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) startLoop();
+        else stopLoop();
+      },
+      { threshold: 0 },
+    );
+    io.observe(canvas);
+
     window.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseleave", onMouseLeave);
 
-    animId = requestAnimationFrame(draw);
-
     return () => {
-      cancelAnimationFrame(animId);
+      stopLoop();
       ro.disconnect();
+      io.disconnect();
       window.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseleave", onMouseLeave);
     };

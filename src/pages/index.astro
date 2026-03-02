@@ -35,7 +35,6 @@ const sortedProjects = [...softwareProjects].sort((a, b) => {
 
 const slides = sortedProjects.map((p) => ({
   image: p.frontmatter.images?.[0],
-  alt: p.frontmatter.title,
   project: {
     title: p.frontmatter.title,
     subtitle: p.frontmatter.subtitle,
@@ -68,7 +67,7 @@ const archivePosts = latestPosts.slice(1);
 <Layout transparentHeader>
   <main>
     <section class="hero-section">
-      <HeroCarousel slides={slides} fullscreen client:load />
+      <HeroCarousel slides={slides} fullscreen client:idle />
     </section>
 
     <!-- ============ BLOG ============ -->

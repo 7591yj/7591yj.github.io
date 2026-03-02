@@ -8,6 +8,12 @@ function init() {
 
   if (!header || !hero) return;
 
+  // Set the correct state immediately
+  if (window.scrollY < 1) {
+    header.classList.add("header--transparent");
+    header.classList.remove("header--scrolled");
+  }
+
   const observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
@@ -37,3 +43,5 @@ function init() {
 }
 
 document.addEventListener("astro:page-load", init);
+
+export {};
