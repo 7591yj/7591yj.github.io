@@ -35,7 +35,6 @@ const sortedProjects = [...softwareProjects].sort((a, b) => {
 
 const slides = sortedProjects.map((p) => ({
   image: p.frontmatter.images?.[0],
-  alt: p.frontmatter.title,
   project: {
     title: p.frontmatter.title,
     subtitle: p.frontmatter.subtitle,

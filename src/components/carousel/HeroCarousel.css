@@ -155,27 +155,6 @@
   user-select: none;
 }
 
-.hero-carousel__overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  padding: 1.5rem;
-}
-
-.hero-carousel__title {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  color: #fff;
-}
-
-.hero-carousel__subtitle {
-  font-size: var(--font-size-md);
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 0.25rem;
-}
-
 /* ========================================
  * Navigation
  * ======================================== */
