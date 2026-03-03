@@ -6,6 +6,7 @@ import SectionBlock from "../components/SectionBlock.astro";
 import BlogPostCard from "../components/BlogPostCard.astro";
 import Button from "../components/Button.astro";
 import { SITE_NAME } from "../consts";
+import { useTranslations } from "../i18n/ui";
 
 const blogModules = import.meta.glob<{
   frontmatter: Record<string, any>;
@@ -63,12 +64,20 @@ const latestDate =
 
 const featuredPost = latestPosts[0];
 const archivePosts = latestPosts.slice(1);
+const locale = Astro.currentLocale ?? "en";
+const t = useTranslations(locale);
 ---
 
 <Layout transparentHeader>
   <main>
     <section class="hero-section">
-      <HeroCarousel slides={slides} fullscreen client:idle />
+      <HeroCarousel
+        slides={slides}
+        fullscreen
+        releasedLabel={t("status.released")}
+        inDevelopmentLabel={t("status.inDevelopment")}
+        client:idle
+      />
     </section>
 
     <!-- ============ BLOG ============ -->

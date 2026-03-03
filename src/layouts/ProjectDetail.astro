@@ -1,18 +1,32 @@
 ---
 import DetailLayout from "./DetailLayout.astro";
 import { SITE_NAME } from "../consts";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { useTranslations } from "../i18n/ui";
+import type { ProjectStatus } from "../types";
 
 interface Frontmatter {
   title: string;
   subtitle?: string;
   year?: number;
-  status?: string;
+  status?: ProjectStatus;
   link?: string;
 }
 
 const { title, subtitle, year, status, link } =
   Astro.props.frontmatter as Frontmatter;
 const headings = Astro.props.headings ?? [];
+const locale = Astro.currentLocale ?? "en";
+const t = useTranslations(locale);
+
+const statusLabels: Record<Frontmatter["status"], string> = {
+  released: t("status.released"),
+  "in development": t("status.inDevelopment"),
+  planned: t("status.planned"),
+  prototype: t("status.prototype"),
+  paused: t("status.paused"),
+  archived: t("status.archived"),
+};
 ---
 
 <DetailLayout
@@ -20,15 +34,15 @@ const headings = Astro.props.headings ?? [];
   module="MODULE.001///"
   headingTitle={title}
   subtitle={subtitle}
-  backLinkHref="/projects"
-  backLinkLabel="Back to projects"
+  backLinkHref={getRelativeLocaleUrl(locale, "/projects")}
+  backLinkLabel={t("detail.backProjects")}
   headings={headings}
 >
   <div class="meta" slot="meta">
     {
       year && (
         <>
-          <span class="meta__label">YEAR</span>
+          <span class="meta__label">{t("meta.year")}</span>
           <span class="meta__value">{year}</span>
         </>
       )
@@ -36,15 +50,15 @@ const headings = Astro.props.headings ?? [];
     {
       status && (
         <>
-          <span class="meta__label">STATUS</span>
-          <span class="meta__value">{status}</span>
+          <span class="meta__label">{t("meta.status")}</span>
+          <span class="meta__value">{statusLabels[status]}</span>
         </>
       )
     }
     {
       link && (
         <>
-          <span class="meta__label">LINK</span>
+          <span class="meta__label">{t("meta.link")}</span>
           <a
             class="meta__link"
             href={link}

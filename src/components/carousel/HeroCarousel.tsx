@@ -22,9 +22,16 @@ interface ProjectSlide {
 interface Props {
   slides: ProjectSlide[];
   fullscreen?: boolean;
+  releasedLabel: string;
+  inDevelopmentLabel: string;
 }
 
-export default function HeroCarousel({ slides, fullscreen }: Props) {
+export default function HeroCarousel({
+  slides,
+  fullscreen,
+  releasedLabel,
+  inDevelopmentLabel,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
   const [playing, setPlaying] = useState(true);
@@ -109,7 +116,10 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
                     ))}
                   </div>
                   <span className="hero-carousel__fallback-status">
-                    {slide.project.current ? "IN DEVELOPMENT" : "RELEASED"}
+                    {(slide.project.current
+                      ? inDevelopmentLabel
+                      : releasedLabel
+                    ).toUpperCase()}
                   </span>
                 </div>
               )}
@@ -140,7 +150,10 @@ export default function HeroCarousel({ slides, fullscreen }: Props) {
                       }`}
                     />
                     <span>
-                      {slide.project.current ? "CURRENTLY BUILDING" : "RELEASED"}
+                      {(slide.project.current
+                        ? inDevelopmentLabel
+                        : releasedLabel
+                      ).toUpperCase()}
                     </span>
                   </div>
                   <div className="hero-carousel__project-header">

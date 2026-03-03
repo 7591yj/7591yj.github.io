@@ -7,11 +7,12 @@ import SectionBlock from "../../components/SectionBlock.astro";
 import BlogPostCard from "../../components/BlogPostCard.astro";
 import Button from "../../components/Button.astro";
 import { SITE_NAME } from "../../consts";
+import { useTranslations } from "../../i18n/ui";
 
 const blogModules = import.meta.glob<{
   frontmatter: Record<string, any>;
   url: string;
-}>("../blog/*.mdx", { eager: true });
+}>("./blog/*.mdx", { eager: true });
 const posts = Object.values(blogModules);
 const latestPosts = posts
   .sort(
@@ -24,7 +25,7 @@ const latestPosts = posts
 const projectModules = import.meta.glob<{
   frontmatter: Record<string, any>;
   url: string;
-}>("../projects/*.mdx", { eager: true });
+}>("./projects/*.mdx", { eager: true });
 const softwareProjects = Object.values(projectModules).filter(
   (p) => p.frontmatter.category === "software",
 );
@@ -35,7 +36,6 @@ const sortedProjects = [...softwareProjects].sort((a, b) => {
   return aHas - bHas;
 });
 
-// TODO: link to the Japanese routes after adding them
 const slides = sortedProjects.map((p) => ({
   image: p.frontmatter.images?.[0],
   project: {
@@ -44,7 +44,7 @@ const slides = sortedProjects.map((p) => ({
     tech: p.frontmatter.tech,
     status: p.frontmatter.status,
     current: p.frontmatter.current,
-    href: `/projects/${p.url!.split("/").pop()!}`,
+    href: getRelativeLocaleUrl("ja", `/projects/${p.url!.split("/").pop()!}`),
   },
 }));
 
@@ -65,12 +65,19 @@ const latestDate =
 
 const featuredPost = latestPosts[0];
 const archivePosts = latestPosts.slice(1);
+const t = useTranslations(Astro.currentLocale);
 ---
 
 <Layout transparentHeader>
   <main>
     <section class="hero-section">
-      <HeroCarousel slides={slides} fullscreen client:idle />
+      <HeroCarousel
+        slides={slides}
+        fullscreen
+        releasedLabel={t("status.released")}
+        inDevelopmentLabel={t("status.inDevelopment")}
+        client:idle
+      />
     </section>
 
     <!-- ============ BLOG ============ -->

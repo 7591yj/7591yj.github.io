@@ -6,11 +6,13 @@ import ProjectGraph from "../../components/graph/ProjectGraph";
 import { SITE_NAME } from "../../consts";
 import type { Project } from "../../types";
 import { useTranslations } from "../../i18n/ui";
+import { getRelativeLocaleUrl } from "astro:i18n";
 
 const t = useTranslations(Astro.currentLocale);
+const internalBasePath = getRelativeLocaleUrl("ja", "/projects");
 
 const mdxModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
-  "../projects/*.mdx",
+  "./projects/*.mdx",
   { eager: true },
 );
 const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
@@ -40,6 +42,7 @@ const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
         selectTechLabel={t("projects.selectTech")}
         techSelectedTemplate={t("projects.techSelected")}
         clearLabel={t("projects.clear")}
+        internalBasePath={internalBasePath}
         client:visible
       />
     </section>

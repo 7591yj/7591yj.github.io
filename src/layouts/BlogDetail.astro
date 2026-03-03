@@ -1,6 +1,8 @@
 ---
 import DetailLayout from "./DetailLayout.astro";
 import { SITE_NAME } from "../consts";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { useTranslations } from "../i18n/ui";
 
 interface Frontmatter {
   title: string;
@@ -12,6 +14,8 @@ interface Frontmatter {
 const { title, date, description, tags } =
   Astro.props.frontmatter as Frontmatter;
 const headings = Astro.props.headings ?? [];
+const locale = Astro.currentLocale ?? "en";
+const t = useTranslations(locale);
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -26,17 +30,17 @@ function formatDate(dateStr: string) {
   title={`${SITE_NAME} | ${title}`}
   module="MODULE.002///"
   headingTitle={title}
-  backLinkHref="/blog"
-  backLinkLabel="Back to blog"
+  backLinkHref={getRelativeLocaleUrl(locale, "/blog")}
+  backLinkLabel={t("detail.backBlog")}
   headings={headings}
 >
   <div class="meta" slot="meta">
-    <span class="meta__label">DATE</span>
+    <span class="meta__label">{t("meta.date")}</span>
     <span class="meta__value">{formatDate(date)}</span>
     {
       tags && tags.length > 0 && (
         <>
-          <span class="meta__label">TAGS</span>
+          <span class="meta__label">{t("meta.tags")}</span>
           <div class="meta__tags">
             {tags.map((t) => (
               <span class="meta__tag">{t}</span>

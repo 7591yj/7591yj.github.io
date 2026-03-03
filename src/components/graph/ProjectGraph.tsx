@@ -24,6 +24,7 @@ interface Props {
   selectTechLabel: string;
   techSelectedTemplate: string;
   clearLabel: string;
+  internalBasePath?: string;
 }
 
 function computeGraphVisibility(
@@ -69,7 +70,13 @@ function computeGraphVisibility(
   return { isNodeHighlighted, isNodeDimmed, isEdgeHighlighted, isEdgeDimmed };
 }
 
-export default function ProjectGraph({ projects, selectTechLabel, techSelectedTemplate, clearLabel }: Props) {
+export default function ProjectGraph({
+  projects,
+  selectTechLabel,
+  techSelectedTemplate,
+  clearLabel,
+  internalBasePath,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [positions, setPositions] = useState<Map<string, { x: number; y: number }>>(new Map());
@@ -325,6 +332,7 @@ export default function ProjectGraph({ projects, selectTechLabel, techSelectedTe
               onPointerDown={() => {}}
               onPointerEnter={() => {}}
               onPointerLeave={() => {}}
+              internalBasePath={internalBasePath}
             />
           </div>
         ))}
@@ -414,6 +422,7 @@ export default function ProjectGraph({ projects, selectTechLabel, techSelectedTe
                   onPointerDown={handlePointerDown(i)}
                   onPointerEnter={() => hoverNode(p.id)}
                   onPointerLeave={() => hoverNode(null)}
+                  internalBasePath={internalBasePath}
                 />
               </div>
             );
