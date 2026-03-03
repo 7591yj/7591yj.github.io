@@ -1,0 +1,13 @@
+.schematic {
+  position: relative;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: 2rem 0;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .schematic {
+    max-width: 90%;
+  }
+}

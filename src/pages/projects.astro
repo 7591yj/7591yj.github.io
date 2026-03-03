@@ -1,4 +1,5 @@
 ---
+import "../styles/pages/projects.css";
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
 import ProjectGraph from "../components/graph/ProjectGraph";
@@ -34,20 +35,5 @@ const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
       <ProjectGraph projects={allProjects} client:visible />
     </section>
 
-    <style>
-      .schematic {
-        position: relative;
-        max-width: 100%;
-        margin-inline: auto;
-        padding: 2rem 0;
-        border-top: 1px solid var(--color-border);
-      }
-
-      @media (max-width: 768px) {
-        .schematic {
-          max-width: 90%;
-        }
-      }
-    </style>
   </main>
 </Layout>

@@ -1,0 +1,31 @@
+.feed-section {
+  border: 1px solid var(--color-border);
+  border-top: 0;
+}
+
+.feed {
+  position: relative;
+  padding: 2rem var(--spacing-xl);
+  padding-left: calc(var(--spacing-xl) - 3.5rem);
+}
+
+.feed__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.empty {
+  font-family: monospace;
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  padding: 2rem 3.5rem;
+}
+
+@media (max-width: 768px) {
+  .feed {
+    padding: 1.5rem 1rem;
+    padding-left: 0.5rem;
+  }
+}
