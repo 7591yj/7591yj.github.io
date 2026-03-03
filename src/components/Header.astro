@@ -251,7 +251,7 @@ const currentPath = Astro.url.pathname;
     right: 0;
     bottom: 0;
     background: var(--color-bg-primary);
-    z-index: var(--z-overlay);
+    z-index: calc(var(--z-sticky) - 1);
     opacity: 0;
     visibility: hidden;
     transition:
@@ -358,6 +358,10 @@ const currentPath = Astro.url.pathname;
     const header = document.querySelector(".header");
     const hamburger = document.querySelector(".hamburger");
     const mobileMenu = document.querySelector(".mobile-menu");
+    const langDropdown = document.querySelector(
+      ".lang-select .lang-dropdown",
+    );
+    const langIcon = document.querySelector(".lang-select .lang-icon");
     if (!header || !hamburger || !mobileMenu) return;
 
     function close() {
@@ -368,6 +372,8 @@ const currentPath = Astro.url.pathname;
 
     hamburger.addEventListener("click", () => {
       const expanded = hamburger.getAttribute("aria-expanded") === "true";
+      langDropdown?.classList.remove("open");
+      langIcon?.classList.remove("flipped");
       hamburger.setAttribute("aria-expanded", String(!expanded));
       mobileMenu.classList.toggle("open");
       header.classList.toggle("header--menu-open");
