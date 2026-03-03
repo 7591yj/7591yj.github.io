@@ -1,0 +1,102 @@
+---
+import "../../styles/pages/blog.css";
+import Layout from "../../layouts/Layout.astro";
+import PageHeading from "../../components/PageHeading.astro";
+import BlogPostCard from "../../components/BlogPostCard.astro";
+import { SITE_NAME } from "../../consts";
+
+const blogModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
+  "../blog/*.mdx",
+  { eager: true },
+);
+const posts = Object.values(blogModules);
+
+const sorted = posts
+  .filter((p) => p.frontmatter.title)
+  .sort(
+    (a, b) =>
+      new Date(b.frontmatter.date).getTime() -
+      new Date(a.frontmatter.date).getTime(),
+  );
+
+const now = Date.now();
+const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}.${m}.${day}`;
+}
+
+const latestDate =
+  sorted.length > 0 ? formatDate(sorted[0].frontmatter.date) : "----.--.--";
+---
+
+<Layout title={`${SITE_NAME} | ブログ`}>
+  <main>
+    <section>
+      <PageHeading module="MODULE.002///" title="ブログ" />
+    </section>
+
+    <section class="feed-section">
+      <!-- ticker strip -->
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker__track">
+          {
+            [0, 1].map(() => (
+              <span class="ticker__segment">
+                {
+                  [0, 1, 2].map(() => (
+                    <>
+                      <span>SIGNAL CLEAR</span>
+                      <span class="ticker__dot" />
+                      <span>{sorted.length} ENTRIES LOADED</span>
+                      <span class="ticker__dot" />
+                      <span>LATEST {latestDate}</span>
+                      <span class="ticker__dot" />
+                      <span>SYS.BLOG ACTIVE</span>
+                      <span class="ticker__dot" />
+                      <span>TRANSMISSION OK</span>
+                      <span class="ticker__dot" />
+                    </>
+                  ))
+                }
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- article feed -->
+      <div class="feed">
+        <div class="dot-grid"></div>
+        <div class="feed__list">
+          {
+            sorted.length > 0 ? (
+              sorted.map((post, i) => (
+                <BlogPostCard
+                  url={post.url!}
+                  title={post.frontmatter.title}
+                  date={formatDate(post.frontmatter.date)}
+                  description={post.frontmatter.description}
+                  tags={post.frontmatter.tags}
+                  isNew={
+                    now - new Date(post.frontmatter.date).getTime() < thirtyDays
+                  }
+                  index={sorted.length - i}
+                  delay={Math.min(i + 1, 5)}
+                />
+              ))
+            ) : (
+              <p class="empty" data-animate>
+                &gt; エントリーが見つかりません。送信を待機中&hellip;
+              </p>
+            )
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
