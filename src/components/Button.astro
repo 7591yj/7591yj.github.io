@@ -28,6 +28,7 @@ const hasLabel = Astro.slots.has("default");
   class:list={["btn", `btn--${variant}`, `btn--${size}`, className]}
   href={href}
   aria-disabled={disabled ? "true" : undefined}
+  data-haptic="nudge"
   {...rest}
 >
   {variant !== "icon" && <span class="btn__fill" aria-hidden="true" />}
@@ -256,3 +257,16 @@ const hasLabel = Astro.slots.has("default");
     animation: text-fade var(--duration-fast) var(--ease-out-expo);
   }
 </style>
+
+<script>
+  import { WebHaptics } from "web-haptics";
+  import { KEYPRESS } from "../haptics";
+
+  const haptics = new WebHaptics({ debug: import.meta.env.DEV });
+
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll("[data-haptic='nudge']").forEach((el) => {
+      el.addEventListener("click", () => haptics.trigger(KEYPRESS));
+    });
+  });
+</script>

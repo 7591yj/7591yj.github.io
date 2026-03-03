@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useWebHaptics } from "web-haptics/react";
+import { TICK } from "../../haptics";
 
 interface Props {
   allTags: string[];
@@ -28,6 +30,7 @@ export default function FilterBar({
   const hasActive = activeTags.size > 0 || activeTechs.size > 0;
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { trigger } = useWebHaptics({ debug: import.meta.env.DEV });
 
   useEffect(() => {
     if (!open) return;
@@ -52,7 +55,7 @@ export default function FilterBar({
               <button
                 key={tag}
                 className={`project-filter__chip ${activeTags.has(tag) ? "project-filter__chip--active" : ""}`}
-                onClick={() => onToggleTag(tag)}
+                onClick={() => { trigger(TICK); onToggleTag(tag); }}
               >
                 {tag}
               </button>
@@ -76,7 +79,7 @@ export default function FilterBar({
                   <button
                     key={tech}
                     className="project-filter__dropdown-item"
-                    onClick={() => onToggleTech(tech)}
+                    onClick={() => { trigger(TICK); onToggleTech(tech); }}
                   >
                     <span
                       className={`project-filter__dropdown-check ${activeTechs.has(tech) ? "project-filter__dropdown-check--active" : ""}`}

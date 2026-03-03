@@ -128,13 +128,23 @@ const pathWithoutLocale =
 </style>
 
 <script>
+  import { WebHaptics } from "web-haptics";
+  import { PING, CONFIRM } from "../haptics";
+
+  const haptics = new WebHaptics({ debug: import.meta.env.DEV });
+
   document.addEventListener("astro:page-load", () => {
     const toggle = document.getElementById("lang-toggle");
     const dropdown = document.getElementById("lang-dropdown");
 
     toggle?.addEventListener("click", () => {
+      haptics.trigger(PING);
       dropdown?.classList.toggle("open");
       toggle.querySelector(".lang-icon")?.classList.toggle("flipped");
+    });
+
+    dropdown?.querySelectorAll(".lang-option").forEach((option) => {
+      option.addEventListener("click", () => haptics.trigger(CONFIRM));
     });
 
     document.addEventListener("click", (e) => {

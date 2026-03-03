@@ -88,6 +88,7 @@ export default function ContentCarousel({ images, size = "xl" }: Props) {
           <button
             className="content-carousel__btn"
             aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
+            data-haptic="nudge"
             onClick={toggleAutoplay}
           >
             <svg
@@ -106,6 +107,7 @@ export default function ContentCarousel({ images, size = "xl" }: Props) {
             ref={prevRef}
             className="content-carousel__btn"
             aria-label="Previous slide"
+            data-haptic="nudge"
           >
             <svg
               className="content-carousel__btn-icon"
@@ -119,6 +121,7 @@ export default function ContentCarousel({ images, size = "xl" }: Props) {
             ref={nextRef}
             className="content-carousel__btn"
             aria-label="Next slide"
+            data-haptic="nudge"
           >
             <svg
               className="content-carousel__btn-icon"

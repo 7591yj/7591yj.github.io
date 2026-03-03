@@ -28,3 +28,8 @@ const t = useTranslations(locale);
     </section>
   </main>
 </Layout>
+
+<script>
+  import { WebHaptics } from "web-haptics";
+  new WebHaptics({ debug: import.meta.env.DEV }).trigger("error");
+</script>

@@ -182,6 +182,7 @@ export default function HeroCarousel({
         <button
           className="hero-carousel__stop btn btn--icon btn--md"
           aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
+          data-haptic="nudge"
           onClick={toggleAutoplay}
         >
           <svg className="btn__icon" viewBox="0 0 32 32" fill="currentColor">
@@ -195,6 +196,7 @@ export default function HeroCarousel({
         <button
           className="hero-carousel__prev btn btn--icon btn--md"
           aria-label="Previous slide"
+          data-haptic="nudge"
         >
           <svg className="btn__icon" viewBox="0 0 32 32" fill="currentColor">
             <path d="M20.3 24.7L11.6 16l8.7-8.7 1.4 1.4L13.4 16l7.3 7.3z" />
@@ -203,6 +205,7 @@ export default function HeroCarousel({
         <button
           className="hero-carousel__next btn btn--icon btn--md"
           aria-label="Next slide"
+          data-haptic="nudge"
         >
           <svg className="btn__icon" viewBox="0 0 32 32" fill="currentColor">
             <path d="M11.7 24.7l-1.4-1.4 7.3-7.3-7.3-7.3 1.4-1.4 8.7 8.7z" />
