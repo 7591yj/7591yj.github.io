@@ -9,6 +9,7 @@ interface Props {
   onPointerDown: (e: React.PointerEvent) => void;
   onPointerEnter: () => void;
   onPointerLeave: () => void;
+  internalBasePath?: string;
 }
 
 const DRAG_THRESHOLD = 5;
@@ -21,12 +22,14 @@ export default function GraphNode({
   onPointerDown,
   onPointerEnter,
   onPointerLeave,
+  internalBasePath = "/projects",
 }: Props) {
   const pointerOrigin = useRef<{ x: number; y: number } | null>(null);
 
   const hasLink = !!(project.slug || project.href);
+  const normalizedBasePath = internalBasePath.replace(/\/$/, "");
   const linkTarget = project.slug
-    ? `/projects/${project.slug}`
+    ? `${normalizedBasePath}/${project.slug}`
     : project.href ?? undefined;
   const isExternal = !project.slug && !!project.href;
 

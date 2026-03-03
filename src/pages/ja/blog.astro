@@ -1,9 +1,9 @@
 ---
-import "../styles/pages/blog.css";
-import Layout from "../layouts/Layout.astro";
-import PageHeading from "../components/PageHeading.astro";
-import BlogPostCard from "../components/BlogPostCard.astro";
-import { SITE_NAME } from "../consts";
+import "../../styles/pages/blog.css";
+import Layout from "../../layouts/Layout.astro";
+import PageHeading from "../../components/PageHeading.astro";
+import BlogPostCard from "../../components/BlogPostCard.astro";
+import { SITE_NAME } from "../../consts";
 
 const blogModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
   "./blog/*.mdx",
@@ -34,10 +34,10 @@ const latestDate =
   sorted.length > 0 ? formatDate(sorted[0].frontmatter.date) : "----.--.--";
 ---
 
-<Layout title={`${SITE_NAME} | Blog`}>
+<Layout title={`${SITE_NAME} | ブログ`}>
   <main>
     <section>
-      <PageHeading module="MODULE.002///" title="Blog" />
+      <PageHeading module="MODULE.002///" title="ブログ" />
     </section>
 
     <section class="feed-section">
@@ -91,7 +91,7 @@ const latestDate =
               ))
             ) : (
               <p class="empty" data-animate>
-                &gt; No entries found. Awaiting transmission&hellip;
+                &gt; エントリーが見つかりません。送信を待機中&hellip;
               </p>
             )
           }

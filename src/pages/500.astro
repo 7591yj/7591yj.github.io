@@ -2,6 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import FadeInSection from "../components/motion/FadeInSection.tsx";
 import Button from "../components/Button.astro";
+import { detectLocale, useTranslations } from "../i18n/ui";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+const locale = detectLocale(Astro.url.pathname);
+const t = useTranslations(locale);
 ---
 
 <Layout>
@@ -13,9 +18,11 @@ import Button from "../components/Button.astro";
             500
           </h1>
           <p class="text-xl text-[var(--color-text-secondary)] mb-8">
-            Internal Server Error
+            {t("500.message")}
           </p>
-          <Button variant="reverse" href="/"> Back to Home </Button>
+          <Button variant="reverse" href={getRelativeLocaleUrl(locale, "/")}>
+            {t("500.back")}
+          </Button>
         </div>
       </FadeInSection>
     </section>

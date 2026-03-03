@@ -16,7 +16,7 @@ const { title = SITE_NAME, transparentHeader = false } = Astro.props;
 
 <Font cssVariable="--font-shippori" preload />
 
-<html lang="en">
+<html lang={Astro.currentLocale ?? "en"}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />

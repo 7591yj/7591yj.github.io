@@ -1,6 +1,14 @@
+export type ProjectStatus =
+  | "released"
+  | "in development"
+  | "planned"
+  | "prototype"
+  | "paused"
+  | "archived";
+
 export interface Project {
   title: string;
-  status: string;
+  status: ProjectStatus;
   subtitle: string;
   desc: string[];
   tech: string[];

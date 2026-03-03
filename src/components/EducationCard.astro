@@ -8,6 +8,8 @@ interface Props {
   position: string;
   period: string;
   major: string;
+  majorLabel?: string;
+  majorLabelAfter?: boolean;
   href?: string;
   size?: string;
   class?: string;
@@ -20,6 +22,8 @@ const {
   position,
   period,
   major,
+  majorLabel = "Major in",
+  majorLabelAfter = false,
   href,
   size,
   class: className,
@@ -55,7 +59,7 @@ const Tag = href ? "a" : "div";
         <span>{period}</span>
       </li>
     </ul>
-    <p>Major in {major}</p>
+    <p>{majorLabelAfter ? `${major} ${majorLabel}` : `${majorLabel} ${major}`}</p>
   </div>
 </Tag>
 

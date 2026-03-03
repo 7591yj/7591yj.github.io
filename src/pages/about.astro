@@ -1,4 +1,5 @@
 ---
+import "../styles/pages/about.css";
 import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
@@ -92,19 +93,21 @@ import { SITE_NAME, EMAIL } from "../consts";
       </SectionBlock>
       <SectionBlock title="PAPERS///">
         <div class="container-main pt-6 pb-6">
-          <PaperCard href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation">
+          <PaperCard
+            href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
+          >
             The 25th International Conference on Electronics, Information, and
             Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026)
             (Published) “Automated Korean-English Bilingual Highlighted Text
-            Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim
-            et.al 8
+            Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim et.al
+            8
           </PaperCard>
           <PaperCard disabled>
             The 13th IEEE International Conference on Consumer Electronics –
             Taoyuan, Taiwan 2026 (IEEE ICCE-TW 2026) (Submitted)
-            “Illumination-Adaptive Part Detection for Automated FDM 3D
-            Printing Dataset Collection” Seungyun Choi, Seungjun Lee, Yeongjin
-            Kim, Namjoon Kim, Hyukjae Lee
+            “Illumination-Adaptive Part Detection for Automated FDM 3D Printing
+            Dataset Collection” Seungyun Choi, Seungjun Lee, Yeongjin Kim,
+            Namjoon Kim, Hyukjae Lee
           </PaperCard>
         </div>
       </SectionBlock>
@@ -188,7 +191,7 @@ import { SITE_NAME, EMAIL } from "../consts";
                 <a
                   href="https://www.chuo-u.ac.jp/academics/faculties/science/departments/infotech/news/2026/01/83597/"
                 >
-                  画像・映像コンテンツ演習 成果発表会
+                  Software Project on CG, VR and Image Processing Presentation
                 </a>
               </td>
               <td>Grand Prize</td>
@@ -198,59 +201,4 @@ import { SITE_NAME, EMAIL } from "../consts";
       </SectionBlock>
     </section>
   </main>
-
-  <style>
-    .gallery {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-
-      @media (max-width: 768px) {
-        flex-direction: column;
-      }
-    }
-
-    .gallery > * {
-      border: 1px solid var(--color-border);
-    }
-
-    .info-table {
-      table-layout: fixed;
-
-      @media (max-width: 768px) {
-        table-layout: auto;
-        font-size: var(--font-size-md);
-
-        th {
-          font-size: var(--font-size-md);
-        }
-      }
-    }
-
-    .info-table tr {
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .info-table th {
-      padding: 0.6rem;
-      text-align: start;
-    }
-
-    .info-table td {
-      padding: 0.75rem;
-    }
-
-    .award-table {
-      table-layout: auto;
-    }
-
-    .award-table td:first-child,
-    .award-table th:first-child {
-      white-space: nowrap;
-
-      @media (max-width: 768px) {
-        white-space: normal;
-      }
-    }
-  </style>
 </Layout>

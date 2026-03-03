@@ -1,0 +1,186 @@
+---
+layout: ../../../layouts/BlogDetail.astro
+title: "NixOSへの移行"
+date: "2026-02-25"
+description: "Linux遍歴とNixOSへ移った理由"
+tags: ["linux"]
+---
+
+import ImageContainer from "../../../components/ImageContainer.astro";
+import ImageGrid from "../../../components/content/ImageGrid.astro";
+import ContentImage from "../../../components/content/ContentImage.astro";
+import Accordion from "../../../components/content/Accordion.astro";
+import ColorText from "../../../components/content/ColorText.astro";
+import TerminalBlock from "../../../components/content/TerminalBlock.astro";
+import NixOSLogo from "../../../components/content/NixOSLogo.astro";
+
+> **クイックディスクレーマー:**
+>
+> 私はNixOSのエキスパートではありません。今もなお、ホストのNixOS移行の真っ最中です。
+>
+> 完了までにかなり時間がかかる見込みですが、もし興味があれば
+> [こちら](https://github.com/7591yj/nixos-dotfiles) がNixOS設定のリポジトリです。
+>
+> 改善できる点はたくさんあると思っています。気づいたことがあれば、ぜひ指摘していただけると嬉しいです。よろしくお願いします。
+
+### Linux遍歴
+
+私は結構長く <a href="https://archlinux.org/">Arch</a> と <a href="https://www.fedoraproject.org/">Fedora</a> を使ってきました。
+
+デスクトップとノート PC は Arch を選びました。GNOME や i3 と合わせて使うことが多く、
+大きな手間をかけずに高い自由度を得られる点が気に入っていました。
+サーバーはFedoraを使っていて、新しいパッケージの提供が十分早い一方で、
+メンテナンスを怠るても壊れずらいという性質もありました。
+
+例外もあります。LG さんの古いノートPCでは <a href="https://www.gentoo.org/">Gentoo</a> を使っていました。
+正確な型番すらよく分からないほど古いモデルです。性能に限界があるため、機能を犠牲したバージョンを作ってビルドすることで若干重いパッケージも動くようになりました。
+
+それでも、NixOS へ移行するまでの主力は Arch と Fedora でした。
+
+#### それでも移行する理由
+
+使わない古い PC をホームサーバーとして使うのが好きで、今も多く稼働しています。
+Jellyfin 用、検証用、雑な NAS 用など、台数はどんどん増えていきました。
+
+<ImageGrid columns={2}>
+  <ImageContainer
+    src="https://7591yj.x02.me/i/BW8A.jpg"
+    alt="The jank machine"
+  />
+  <ImageContainer
+    src="https://7591yj.x02.me/i/CGBE.png"
+    alt="Using Jellyfin server"
+  />
+</ImageGrid>
+
+管理できないほどではありませんでした。「できるだけ」 はと言うほうが真実ですが。
+
+でも、長年かけて増えていった混在の環境は摩擦を生みました。
+各マシンは、いつの間にかそれぞれ違う前提を持っていました。
+
+- パッケージマネージャの癖や更新ペース
+- Gentoo の OpenRC など、init システムの違い
+- いつ入れたか分からない未記録の依存
+
+環境を再現するには、更新されないメモを頼るか、ディスクをクローンして祈るか。
+「自分のマシンでは動く」問題が現実になっていました。
+
+決定打になったのは、Fedora サーバーが原因不明で死んだことです。
+データのバックアップはあっても、設定がありませんでした。
+サービス設定、ファイアウォール、systemd タイマー、対処のために入れたパッケージ…。
+復旧には、過去に学んだことをまた最初からやり直す必要がありました。
+
+その瞬間、もう限界だと感じました。
+
+### NixOSへ
+
+<NixOSLogo />
+
+復旧作業のあと、ついに NixOS を試す決意をしました。
+
+NixOS は、通常の Linux 管理モデルを反転させます。
+コマンドで状態を直接変更するのではなく、望む状態を設定ファイルに宣言し、
+その宣言に合わせてシステムが構築されます。
+
+NixOS の設定ファイル（あるいはその集合）が記述するのは、例えば以下です。
+
+- インストールするパッケージ
+- 有効化するサービスとその設定
+- ユーザーと権限
+- ファイアウォールのルール
+- カーネルパラメータ
+- ブートローダ設定
+
+つまり、ほぼシステム全体です。
+
+再構築は、たった１コマンドで済みます。
+
+<TerminalBlock
+  user="user"
+  host="nixos"
+  path="~/nixos-dotfiles"
+  command="nixos-rebuild switch --flake .#hostname"
+  output={[
+    "Checking switch inhibitors... done",
+    "activating the configuration...",
+    "setting up /etc...",
+    "reloading user units for user...",
+    "restarting sysinit-reactivation.target",
+    "Done. The new configuration is /nix/store/whateverhashcreated-26.05",
+  ]}
+/>
+
+ロールバックは再起動だけで可能。設定はバージョン管理に置かれ、
+システム全体が再現可能になります。
+
+聞くだけでも魅力的ですが、実際に使うには設定ファイルを書かなければなりません。
+NixOS を知ってから約2年、試しつつも移行を先延ばしにしていた最大の理由はやはり実にこれだったと感じました。
+
+### 移行の進め方
+
+正直に言うと、移行はスムーズではありませんでした。
+
+ただ、最初からそうなるだろうと予想していたので、次の方針で進めました。
+
+1. 新規か、重要度の低いマシンから始める
+2. デスクトップ/ノートPCを先に、サーバーは後に（サーバーを壊したくない）
+3. 既存設定を段階的に移植する
+4. AUR のような便利さは、Nix の代替や自前パッケージが必要だと割り切る
+5. flakes と home-manager を早めに導入する
+6. ファイル分割は「やりすぎかも」くらい細かくする（あとで統合すればいい）
+
+結果、今でも設定はかなり散らかっていて、ミスもあります。
+でも効果は絶大でした。新しいサービスを追加するのは1ファイル追加で終わります。
+全マシンに変更を反映するなら、1ファイル編集で済みます。
+
+<span class="hover-sweep-text-inv">
+  設定そのものがドキュメントになりました。
+</span>
+
+#### つらかった点
+
+最初の壁は Nix 言語でした。純粋関数型の言語なので、
+`let...in`、属性セット、関数適用の理解に時間がかかります。
+
+次に出てきたのはモジュールシステムの細かい違いです。
+`pkgs.writeShellScript` と `pkgs.writeShellApplication` の使い分け、
+`config`/`options`/`lib` の役割など、積み上がっていきます。
+
+```nix
+{ config, pkgs, ... }: {
+  services.nginx.enable = true;
+  environment.systemPackages = with pkgs; [ vim git ];
+}
+```
+
+ドキュメントは改善されているものの、NixOS マニュアル、nixpkgs のソース、
+コミュニティ Wiki に分散しています。
+
+まとめると、急な坂ではあるけれど、登れないほどではありませんでした。
+
+### 現在の状況
+
+メインのノート PC は NixOS（unstable）に移行済みです。
+更新が速いのが気に入っています。メイン機なのでこまめにメンテしており、
+今のところ大きな問題は起きていません。このまま何も起きないといいなと思っています。
+
+<ImageGrid columns={2}>
+  <ImageContainer
+    src="https://7591yj.x02.me/i/ZV9GJY.png"
+    alt="My primary laptop, running NixOS"
+  />
+  <ImageContainer
+    src="https://7591yj.x02.me/i/SQHU2.png"
+    alt="Home server setup, wip"
+  />
+</ImageGrid>
+
+サーバーはまだ混在状態で、ほとんどは Fedora か、今動いている何かのままです。
+ただ、NixOS で動かす新しいサーバーを構成中で、これが成功すれば
+サーバー群の本格移行を開始するつもりです。今から楽しみにしています。
+
+Nix は学習コストが高い一方で、可能性が大きいことも理解できてきました。
+設定を書く作業は大変ですが、一度やれば終わりです。
+
+ただ、例の古い LG パソコンは今も Gentoo のままです。
+NixOS を動かすには力不足で、そろそろ引退させる時期かもしれません。

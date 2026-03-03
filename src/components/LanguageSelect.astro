@@ -9,6 +9,13 @@ const languages = [
 ];
 
 const currentLocale = Astro.currentLocale || "en";
+
+const localeCodes = languages.map((l) => l.code);
+const segments = Astro.url.pathname.split("/").filter(Boolean);
+const pathWithoutLocale =
+  segments.length > 0 && localeCodes.includes(segments[0])
+    ? "/" + segments.slice(1).join("/")
+    : Astro.url.pathname;
 ---
 
 <div class="lang-select">
@@ -21,7 +28,7 @@ const currentLocale = Astro.currentLocale || "en";
   <div id="lang-dropdown" class="lang-dropdown" role="menu">
     {
       languages.map(({ code, label }) => {
-        const href = getRelativeLocaleUrl(code, "");
+        const href = getRelativeLocaleUrl(code, pathWithoutLocale);
         return (
           <a
             href={href}

@@ -1,18 +1,22 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import ThemeToggle from "./ThemeToggle.astro";
 import LanguageSelect from "./LanguageSelect.astro";
 import { SITE_NAME } from "../consts";
+import { useTranslations } from "../i18n/ui";
 
 interface Props {
   transparentHeader?: boolean;
 }
 
 const { transparentHeader = false } = Astro.props;
+const locale = Astro.currentLocale ?? "en";
+const t = useTranslations(locale);
 const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Projects", href: "/projects" },
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
+  { label: t("nav.home"), href: getRelativeLocaleUrl(locale, "/") },
+  { label: t("nav.projects"), href: getRelativeLocaleUrl(locale, "/projects") },
+  { label: t("nav.blog"), href: getRelativeLocaleUrl(locale, "/blog") },
+  { label: t("nav.about"), href: getRelativeLocaleUrl(locale, "/about") },
 ];
 const currentPath = Astro.url.pathname;
 ---
@@ -42,7 +46,7 @@ const currentPath = Astro.url.pathname;
         }
       </div>
     </nav>
-    <a href="/" class="logo">{SITE_NAME}</a>
+    <a href={getRelativeLocaleUrl(locale, "/")} class="logo">{SITE_NAME}</a>
     <nav class="nav-sub justify-end">
       <LanguageSelect />
       <ThemeToggle />
@@ -247,7 +251,7 @@ const currentPath = Astro.url.pathname;
     right: 0;
     bottom: 0;
     background: var(--color-bg-primary);
-    z-index: var(--z-overlay);
+    z-index: calc(var(--z-sticky) - 1);
     opacity: 0;
     visibility: hidden;
     transition:
@@ -354,6 +358,10 @@ const currentPath = Astro.url.pathname;
     const header = document.querySelector(".header");
     const hamburger = document.querySelector(".hamburger");
     const mobileMenu = document.querySelector(".mobile-menu");
+    const langDropdown = document.querySelector(
+      ".lang-select .lang-dropdown",
+    );
+    const langIcon = document.querySelector(".lang-select .lang-icon");
     if (!header || !hamburger || !mobileMenu) return;
 
     function close() {
@@ -364,6 +372,8 @@ const currentPath = Astro.url.pathname;
 
     hamburger.addEventListener("click", () => {
       const expanded = hamburger.getAttribute("aria-expanded") === "true";
+      langDropdown?.classList.remove("open");
+      langIcon?.classList.remove("flipped");
       hamburger.setAttribute("aria-expanded", String(!expanded));
       mobileMenu.classList.toggle("open");
       header.classList.toggle("header--menu-open");
