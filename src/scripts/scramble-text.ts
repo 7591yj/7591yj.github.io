@@ -1,6 +1,22 @@
-const chars =
+const charsAscii =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
+const charsJa =
+  "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
 const resolveDelay = 60;
+
+// Full-width characters
+function isWide(ch: string): boolean {
+  const code = ch.charCodeAt(0);
+  return (
+    (code >= 0x3000 && code <= 0x9fff) || // CJK
+    (code >= 0xff00 && code <= 0xffef) // full-width latin; half-width kana
+  );
+}
+
+function randomChar(original: string): string {
+  const pool = isWide(original) ? charsJa : charsAscii;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
 
 function playScramble(el: HTMLElement, original: string) {
   let frameId: number | null = null;
@@ -12,9 +28,9 @@ function playScramble(el: HTMLElement, original: string) {
     el.textContent = original
       .split("")
       .map((ch, i) => {
-        if (ch === " ") return " ";
+        if (ch === " " || ch === "\u3000") return ch;
         if (resolved[i]) return original[i];
-        return chars[Math.floor(Math.random() * chars.length)];
+        return randomChar(original[i]);
       })
       .join("");
 
@@ -24,13 +40,16 @@ function playScramble(el: HTMLElement, original: string) {
   };
 
   original.split("").forEach((ch, i) => {
-    if (ch === " ") {
+    if (ch === " " || ch === "\u3000") {
       resolved[i] = true;
       return;
     }
-    const id = window.setTimeout(() => {
-      resolved[i] = true;
-    }, resolveDelay * (i + 1));
+    const id = window.setTimeout(
+      () => {
+        resolved[i] = true;
+      },
+      resolveDelay * (i + 1),
+    );
     timeoutIds.push(id);
   });
 
@@ -74,17 +93,15 @@ function initViewport(el: HTMLElement, original: string) {
 }
 
 function init() {
-  document
-    .querySelectorAll<HTMLElement>("[data-scramble]")
-    .forEach((el) => {
-      const original = el.dataset.scramble || el.textContent || "";
+  document.querySelectorAll<HTMLElement>("[data-scramble]").forEach((el) => {
+    const original = el.dataset.scramble || el.textContent || "";
 
-      if (el.closest("header")) {
-        initHover(el, original);
-      } else {
-        initViewport(el, original);
-      }
-    });
+    if (el.closest("header")) {
+      initHover(el, original);
+    } else {
+      initViewport(el, original);
+    }
+  });
 }
 
 // Re-run on Astro page transitions

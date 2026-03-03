@@ -1,18 +1,22 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import ThemeToggle from "./ThemeToggle.astro";
 import LanguageSelect from "./LanguageSelect.astro";
 import { SITE_NAME } from "../consts";
+import { useTranslations } from "../i18n/ui";
 
 interface Props {
   transparentHeader?: boolean;
 }
 
 const { transparentHeader = false } = Astro.props;
+const locale = Astro.currentLocale ?? "en";
+const t = useTranslations(locale);
 const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Projects", href: "/projects" },
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
+  { label: t("nav.home"), href: getRelativeLocaleUrl(locale, "/") },
+  { label: t("nav.projects"), href: getRelativeLocaleUrl(locale, "/projects") },
+  { label: t("nav.blog"), href: getRelativeLocaleUrl(locale, "/blog") },
+  { label: t("nav.about"), href: getRelativeLocaleUrl(locale, "/about") },
 ];
 const currentPath = Astro.url.pathname;
 ---
@@ -42,7 +46,7 @@ const currentPath = Astro.url.pathname;
         }
       </div>
     </nav>
-    <a href="/" class="logo">{SITE_NAME}</a>
+    <a href={getRelativeLocaleUrl(locale, "/")} class="logo">{SITE_NAME}</a>
     <nav class="nav-sub justify-end">
       <LanguageSelect />
       <ThemeToggle />
