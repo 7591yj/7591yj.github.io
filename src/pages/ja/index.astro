@@ -1,0 +1,250 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import "../../styles/pages/home.css";
+import Layout from "../../layouts/Layout.astro";
+import HeroCarousel from "../../components/carousel/HeroCarousel.tsx";
+import SectionBlock from "../../components/SectionBlock.astro";
+import BlogPostCard from "../../components/BlogPostCard.astro";
+import Button from "../../components/Button.astro";
+import { SITE_NAME } from "../../consts";
+
+const blogModules = import.meta.glob<{
+  frontmatter: Record<string, any>;
+  url: string;
+}>("../blog/*.mdx", { eager: true });
+const posts = Object.values(blogModules);
+const latestPosts = posts
+  .sort(
+    (a, b) =>
+      new Date(b.frontmatter.date).getTime() -
+      new Date(a.frontmatter.date).getTime(),
+  )
+  .slice(0, 3);
+
+const projectModules = import.meta.glob<{
+  frontmatter: Record<string, any>;
+  url: string;
+}>("../projects/*.mdx", { eager: true });
+const softwareProjects = Object.values(projectModules).filter(
+  (p) => p.frontmatter.category === "software",
+);
+
+const sortedProjects = [...softwareProjects].sort((a, b) => {
+  const aHas = a.frontmatter.images && a.frontmatter.images.length > 0 ? 0 : 1;
+  const bHas = b.frontmatter.images && b.frontmatter.images.length > 0 ? 0 : 1;
+  return aHas - bHas;
+});
+
+// TODO: link to the Japanese routes after adding them
+const slides = sortedProjects.map((p) => ({
+  image: p.frontmatter.images?.[0],
+  project: {
+    title: p.frontmatter.title,
+    subtitle: p.frontmatter.subtitle,
+    tech: p.frontmatter.tech,
+    status: p.frontmatter.status,
+    current: p.frontmatter.current,
+    href: `/projects/${p.url!.split("/").pop()!}`,
+  },
+}));
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}.${m}.${day}`;
+}
+
+const now = Date.now();
+const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+const latestDate =
+  latestPosts.length > 0
+    ? formatDate(latestPosts[0].frontmatter.date)
+    : "----.--.--";
+
+const featuredPost = latestPosts[0];
+const archivePosts = latestPosts.slice(1);
+---
+
+<Layout transparentHeader>
+  <main>
+    <section class="hero-section">
+      <HeroCarousel slides={slides} fullscreen client:idle />
+    </section>
+
+    <!-- ============ BLOG ============ -->
+    <section class="preview-section">
+      <SectionBlock title="記事///">
+        <div class="section-bar" aria-hidden="true">
+          <div class="section-bar__info">
+            <span class="section-bar__accent">WRITING.FEED</span>
+            <span class="section-bar__sep">//</span>
+            <span>LAST TX {latestDate}</span>
+            <span class="section-bar__sep">//</span>
+            <span>{latestPosts.length} DISPATCHES</span>
+            <span class="section-bar__sep">//</span>
+            <span>SIGNAL OK</span>
+          </div>
+        </div>
+
+        <div class="blog-feed">
+          <div class="scanline-bg"></div>
+
+          <!-- Featured post -->
+          {
+            featuredPost && (
+              <div class="blog-featured">
+                <div class="blog-featured__badge">
+                  <span>LATEST</span>
+                </div>
+                <div class="blog-featured__card">
+                  <BlogPostCard
+                    url={featuredPost.url!}
+                    title={featuredPost.frontmatter.title}
+                    date={featuredPost.frontmatter.date}
+                    description={featuredPost.frontmatter.description}
+                    tags={featuredPost.frontmatter.tags}
+                    isNew={
+                      now - new Date(featuredPost.frontmatter.date).getTime() <
+                      thirtyDays
+                    }
+                    index={1}
+                    delay={0}
+                  />
+                </div>
+              </div>
+            )
+          }
+
+          <!-- Archive divider -->
+          {
+            archivePosts.length > 0 && (
+              <div class="blog-divider">
+                <span class="blog-divider__label">ARCHIVE</span>
+                <span class="blog-divider__rule" />
+              </div>
+            )
+          }
+
+          <!-- Archive list -->
+          <div class="blog-archive">
+            {
+              archivePosts.map((post, i) => (
+                <BlogPostCard
+                  url={post.url!}
+                  title={post.frontmatter.title}
+                  date={post.frontmatter.date}
+                  description={post.frontmatter.description}
+                  tags={post.frontmatter.tags}
+                  isNew={
+                    now - new Date(post.frontmatter.date).getTime() < thirtyDays
+                  }
+                  index={i + 2}
+                  delay={i + 1}
+                />
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="section-action" data-animate>
+          <Button href={getRelativeLocaleUrl("ja", "/blog")}>記事一覧</Button>
+        </div>
+      </SectionBlock>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="preview-section">
+      <SectionBlock title="プロフィール///">
+        <!-- Ticker strip -->
+        <div class="ticker" aria-hidden="true">
+          <div class="ticker__track">
+            {
+              [0, 1].map(() => (
+                <span class="ticker__segment">
+                  {[0, 1, 2].map(() => (
+                    <>
+                      <span>WHO IS THIS</span>
+                      <span class="ticker__dot" />
+                      <span>PROFILE LOADED</span>
+                      <span class="ticker__dot" />
+                      <span>CLEARANCE OK</span>
+                      <span class="ticker__dot" />
+                      <span>DOSSIER READY</span>
+                      <span class="ticker__dot" />
+                    </>
+                  ))}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- About HUD display -->
+        <div class="about-hud">
+          <div class="dot-grid dot-grid--faint"></div>
+          <div class="about-hud__inner">
+            <!-- Terminal block -->
+            <div class="terminal-block" data-animate>
+              <div class="terminal-block__header">
+                <span class="led led--active led--sm"></span>
+                <span>未解決チケット // 3件</span>
+              </div>
+              <div class="terminal-block__body">
+                <p class="terminal-line">
+                  <span class="terminal-prompt">&gt;</span> ホームラボはどこまで追い込めるか？
+                </p>
+                <p class="terminal-line">
+                  <span class="terminal-prompt">&gt;</span> インターフェースに意図と生気を与えるものは何か？
+                </p>
+                <p class="terminal-line">
+                  <span class="terminal-prompt">&gt;</span> 宣言的な設定は、いつ再現性から非実用性へと転じるのか？
+                </p>
+                <p class="terminal-line terminal-line--cursor">
+                  <span class="terminal-prompt">&gt;</span>
+                  <span class="terminal-cursor"></span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Profile card -->
+            <div class="profile-card" data-animate>
+              <div class="profile-card__header">
+                <span>プロフィール</span>
+              </div>
+              <div class="profile-card__body">
+                <div class="profile-meta">
+                  <span class="profile-meta__label">ハンドル</span>
+                  <span class="profile-meta__value">{SITE_NAME}</span>
+
+                  <span class="profile-meta__label">興味分野</span>
+                  <span class="profile-meta__value">
+                    Web、コンテナ化、Linux、UI/UX
+                  </span>
+
+                  <span class="profile-meta__label">スタック</span>
+                  <span class="profile-meta__value">
+                    TS / React / Svelte / Python
+                  </span>
+
+                  <span class="profile-meta__label">ステータス</span>
+                  <span class="profile-meta__value profile-meta__value--status">
+                    <span class="led led--active led--sm"></span>
+                    稼動中
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-action" data-animate>
+          <Button href={getRelativeLocaleUrl("ja", "/about")}
+            >詳細プロフィール</Button
+          >
+        </div>
+      </SectionBlock>
+    </section>
+  </main>
+</Layout>
