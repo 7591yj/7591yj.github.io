@@ -11,6 +11,9 @@ export const ui = {
     "404.back": "Back to Home",
     "500.message": "Internal Server Error",
     "500.back": "Back to Home",
+    "projects.selectTech": "Select tech…",
+    "projects.techSelected": "{count} selected",
+    "projects.clear": "Clear",
   },
   ja: {
     "nav.home": "ホーム",
@@ -21,6 +24,9 @@ export const ui = {
     "404.back": "ホームへ戻る",
     "500.message": "内部サーバーエラー",
     "500.back": "ホームへ戻る",
+    "projects.selectTech": "技術を選択…",
+    "projects.techSelected": "{count}件選択",
+    "projects.clear": "クリア",
   },
 } satisfies Record<Locale, Record<string, string>>;
 

@@ -8,6 +8,9 @@ interface Props {
   onToggleTag: (tag: string) => void;
   onToggleTech: (tech: string) => void;
   onClear: () => void;
+  selectTechLabel: string;
+  techSelectedTemplate: string;
+  clearLabel: string;
 }
 
 export default function FilterBar({
@@ -18,6 +21,9 @@ export default function FilterBar({
   onToggleTag,
   onToggleTech,
   onClear,
+  selectTechLabel,
+  techSelectedTemplate,
+  clearLabel,
 }: Props) {
   const hasActive = activeTags.size > 0 || activeTechs.size > 0;
   const [open, setOpen] = useState(false);
@@ -61,7 +67,7 @@ export default function FilterBar({
               className={`project-filter__dropdown-trigger ${techCount > 0 ? "project-filter__dropdown-trigger--active" : ""}`}
               onClick={() => setOpen((v) => !v)}
             >
-              {techCount > 0 ? `${techCount} selected` : "Select tech…"}
+              {techCount > 0 ? techSelectedTemplate.replace("{count}", String(techCount)) : selectTechLabel}
               <span aria-hidden>▾</span>
             </button>
             {open && (
@@ -86,7 +92,7 @@ export default function FilterBar({
 
       {hasActive && (
         <button className="project-filter__clear" onClick={onClear}>
-          Clear
+          {clearLabel}
         </button>
       )}
     </div>

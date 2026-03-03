@@ -5,6 +5,9 @@ import PageHeading from "../components/PageHeading.astro";
 import ProjectGraph from "../components/graph/ProjectGraph";
 import { SITE_NAME } from "../consts";
 import type { Project } from "../types";
+import { useTranslations } from "../i18n/ui";
+
+const t = useTranslations(Astro.currentLocale);
 
 const mdxModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
   "./projects/*.mdx",
@@ -32,7 +35,13 @@ const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
     </section>
 
     <section class="schematic">
-      <ProjectGraph projects={allProjects} client:visible />
+      <ProjectGraph
+        projects={allProjects}
+        selectTechLabel={t("projects.selectTech")}
+        techSelectedTemplate={t("projects.techSelected")}
+        clearLabel={t("projects.clear")}
+        client:visible
+      />
     </section>
 
   </main>

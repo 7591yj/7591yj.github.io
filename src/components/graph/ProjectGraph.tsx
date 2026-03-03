@@ -21,6 +21,9 @@ const GRAPH_HEIGHT = 700;
 
 interface Props {
   projects: Project[];
+  selectTechLabel: string;
+  techSelectedTemplate: string;
+  clearLabel: string;
 }
 
 function computeGraphVisibility(
@@ -66,7 +69,7 @@ function computeGraphVisibility(
   return { isNodeHighlighted, isNodeDimmed, isEdgeHighlighted, isEdgeDimmed };
 }
 
-export default function ProjectGraph({ projects }: Props) {
+export default function ProjectGraph({ projects, selectTechLabel, techSelectedTemplate, clearLabel }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [positions, setPositions] = useState<Map<string, { x: number; y: number }>>(new Map());
@@ -293,6 +296,9 @@ export default function ProjectGraph({ projects }: Props) {
       onToggleTag={toggleTag}
       onToggleTech={toggleTech}
       onClear={clearFilters}
+      selectTechLabel={selectTechLabel}
+      techSelectedTemplate={techSelectedTemplate}
+      clearLabel={clearLabel}
     />
   );
 
