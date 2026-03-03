@@ -1,0 +1,23 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import FadeInSection from "../../components/motion/FadeInSection.tsx";
+import Button from "../../components/Button.astro";
+---
+
+<Layout>
+  <main class="container-main">
+    <section class="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] text-center">
+      <FadeInSection client:visible>
+        <div class="content-container">
+          <h1 class="font-shippori text-[clamp(12rem,40vw,28rem)] font-bold leading-none tracking-[0.3em] pl-[0.3em]">
+            404
+          </h1>
+          <p class="text-xl text-[var(--color-text-secondary)] mb-8">
+            ページが見つかりません
+          </p>
+          <Button variant="reverse" href="/ja"> ホームへ戻る </Button>
+        </div>
+      </FadeInSection>
+    </section>
+  </main>
+</Layout>
