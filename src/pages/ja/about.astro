@@ -1,0 +1,202 @@
+---
+import "../../styles/pages/about.css";
+import { Icon } from "astro-icon/components";
+import Layout from "../../layouts/Layout.astro";
+import PageHeading from "../../components/PageHeading.astro";
+import SectionBlock from "../../components/SectionBlock.astro";
+import EducationCard from "../../components/EducationCard.astro";
+import PaperCard from "../../components/PaperCard.astro";
+import { SITE_NAME, EMAIL } from "../../consts";
+---
+
+<Layout title={`${SITE_NAME} | プロフィール`}>
+  <main>
+    <section>
+      <PageHeading module="MODULE.003///" title="プロフィール">
+        <div class="meta">
+          <span class="meta__label"><Icon name="me" /> 氏名</span>
+          <span class="meta__value">金 栄鎮 (KIM YEONGJIN)</span>
+          <span class="meta__label"><Icon name="cake" /> 生年月日</span>
+          <span class="meta__value">2002. 07. 20</span>
+          <span class="meta__label"><Icon name="at" /> メール</span>
+          <a class="meta__link" href={`mailto:${EMAIL}`}>{EMAIL} &#8599;</a>
+          <span class="meta__label"><Icon name="map-pin-house" /> 出身地</span>
+          <a
+            class="meta__link"
+            href="https://www.google.com/maps/search/?api=1&query=Jeonju,%20South%20Korea"
+            >全州市、韓国 &#8599;</a
+          >
+          <span class="meta__label"><Icon name="map-pin" /> 現在地</span>
+          <a
+            class="meta__link"
+            href="https://www.google.com/maps/search/?api=1&query=Tokyo,%20Japan"
+            >東京都、日本 &#8599;</a
+          >
+        </div>
+      </PageHeading>
+      <SectionBlock title="学歴///">
+        <div class="gallery">
+          <EducationCard
+            href="https://www.inha.ac.kr/sites/kr/index..do"
+            src="https://raw.githubusercontent.com/incalc/inha-logo/refs/heads/master/svg/static/inha_symbol_mark.svg"
+            institution="仁荷大学校"
+            location="仁川市、韓国"
+            position="学生"
+            period="2021. 03 - 2027. 02 (予定)"
+            major="情報通信工学科"
+            class="p-5"
+            size="20%"
+          />
+          <EducationCard
+            href="https://www.chuo-u.ac.jp/"
+            src="https://www.chuo-u.ac.jp/media/images/en/common/header_logo.svg"
+            institution="中央大学"
+            location="東京都、日本"
+            position="交換留学生"
+            period="2025. 09 - 2026. 08 (予定)"
+            major="情報工学科"
+            class="p-5"
+            size="70%"
+          />
+        </div>
+      </SectionBlock>
+      <SectionBlock title="資格・検定///">
+        <div class="container-main pt-6 pb-6 overflow-x-auto">
+          <table class="info-table w-full">
+            <tr class="font-shippori text-xl">
+              <th>取得日</th>
+              <th>資格名</th>
+              <th>発行機関</th>
+            </tr>
+            <tr>
+              <td>2021. 07. 13</td>
+              <td>普通自動車第一種運転免許</td>
+              <td>全羅北道地方警察庁</td>
+            </tr>
+            <tr>
+              <td>2024. 08. 13</td>
+              <td>日本語能力試験 N2</td>
+              <td>国際交流基金</td>
+            </tr>
+            <tr>
+              <td>2025. 01. 26</td>
+              <td>TOEIC、925点</td>
+              <td>韓国TOEICコミッティ</td>
+            </tr>
+            <tr>
+              <td>2025. 05. 24</td>
+              <td>TOPCIT、677点</td>
+              <td>科学技術情報通信部（韓国）</td>
+            </tr>
+          </table>
+        </div>
+      </SectionBlock>
+      <SectionBlock title="論文///">
+        <div class="container-main pt-6 pb-6">
+          <PaperCard
+            href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
+          >
+            第25回国際エレクトロニクス・情報・通信会議（ICEIC 2026）-
+            中国・マカオ 2026（発表済）"Automated Korean-English Bilingual
+            Highlighted Text Extraction Using HSV Segmentation" SeungJun Lee,
+            Yeongjin Kim et.al 8
+          </PaperCard>
+          <PaperCard disabled>
+            第13回 IEEE 国際消費者エレクトロニクス会議 – 台湾・桃園 2026（IEEE
+            ICCE-TW 2026）（投稿済） "Illumination-Adaptive Part Detection for
+            Automated FDM 3D Printing Dataset Collection" Seungyun Choi,
+            Seungjun Lee, Yeongjin Kim, Namjoon Kim, Hyukjae Lee
+          </PaperCard>
+        </div>
+      </SectionBlock>
+      <SectionBlock title="部活・サークル///">
+        <div class="container-main pt-6 pb-6 overflow-x-auto">
+          <table class="info-table w-full">
+            <tr class="font-shippori text-xl flex-1">
+              <th>期間</th>
+              <th>名称</th>
+              <th>内容</th>
+              <th>役職</th>
+            </tr>
+            <tr class="flex-1">
+              <td>2021. 03 - 2021. 08</td>
+              <td>
+                <a href="https://www.instagram.com/igrus_inha/">IGRUS</a>
+              </td>
+              <td>ソフトウェア開発</td>
+              <td>メンバー</td>
+            </tr>
+            <tr>
+              <td>2024. 03 - 2024. 08</td>
+              <td>
+                <a href="https://www.instagram.com/igrus_inha/">IGRUS</a>
+              </td>
+              <td>ソフトウェア開発</td>
+              <td>メンバー</td>
+            </tr>
+            <tr>
+              <td>2024. 03 - 2025. 08</td>
+              <td>
+                <a
+                  href="https://jelly-locust-cea.notion.site/Seeds-1beac07ca4e98043bbe9e81ccf29e806"
+                  >Seeds</a
+                >
+              </td>
+              <td>ウェブ開発</td>
+              <td>スタッフ</td>
+            </tr>
+          </table>
+        </div>
+      </SectionBlock>
+      <SectionBlock title="受賞歴///">
+        <div class="container-main pt-6 pb-6 overflow-x-auto">
+          <table class="info-table award-table w-full">
+            <colgroup>
+              <col />
+              <col style="width: 50%" />
+              <col style="width: 50%" />
+            </colgroup>
+            <tr class="font-shippori text-xl">
+              <th>日付</th>
+              <th>名称</th>
+              <th>受賞</th>
+            </tr>
+            <tr>
+              <td>2023. 11. 12</td>
+              <td>
+                中央大学（韓国） × SEOULLAB PARTNERS '2023<br />START-LAB
+              </td>
+              <td>最優秀賞</td>
+            </tr>
+            <tr>
+              <td>2025. 01. 18</td>
+              <td> 2025 GreenTech グローバルソン </td>
+              <td>最優秀スタートアップピッチ賞</td>
+            </tr>
+            <tr>
+              <td>2025. 11. 19</td>
+              <td>
+                2025 ハニウム ドリームアップ コンテスト<br
+                />（創造的チャレンジ部門）
+              </td>
+              <td>
+                奨励賞（本審査）<br />（予選にて優秀プロジェクトに選出）
+              </td>
+            </tr>
+            <tr>
+              <td>2025. 11. 12</td>
+              <td>
+                <a
+                  href="https://www.chuo-u.ac.jp/academics/faculties/science/departments/infotech/news/2026/01/83597/"
+                >
+                  画像・映像コンテンツ演習 成果発表会
+                </a>
+              </td>
+              <td>最優秀賞</td>
+            </tr>
+          </table>
+        </div>
+      </SectionBlock>
+    </section>
+  </main>
+</Layout>
