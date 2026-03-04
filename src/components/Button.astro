@@ -259,14 +259,12 @@ const hasLabel = Astro.slots.has("default");
 </style>
 
 <script>
-  import { WebHaptics } from "web-haptics";
+  import { triggerHaptic } from "../haptics-instance";
   import { KEYPRESS } from "../haptics";
-
-  const haptics = new WebHaptics({ debug: import.meta.env.DEV });
 
   document.addEventListener("astro:page-load", () => {
     document.querySelectorAll("[data-haptic='nudge']").forEach((el) => {
-      el.addEventListener("click", () => haptics.trigger(KEYPRESS));
+      el.addEventListener("click", () => triggerHaptic(KEYPRESS));
     });
   });
 </script>

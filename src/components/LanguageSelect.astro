@@ -128,30 +128,35 @@ const pathWithoutLocale =
 </style>
 
 <script>
-  import { WebHaptics } from "web-haptics";
+  import { triggerHaptic } from "../haptics-instance";
   import { PING, CONFIRM } from "../haptics";
 
-  const haptics = new WebHaptics({ debug: import.meta.env.DEV });
+  // Registered once
+  // isTrusted check ignores programmatic .click() calls; prevent dropdown auto-close
+  document.addEventListener("click", (e) => {
+    if (!e.isTrusted) return;
+    if (!(e.target as HTMLElement).closest(".lang-select")) {
+      document.getElementById("lang-dropdown")?.classList.remove("open");
+      document
+        .getElementById("lang-toggle")
+        ?.querySelector(".lang-icon")
+        ?.classList.remove("flipped");
+    }
+  });
 
   document.addEventListener("astro:page-load", () => {
     const toggle = document.getElementById("lang-toggle");
     const dropdown = document.getElementById("lang-dropdown");
 
-    toggle?.addEventListener("click", () => {
-      haptics.trigger(PING);
+    toggle?.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent the same click from triggering the outside-click handler
       dropdown?.classList.toggle("open");
       toggle.querySelector(".lang-icon")?.classList.toggle("flipped");
+      triggerHaptic(PING);
     });
 
     dropdown?.querySelectorAll(".lang-option").forEach((option) => {
-      option.addEventListener("click", () => haptics.trigger(CONFIRM));
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!(e.target as HTMLElement).closest(".lang-select")) {
-        dropdown?.classList.remove("open");
-        toggle?.querySelector(".lang-icon")?.classList.remove("flipped");
-      }
+      option.addEventListener("click", () => triggerHaptic(CONFIRM));
     });
   });
 </script>

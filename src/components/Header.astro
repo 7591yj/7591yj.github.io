@@ -354,10 +354,8 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <script>
-  import { WebHaptics } from "web-haptics";
+  import { triggerHaptic } from "../haptics-instance";
   import { BOOT } from "../haptics";
-
-  const haptics = new WebHaptics({ debug: import.meta.env.DEV });
 
   function initHamburger() {
     const header = document.querySelector(".header");
@@ -379,10 +377,10 @@ const currentPath = Astro.url.pathname;
       const expanded = hamburger.getAttribute("aria-expanded") === "true";
       langDropdown?.classList.remove("open");
       langIcon?.classList.remove("flipped");
-      haptics.trigger(BOOT);
       hamburger.setAttribute("aria-expanded", String(!expanded));
       mobileMenu.classList.toggle("open");
       header.classList.toggle("header--menu-open");
+      triggerHaptic(BOOT);
     });
 
     // Close on nav link click

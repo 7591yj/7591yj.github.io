@@ -34,10 +34,8 @@ import { Icon } from "astro-icon/components";
     toggleTheme,
     getCurrentTheme,
   } from "../scripts/theme";
-  import { WebHaptics } from "web-haptics";
+  import { triggerHaptic } from "../haptics-instance";
   import { SWITCH } from "../haptics";
-
-  const haptics = new WebHaptics({ debug: import.meta.env.DEV });
 
   const animateIcon = (icon: Element) => {
     animate(
@@ -73,8 +71,8 @@ import { Icon } from "astro-icon/components";
       const y = rect.top + rect.height / 2;
       document.documentElement.style.setProperty("--vt-x", `${x}px`);
       document.documentElement.style.setProperty("--vt-y", `${y}px`);
-      haptics.trigger(SWITCH);
       toggleTheme();
+      triggerHaptic(SWITCH);
     });
   });
 </script>

@@ -30,6 +30,6 @@ const t = useTranslations(locale);
 </Layout>
 
 <script>
-  import { WebHaptics } from "web-haptics";
-  new WebHaptics({ debug: import.meta.env.DEV }).trigger("error");
+  import { triggerHaptic } from "../haptics-instance";
+  triggerHaptic("error");
 </script>
