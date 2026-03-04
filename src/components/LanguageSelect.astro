@@ -131,10 +131,9 @@ const pathWithoutLocale =
   import { triggerHaptic } from "../haptics-instance";
   import { PING, CONFIRM } from "../haptics";
 
-  // Registered once
-  // isTrusted check ignores programmatic .click() calls; prevent dropdown auto-close
-  document.addEventListener("click", (e) => {
-    if (!e.isTrusted) return;
+  // triggered by HTMLElement.click(); WebHaptics' internal label.click()
+  // calls are completely invisible to this handler
+  document.addEventListener("pointerdown", (e) => {
     if (!(e.target as HTMLElement).closest(".lang-select")) {
       document.getElementById("lang-dropdown")?.classList.remove("open");
       document
@@ -148,8 +147,7 @@ const pathWithoutLocale =
     const toggle = document.getElementById("lang-toggle");
     const dropdown = document.getElementById("lang-dropdown");
 
-    toggle?.addEventListener("click", (e) => {
-      e.stopPropagation(); // prevent the same click from triggering the outside-click handler
+    toggle?.addEventListener("click", () => {
       dropdown?.classList.toggle("open");
       toggle.querySelector(".lang-icon")?.classList.toggle("flipped");
       triggerHaptic(PING);
