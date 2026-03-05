@@ -73,7 +73,7 @@
 }
 
 .graph-node__title {
-  font-family: "Shippori Mincho", serif;
+  font-family: var(--font-shippori), serif;
   font-size: var(--font-size-2xl);
   color: var(--color-text-primary);
   margin: 0;

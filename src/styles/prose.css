@@ -14,7 +14,7 @@
 .prose h3,
 .prose h4,
 .prose h5 {
-  font-family: "Shippori Mincho", serif;
+  font-family: var(--font-shippori), serif;
   position: relative;
   color: var(--color-text-primary);
   scroll-margin-top: 5rem;
@@ -203,7 +203,7 @@
 }
 
 .prose th {
-  font-family: "Shippori Mincho", serif;
+  font-family: var(--font-shippori), serif;
   text-align: start;
   padding: 0.6rem;
   border-bottom: 1px solid var(--color-border);
