@@ -8,7 +8,13 @@ export default function HapticsNotice() {
   const haptics = useRef<WebHaptics | null>(null);
 
   useEffect(() => {
-    setSupported(WebHaptics.isSupported);
+    // mirror the library's two haptic paths:
+    // if (WebHaptics.isSupported) → navigator.vibrate
+    // if (!WebHaptics.isSupported || debug) → fake label click
+    const vibratesNatively = WebHaptics.isSupported;
+    const hasFakeLabelHaptics =
+      !WebHaptics.isSupported && navigator.maxTouchPoints > 0;
+    setSupported(vibratesNatively || hasFakeLabelHaptics);
     const stored = localStorage.getItem(SOUND_KEY) === "on";
     setSoundOn(stored);
     // debug is the library's audio fallback mechanism, not actual debugging
