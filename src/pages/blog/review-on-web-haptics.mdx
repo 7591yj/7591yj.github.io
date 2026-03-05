@@ -1,0 +1,328 @@
+---
+layout: ../../layouts/BlogDetail.astro
+title: "Review on web-haptics"
+date: "2026-03-05"
+description: "New NPM package simplifying haptics"
+tags: ["open-source", "review"]
+---
+
+import ImageContainer from "../../components/ImageContainer.astro";
+import ImageGrid from "../../components/content/ImageGrid.astro";
+
+import SolutionsShowcase from "./review-on-web-haptics/SolutionsShowcase.tsx";
+import HapticsNotice from "./review-on-web-haptics/HapticsNotice.tsx";
+import PatternPreview from "./review-on-web-haptics/PatternPreview.tsx";
+import IntensityMatrix from "./review-on-web-haptics/IntensityMatrix.tsx";
+import "./review-on-web-haptics/styles.css";
+
+<HapticsNotice client:load />
+
+[Let me go straight to the point](#web-haptics)
+
+### For a Better Web Experience
+
+In a world where web apps have become the go-to way for creating new solutions,
+creating a close-to-native mobile experience has never been an easy job.
+
+Listing them, and now I'll call that a big pile of dots:
+
+- Fixed-width desktop layouts rendered on small screens
+- Hover-centric UI patterns
+- Scrolling/gesture feel (momentum, overscroll, nested scroll areas...)
+- Tap accuracy on tiny targets
+- Form UX (wrong keyboard types, zoom-on-focus, input lag)
+- App-like navigation/state (back button, deep links, transitions...)
+- Offline/poor connectivity behavior
+
+...and they are, as we well know, mostly solved problems.
+
+And these are some of the examples:
+
+#### Responsive Web Design
+
+The introduction of responsive web design solved the "squished look".
+Typical patterns include different layouts on mobile, responsive nav,
+consistent spacing and typography. For example, one of the key techniques,
+`meta viewport` introduces a basic mobile-first layout by:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --gap: 16px;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--gap);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr; /* phone */
+    gap: var(--gap);
+  }
+
+  @media (min-width: 768px) {
+    .layout {
+      grid-template-columns: 280px 1fr; /* sidebar and content */
+    }
+  }
+</style>
+```
+
+<SolutionsShowcase kind="responsive" client:load />
+
+#### Frameworks
+
+Frameworks have been a key contributor as well. [Bootstrap](https://getbootstrap.com/)
+or [Tailwind CSS](https://tailwindcss.com/) made it easy for devs to create
+responsive web, with consistent spacing and typography.
+
+<SolutionsShowcase kind="frameworks" client:load />
+
+#### Touch-first interactions
+
+While being somewhat controversial when implemented in desktop-first UX's as
+well - like how GNOME ecosystem's apps or Apple's new Liquid Glass has brought up
+talks here and there - in the right place they were essential, for bringing
+up bigger hit areas or avoiding hover-only menus.
+
+#### Single Page Apps
+
+<SolutionsShowcase kind="spa" client:load />
+
+SPAs made native app-like stateful navigation common.
+Represented by [React](https://react.dev/)/[Vue](https://vuejs.org/)/[Angular](https://angular.dev/)
+with routers in the TypeScript world, they keep states in the memory and updates
+views without a full reload.
+Though not a full solution - with bundle cost and chances of still getting
+history/back wrong - still, SPAs were revolutionary to the UX for web-apps.
+
+#### Progressive Web Apps
+
+<SolutionsShowcase kind="pwa" client:load />
+
+After SPA's solved the state managements and app-like navigations, PWA's have been
+the one that closes the native gap between native applications and web apps.
+Home screen installs were a thing now, service workers cached for fast repeat
+reloads, offline fallback was introduced, and FINALLY push notifications
+came to the web.
+
+#### Now What?
+
+Ok, that's a LOT of solutions. And it's not even fully covered, skipping hybrid
+wrappers and whatnot.
+
+But the tl;dr is:
+
+1. Introducing responsive/mobile-first CSS replacing fixed desktop layouts
+2. Frameworks/design systems standardizing touch-friendly components and spacing
+3. SPAs and PWAs bringing stability and the "feel" of a native app
+
+The gap we had from an web app's experience compared to a native
+app's has never been narrower.
+
+However, this is _not_ done fully solved.
+
+See, the full experience of a native app does not end here - I would say that the
+one of the most important part that makes up a native-like experience is the
+feedback user gets during the use of the service.
+
+### Feedback
+
+When you touch a button on a mobile app, you get a feedback. It is mostly visual,
+but can also be physical.
+
+The _visual_ part is greatly been improved by the solutions I described. However,
+for the physical part? That's still a mess.
+
+There is [Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API)
+which enables devs to easily implement haptics on their web pages. However, there
+is one big problem with it - they are only mainly reliable on Android browsers.
+
+And one of the engine that does not support this implementation is, sadly, webkit.
+Since Apple does not allow other browser engines to run on iOS currently - it is
+not very easy to deliver haptic feedback to the end user.
+
+iOS takes up a huge percentage of the mobile market, and letting half of the users
+unable to get the full experience is, to say the least, not the best.
+
+But there still is one option that can bring haptic to web on iOS.
+
+### Workaround
+
+iOS gives you this haptic feedback when you press on a toggle, notifying you that
+you've changed something.
+
+Well, then what about _this_?
+
+Make an invisible _fake_ labels and toggle them cronically.
+
+This will trigger iOS's built-in toggle haptic, by toggling a label programmatically.
+
+As janky as it sounds, it works, and you CAN get the haptic this way. Users won't
+be seeing the label, so the UX is not being manipulated with.
+
+### web-haptics
+
+That's what the package [web-haptics](https://haptics.lochie.me/) does initially.
+
+If you look at their [code](https://github.com/lochie/web-haptics/blob/main/packages/web-haptics/src/lib/web-haptics/index.ts),
+in the function `trigger()`, there is a check for `WebHaptics`. If it
+`isSupported`, then simply it will trigger the Vibration API I mentioned.
+
+```ts
+if (WebHaptics.isSupported) {
+  navigator.vibrate(toVibratePattern(vibrations, defaultIntensity));
+}
+```
+
+But what if not?
+
+There will be two cases:
+
+1. The target device does not have haptic motors, so it just physically cannot
+   give the feedback.
+2. The target device is on iOS webkit.
+
+In the first case, well, it's simple. Sad but no haptics, that's it.
+
+In the second case, that's where the _fake_ labels come into place.
+
+```ts
+if (!WebHaptics.isSupported || this.debug) {
+  this.ensureDOM();
+  if (!this.hapticLabel) return;
+  ...
+    this.hapticLabel.click();
+```
+
+See the `hapticLabel`? That's the invisible label that is connecting everything
+together. It will fire as much as the pattern requires it to, creating this
+pseudo-vibration API that can also bring the same feedback to iOS users.
+
+Note that this library keeps a real label in the DOM. It is visually hidden - and
+behavior can vary by iOS versions or hardware.
+
+However, it does not end there as an easy-access workaround for webkit.
+
+#### Custom Patterns
+
+Sometimes, you need custom haptic patterns for bringing the optimal experience.
+
+web-haptics, to give some love to that need, comes up with this interactive
+solution that makes the creation process - enjoyable.
+
+<style>{`
+  .blog-img-centered { width: 100%; }
+  @media (min-width: 768px) {
+    .blog-img-centered { width: 60%; margin: 0 auto; }
+  }
+`}</style>
+
+<div class="blog-img-centered">
+  <ImageGrid columns={1}>
+    <ImageContainer
+      src="https://7591yj.x02.me/i/P23K7.png"
+      alt="Using Jellyfin server"
+    />
+  </ImageGrid>
+</div>
+
+In their website, you can see the section for "Custom Haptic" - and a interactive
+waveform designer you can use to create a new pattern. The pattern created is
+translated right at the bottom of the component, and one-click copy paste is
+what is required.
+
+And of course, you can just go straight to the code as well. It is simple as it
+can be, with no more than just three options - `duration`, `intensity` and `delay`.
+
+```ts
+trigger([{ duration: 30 }, { delay: 60, duration: 40, intensity: 1 }]);
+```
+
+- `duration` defines how long the haptic will take into place in ms.
+- `intensity` defines how strong the haptic will be ranged from 0 to 1.
+  - in Android, `navigator.vibrate(number[])` with `PWM_CYCLE` approximates
+    intensity via on/off duty cycle.
+  - in iOS, it is implemented as click frequency: (`TOGGLE_MIN + (1 - intensity) * TOGGLE_MAX`)
+    <IntensityMatrix client:load />
+- `delay` defines how long it will wait after the haptic beforehand fires in ms.
+
+That simplifies everything, which is much easier to use than just the pure
+vibration API.
+
+I also have created some custom haptic patterns, let me demo you some.
+
+<PatternPreview client:load />
+
+The code is simple to manage as well:
+
+```ts
+// Three escalating pulses
+export const BOOT: Vibration[] = [
+  { duration: 25, intensity: 0.4 },
+  { delay: 35, duration: 25, intensity: 0.7 },
+  { delay: 35, duration: 40, intensity: 1 },
+];
+
+// Single soft pulse
+export const PING: Vibration[] = [{ duration: 22, intensity: 0.5 }];
+```
+
+#### Limitations
+
+"It just works" as it sounds, this solution still is not without any operational
+risks. This is certainly not standards-based haptics API but relying on the current
+iOS behavior. It may change or be throttled by future iOS updates.
+
+One more caveat that cannot be ignored is that, as a hidden label _is_ an interactive
+element, without extra handling it can become focusable, discoverable by screen
+readers, or interfere with forms/event listeners in some edge cases.
+
+It's still a pragmatic workaround relying on current iOS behavior that may change,
+and shipping it still brings costs.
+
+### Simplifying Matters
+
+Providing high-level implementations provides users (devs in this case) the ease of
+use. Of course, the main takeaway is that it also makes users harder to understand
+how it _actually_ is handled like.
+
+Implementations like web-haptics are just one of the examples. One lesson I have
+learned from the past is that, it's all about balance. Too low, it will be just
+hard to use. Too high, you don't really know what is actually going on.
+
+_Everything_ can be seen as the latter, to be honest. What about frameworks?
+What about the C language by itself? Wait, isn't Assembly _hiding_ the logic behind?
+
+Every layer is a trade. less cognitive load up front, underlying constraints get
+more distance. The point is keeping an _escape hatch_. To have a clear mental model,
+inspectable artifacts, and a path to drop down a layer when debugging,
+performance-tuning, or fighting platform quirks.
+
+High-level tools are not _the problem_. Opaque ones are. The goal, I would say,
+is not to avoid abstraction, but to carefully find out the abstraction that still
+buys leverage while preserving traceability when things do break.
+
+### To Close this Article...
+
+In that context, web-haptics landed in the right place for me.
+
+This very site you are visiting right now, uses web-haptics behind to provide you
+the haptics on mobile. The sounds - if you are on desktop and have turned on the
+toggle - uses the same logic web-haptics use when the debug option is turned on.
+
+It was a small, high-level surface that makes haptics easy to ship on mobile,
+plus enough hooks to verify what it is doing when the platform gets weird.
+
+It does hide the details - its label mapping, its _fake_ labels, and the iOS-specific
+workarounds - but that's the point of the library, and it mostly stays honest about
+the constraints it's compensating for.
+
+As a pragmatic tool for adding tactile feedback to common UI interactions, without
+turning the codebase into a platform-quirk museum, I would say web-haptics is a
+solid abstraction, useful because it chooses convenience first, while still having
+enough visibility to keep you oriented when something does not feel right.
