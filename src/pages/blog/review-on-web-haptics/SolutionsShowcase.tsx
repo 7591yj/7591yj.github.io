@@ -51,6 +51,7 @@ function ResponsiveShowcase() {
               gridTemplateColumns: desktop
                 ? "280px minmax(0, 1fr)"
                 : "minmax(0, 1fr)",
+              minWidth: desktop ? "640px" : undefined,
               gap: "16px",
               padding: "16px",
               maxWidth: "1100px",

@@ -67,7 +67,6 @@
 }
 
 .responsive-preview {
-  overflow: hidden;
   border: 1px dashed var(--color-border);
   padding: 0.4rem;
   background: var(--color-bg-primary);
@@ -79,6 +78,7 @@
   background: var(--color-bg-primary);
   padding: 0.4rem;
   max-width: 100%;
+  overflow-x: auto;
   transition: width 250ms var(--ease-out-quart);
 }
 
