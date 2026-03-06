@@ -5,10 +5,10 @@ import PageHeading from "../../components/PageHeading.astro";
 import BlogPostCard from "../../components/BlogPostCard.astro";
 import { SITE_NAME } from "../../consts";
 
-const blogModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
-  "./blog/*.mdx",
-  { eager: true },
-);
+const blogModules = import.meta.glob<{
+  frontmatter: Record<string, any>;
+  url: string;
+}>("./blog/*.mdx", { eager: true });
 const posts = Object.values(blogModules);
 
 const sorted = posts
@@ -34,7 +34,10 @@ const latestDate =
   sorted.length > 0 ? formatDate(sorted[0].frontmatter.date) : "----.--.--";
 ---
 
-<Layout title={`${SITE_NAME} | ブログ`}>
+<Layout
+  title={`${SITE_NAME} | ブログ`}
+  description="7591yjによるソフトウェア開発、デザイン、テクノロジーについての記事"
+>
   <main>
     <section>
       <PageHeading module="MODULE.002///" title="ブログ" />
@@ -47,22 +50,20 @@ const latestDate =
           {
             [0, 1].map(() => (
               <span class="ticker__segment">
-                {
-                  [0, 1, 2].map(() => (
-                    <>
-                      <span>SIGNAL CLEAR</span>
-                      <span class="ticker__dot" />
-                      <span>{sorted.length} ENTRIES LOADED</span>
-                      <span class="ticker__dot" />
-                      <span>LATEST {latestDate}</span>
-                      <span class="ticker__dot" />
-                      <span>SYS.BLOG ACTIVE</span>
-                      <span class="ticker__dot" />
-                      <span>TRANSMISSION OK</span>
-                      <span class="ticker__dot" />
-                    </>
-                  ))
-                }
+                {[0, 1, 2].map(() => (
+                  <>
+                    <span>SIGNAL CLEAR</span>
+                    <span class="ticker__dot" />
+                    <span>{sorted.length} ENTRIES LOADED</span>
+                    <span class="ticker__dot" />
+                    <span>LATEST {latestDate}</span>
+                    <span class="ticker__dot" />
+                    <span>SYS.BLOG ACTIVE</span>
+                    <span class="ticker__dot" />
+                    <span>TRANSMISSION OK</span>
+                    <span class="ticker__dot" />
+                  </>
+                ))}
               </span>
             ))
           }
