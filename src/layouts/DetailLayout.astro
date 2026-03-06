@@ -12,13 +12,16 @@ interface Props {
   backLinkLabel: string;
   headings: { depth: number; slug: string; text: string }[];
   subtitle?: string;
+  description?: string;
+  type?: "website" | "article";
+  publishDate?: string;
 }
 
-const { title, module, headingTitle, backLinkHref, backLinkLabel, headings, subtitle } =
+const { title, module, headingTitle, backLinkHref, backLinkLabel, headings, subtitle, description, type, publishDate } =
   Astro.props;
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description} type={type} publishDate={publishDate}>
   <main>
     <section class="header">
       <PageHeading module={module} title={headingTitle}>
