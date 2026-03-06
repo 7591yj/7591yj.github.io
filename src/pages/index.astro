@@ -68,7 +68,10 @@ const locale = Astro.currentLocale ?? "en";
 const t = useTranslations(locale);
 ---
 
-<Layout transparentHeader>
+<Layout
+  transparentHeader
+  description="Portfolio and blog of 7591yj - software development, design, and research."
+>
   <main>
     <section class="hero-section">
       <HeroCarousel
