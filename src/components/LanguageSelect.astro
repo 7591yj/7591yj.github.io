@@ -131,30 +131,43 @@ const pathWithoutLocale =
   import { triggerHaptic } from "../haptics-instance";
   import { PING, CONFIRM } from "../haptics";
 
-  // triggered by HTMLElement.click(); WebHaptics' internal label.click()
-  // calls are completely invisible to this handler
-  document.addEventListener("pointerdown", (e) => {
-    if (!(e.target as HTMLElement).closest(".lang-select")) {
-      document.getElementById("lang-dropdown")?.classList.remove("open");
-      document
-        .getElementById("lang-toggle")
-        ?.querySelector(".lang-icon")
-        ?.classList.remove("flipped");
-    }
-  });
+  const windowWithLangSelect = window as Window & {
+    __langSelectInit?: boolean;
+  };
 
-  document.addEventListener("astro:page-load", () => {
-    const toggle = document.getElementById("lang-toggle");
-    const dropdown = document.getElementById("lang-dropdown");
+  if (!windowWithLangSelect.__langSelectInit) {
+    windowWithLangSelect.__langSelectInit = true;
 
-    toggle?.addEventListener("click", () => {
-      dropdown?.classList.toggle("open");
-      toggle.querySelector(".lang-icon")?.classList.toggle("flipped");
-      triggerHaptic(PING);
+    // triggered by HTMLElement.click(); WebHaptics' internal label.click()
+    // calls are completely invisible to this handler
+    document.addEventListener("pointerdown", (event) => {
+      if (!(event.target as HTMLElement).closest(".lang-select")) {
+        document.getElementById("lang-dropdown")?.classList.remove("open");
+        document
+          .getElementById("lang-toggle")
+          ?.querySelector(".lang-icon")
+          ?.classList.remove("flipped");
+      }
     });
 
-    dropdown?.querySelectorAll(".lang-option").forEach((option) => {
-      option.addEventListener("click", () => triggerHaptic(CONFIRM));
+    document.addEventListener("click", (event) => {
+      const toggle = (event.target as HTMLElement | null)?.closest(
+        "#lang-toggle",
+      ) as HTMLElement | null;
+      if (toggle) {
+        const dropdown = document.getElementById("lang-dropdown");
+        dropdown?.classList.toggle("open");
+        toggle.querySelector(".lang-icon")?.classList.toggle("flipped");
+        triggerHaptic(PING);
+        return;
+      }
+
+      const option = (event.target as HTMLElement | null)?.closest(
+        ".lang-option",
+      );
+      if (option) {
+        triggerHaptic(CONFIRM);
+      }
     });
-  });
+  }
 </script>

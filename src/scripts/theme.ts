@@ -1,4 +1,5 @@
 const THEME_KEY = "theme";
+let isWatchingSystemPreference = false;
 
 export type Theme = "light" | "dark";
 export type ThemePreference = Theme | "system";
@@ -61,6 +62,9 @@ export function toggleTheme(): void {
 
 // System preference change listener
 export function watchSystemPreference(callback?: (theme: Theme) => void): void {
+  if (isWatchingSystemPreference) return;
+  isWatchingSystemPreference = true;
+
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", (e: MediaQueryListEvent) => {
