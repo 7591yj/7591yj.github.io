@@ -1,4 +1,9 @@
+let cleanupCurrent: (() => void) | null = null;
+
 function init() {
+  cleanupCurrent?.();
+  cleanupCurrent = null;
+
   const header = document.querySelector<HTMLElement>(
     "[data-transparent-header]",
   );
@@ -31,17 +36,16 @@ function init() {
   );
 
   observer.observe(hero);
-
-  // Cleanup for ViewTransitions
-  document.addEventListener(
-    "astro:before-swap",
-    () => {
-      observer.disconnect();
-    },
-    { once: true },
-  );
+  cleanupCurrent = () => {
+    observer.disconnect();
+  };
 }
 
+document.addEventListener("astro:before-swap", () => {
+  cleanupCurrent?.();
+  cleanupCurrent = null;
+});
 document.addEventListener("astro:page-load", init);
+init();
 
 export {};

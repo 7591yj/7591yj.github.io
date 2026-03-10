@@ -106,8 +106,23 @@ const jsonLd =
     <Header transparentHeader={transparentHeader} />
     <slot />
     <Footer />
-    <script src="../scripts/scroll-animate.ts"></script>
-    <script src="../scripts/header-scroll.ts"></script>
+    <script>
+      let scrollAnimateModule: Promise<unknown> | null = null;
+      let headerScrollModule: Promise<unknown> | null = null;
+
+      function loadPageScripts() {
+        if (document.querySelector("[data-animate]")) {
+          scrollAnimateModule ??= import("../scripts/scroll-animate.ts");
+        }
+
+        if (document.querySelector("[data-transparent-header]")) {
+          headerScrollModule ??= import("../scripts/header-scroll.ts");
+        }
+      }
+
+      loadPageScripts();
+      document.addEventListener("astro:page-load", loadPageScripts);
+    </script>
     <script src="../scripts/scramble-text.ts"></script>
     <script>
       import { initTheme, watchSystemPreference } from "../scripts/theme";
