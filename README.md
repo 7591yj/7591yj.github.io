@@ -84,8 +84,8 @@ src/
 
 ## Getting Started
 
-> `flake.nix` is provided for Nix. Use `nix develop` to enter the development
-> shell.
+> The project environment is defined in `devenv.nix` and auto-loaded via
+> `direnv`. `devenv` is expected to already be installed on the system.
 
 ### Prerequisites
 
@@ -93,13 +93,20 @@ src/
 
 ### Commands
 
-| Command           | Action                                                         |
-| :---------------- | :------------------------------------------------------------- |
-| `bun install`     | Install dependencies                                           |
-| `bun run dev`     | Start local dev server at `localhost:4321`                     |
-| `bun run build`   | Build production site to `./dist/`                             |
-| `bun run preview` | Preview production build locally                               |
-| `./dev.sh`        | Launch tmux session (dev server + nvim + shell) - requires Nix |
+| Command           | Action                                             |
+| :---------------- | :------------------------------------------------- |
+| `direnv allow`    | Enable automatic `devenv` activation for this repo |
+| `bun install`     | Install dependencies                               |
+| `devenv up`       | Start local dev server at `localhost:4321`         |
+| `bun run build`   | Build production site to `./dist/`                 |
+| `bun run preview` | Preview production build locally                   |
+| `./dev.sh`        | Launch tmux session (dev server + nvim + shell)    |
+
+### Recommended Workflow
+
+1. Ensure `devenv` is installed on your system.
+2. Run `direnv allow` in the repo root.
+3. Use `./dev.sh` to attach or create the tmux workspace.
 
 ## Fonts
 
