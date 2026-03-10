@@ -29,7 +29,6 @@ import { Icon } from "astro-icon/components";
 </style>
 
 <script>
-  import { animate } from "framer-motion";
   import {
     toggleTheme,
     getCurrentTheme,
@@ -37,16 +36,26 @@ import { Icon } from "astro-icon/components";
   import { triggerHaptic } from "../haptics-instance";
   import { SWITCH } from "../haptics";
 
+  const windowWithThemeToggle = window as Window & {
+    __themeToggleInit?: boolean;
+  };
+
   const animateIcon = (icon: Element) => {
-    animate(
-      icon,
-      { opacity: [0, 1], scale: [0.8, 1] },
-      { duration: 0.2, ease: "easeOut" },
+    if (!(icon instanceof HTMLElement)) return;
+    icon.animate(
+      [
+        { opacity: 0, transform: "scale(0.8)" },
+        { opacity: 1, transform: "scale(1)" },
+      ],
+      {
+        duration: 200,
+        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
     );
   };
 
-  document.addEventListener("astro:page-load", () => {
-    const button = document.getElementById("theme-toggle");
+  if (!windowWithThemeToggle.__themeToggleInit) {
+    windowWithThemeToggle.__themeToggleInit = true;
 
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -65,7 +74,12 @@ import { Icon } from "astro-icon/components";
 
     observer.observe(document.documentElement, { attributes: true });
 
-    button?.addEventListener("click", () => {
+    document.addEventListener("click", (event) => {
+      const button = (event.target as HTMLElement | null)?.closest(
+        "#theme-toggle",
+      ) as HTMLElement | null;
+      if (!button) return;
+
       const rect = button.getBoundingClientRect();
       const x = rect.left + rect.width / 2;
       const y = rect.top + rect.height / 2;
@@ -74,5 +88,5 @@ import { Icon } from "astro-icon/components";
       toggleTheme();
       triggerHaptic(SWITCH);
     });
-  });
+  }
 </script>

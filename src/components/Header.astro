@@ -357,54 +357,58 @@ const currentPath = Astro.url.pathname;
   import { triggerHaptic } from "../haptics-instance";
   import { BOOT } from "../haptics";
 
-  function initHamburger() {
+  const windowWithHeaderInit = window as Window & {
+    __headerInit?: boolean;
+  };
+
+  function closeMenu() {
     const header = document.querySelector(".header");
     const hamburger = document.querySelector(".hamburger");
     const mobileMenu = document.querySelector(".mobile-menu");
-    const langDropdown = document.querySelector(
-      ".lang-select .lang-dropdown",
-    );
-    const langIcon = document.querySelector(".lang-select .lang-icon");
     if (!header || !hamburger || !mobileMenu) return;
-
-    function close() {
-      hamburger!.setAttribute("aria-expanded", "false");
-      mobileMenu!.classList.remove("open");
-      header!.classList.remove("header--menu-open");
-    }
-
-    hamburger.addEventListener("click", () => {
-      const expanded = hamburger.getAttribute("aria-expanded") === "true";
-      langDropdown?.classList.remove("open");
-      langIcon?.classList.remove("flipped");
-      hamburger.setAttribute("aria-expanded", String(!expanded));
-      mobileMenu.classList.toggle("open");
-      header.classList.toggle("header--menu-open");
-      triggerHaptic(BOOT);
-    });
-
-    // Close on nav link click
-    mobileMenu.querySelectorAll(".mobile-menu__link").forEach((link) => {
-      link.addEventListener("click", close);
-    });
-
-    // Close on resize past breakpoint
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 768) close();
-    });
+    hamburger.setAttribute("aria-expanded", "false");
+    mobileMenu.classList.remove("open");
+    header.classList.remove("header--menu-open");
   }
 
   // Close the menu before the DOM is captured for the view transition
   document.addEventListener("astro:before-swap", () => {
-    const hamburger = document.querySelector(".hamburger");
-    const mobileMenu = document.querySelector(".mobile-menu");
-    const header = document.querySelector(".header");
-    hamburger?.setAttribute("aria-expanded", "false");
-    mobileMenu?.classList.remove("open");
-    header?.classList.remove("header--menu-open");
+    closeMenu();
   });
 
-  // Run on initial load and on Astro page transitions
-  initHamburger();
-  document.addEventListener("astro:after-swap", initHamburger);
+  if (!windowWithHeaderInit.__headerInit) {
+    windowWithHeaderInit.__headerInit = true;
+
+    document.addEventListener("click", (event) => {
+      const hamburger = (event.target as HTMLElement | null)?.closest(
+        ".hamburger",
+      ) as HTMLElement | null;
+      if (hamburger) {
+        const header = document.querySelector(".header");
+        const mobileMenu = document.querySelector(".mobile-menu");
+        const langDropdown = document.querySelector(
+          ".lang-select .lang-dropdown",
+        );
+        const langIcon = document.querySelector(".lang-select .lang-icon");
+        if (!header || !mobileMenu) return;
+
+        const expanded = hamburger.getAttribute("aria-expanded") === "true";
+        langDropdown?.classList.remove("open");
+        langIcon?.classList.remove("flipped");
+        hamburger.setAttribute("aria-expanded", String(!expanded));
+        mobileMenu.classList.toggle("open");
+        header.classList.toggle("header--menu-open");
+        triggerHaptic(BOOT);
+        return;
+      }
+
+      if ((event.target as HTMLElement | null)?.closest(".mobile-menu__link")) {
+        closeMenu();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 768) closeMenu();
+    });
+  }
 </script>

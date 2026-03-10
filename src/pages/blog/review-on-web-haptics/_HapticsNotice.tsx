@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { WebHaptics } from "web-haptics";
-import { SOUND_KEY } from "./haptics";
+import { SOUND_KEY } from "./_haptics";
 
 export default function HapticsNotice() {
   const [supported, setSupported] = useState<boolean | null>(null);

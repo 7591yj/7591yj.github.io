@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import FadeInSection from "../components/motion/FadeInSection.tsx";
 import Button from "../components/Button.astro";
 import { detectLocale, useTranslations } from "../i18n/ui";
 import { getRelativeLocaleUrl } from "astro:i18n";
@@ -11,20 +10,22 @@ const t = useTranslations(locale);
 
 <Layout>
   <main class="container-main">
-    <section class="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] text-center">
-      <FadeInSection client:visible>
-        <div class="content-container">
-          <h1 class="font-shippori text-[clamp(12rem,40vw,28rem)] font-bold leading-none tracking-[0.3em] pl-[0.3em]">
-            500
-          </h1>
-          <p class="text-xl text-[var(--color-text-secondary)] mb-8">
-            {t("500.message")}
-          </p>
-          <Button variant="reverse" href={getRelativeLocaleUrl(locale, "/")}>
-            {t("500.back")}
-          </Button>
-        </div>
-      </FadeInSection>
+    <section
+      class="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] text-center"
+    >
+      <div class="content-container" data-animate>
+        <h1
+          class="font-shippori text-[clamp(12rem,40vw,28rem)] font-bold leading-none tracking-[0.3em] pl-[0.3em]"
+        >
+          500
+        </h1>
+        <p class="text-xl text-[var(--color-text-secondary)] mb-8">
+          {t("500.message")}
+        </p>
+        <Button variant="reverse" href={getRelativeLocaleUrl(locale, "/")}>
+          {t("500.back")}
+        </Button>
+      </div>
     </section>
   </main>
 </Layout>

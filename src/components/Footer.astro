@@ -36,7 +36,7 @@ const projectLinks = [
 ];
 ---
 
-<footer class="footer">
+<footer class="footer" data-footer-bg="https://7591yj.x02.me/i/TFZA.webp">
   <div class="footer-main">
     <div class="footer-left-inner container-main">
       <div class="footer-socials">
@@ -72,7 +72,11 @@ const projectLinks = [
     padding-top: var(--folder-cut);
     margin-top: var(--spacing-4xl);
     position: relative;
-    background: url("https://7591yj.x02.me/i/2SUB.png") center / cover no-repeat;
+    background:
+      var(--footer-bg-image), linear-gradient(180deg, #24242c 0%, #141418 100%);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     clip-path: polygon(
       0 0,
       33.33% 0,
@@ -174,3 +178,33 @@ const projectLinks = [
     color: var(--color-text-muted);
   }
 </style>
+
+<script>
+  function initFooterBackground() {
+    const footer = document.querySelector<HTMLElement>(
+      ".footer[data-footer-bg]",
+    );
+    if (!footer || footer.dataset.footerBgReady === "true") return;
+
+    const loadBackground = () => {
+      const src = footer.dataset.footerBg;
+      if (!src) return;
+      footer.style.setProperty("--footer-bg-image", `url("${src}")`);
+      footer.dataset.footerBgReady = "true";
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        loadBackground();
+        observer.disconnect();
+      },
+      { rootMargin: "256px 0px" },
+    );
+
+    observer.observe(footer);
+  }
+
+  document.addEventListener("astro:page-load", initFooterBackground);
+  initFooterBackground();
+</script>
