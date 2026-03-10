@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Vibration } from "web-haptics";
-import { useHaptics } from "./haptics";
+import { useHaptics } from "./_haptics";
 import { KEYPRESS, SWITCH, BOOT, PING, CONFIRM, TICK } from "../../../haptics";
 
 const PATTERNS = [

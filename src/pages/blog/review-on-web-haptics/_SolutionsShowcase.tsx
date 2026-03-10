@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { CSSProperties } from "react";
-import { useHaptics } from "./haptics";
+import { useHaptics } from "./_haptics";
 import { KEYPRESS, SWITCH, PING, CONFIRM, TICK } from "../../../haptics";
 
 type ShowcaseKind = "responsive" | "frameworks" | "spa" | "pwa";
