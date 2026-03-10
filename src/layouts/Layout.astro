@@ -4,14 +4,51 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 import { Font } from "astro:assets";
-import { SITE_NAME } from "../consts";
+import { SITE_NAME, SITE_DESCRIPTION, SITE_OG_IMAGE, AUTHOR } from "../consts";
 
 interface Props {
   title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishDate?: string;
+  noindex?: boolean;
   transparentHeader?: boolean;
 }
 
-const { title = SITE_NAME, transparentHeader = false } = Astro.props;
+const {
+  title = SITE_NAME,
+  description,
+  image,
+  type = "website",
+  publishDate,
+  noindex = false,
+  transparentHeader = false,
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image ?? SITE_OG_IMAGE, Astro.site).href;
+const metaDescription = description ?? SITE_DESCRIPTION;
+
+const jsonLd =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description: metaDescription,
+        url: canonicalUrl,
+        datePublished: publishDate,
+        author: { "@type": "Person", name: AUTHOR },
+        image: ogImage,
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        url: Astro.site,
+        name: SITE_NAME,
+        description: SITE_DESCRIPTION,
+      };
 ---
 
 <Font cssVariable="--font-shippori" preload />
@@ -23,6 +60,27 @@ const { title = SITE_NAME, transparentHeader = false } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <meta name="description" content={metaDescription} />
+    <meta name="author" content={AUTHOR} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    {noindex && <meta name="robots" content="noindex" />}
+
     <ViewTransitions />
     <script is:inline>
       (function () {

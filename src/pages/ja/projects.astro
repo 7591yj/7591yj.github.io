@@ -11,10 +11,10 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 const t = useTranslations(Astro.currentLocale);
 const internalBasePath = getRelativeLocaleUrl("ja", "/projects");
 
-const mdxModules = import.meta.glob<{ frontmatter: Record<string, any>; url: string }>(
-  "./projects/*.mdx",
-  { eager: true },
-);
+const mdxModules = import.meta.glob<{
+  frontmatter: Record<string, any>;
+  url: string;
+}>("./projects/*.mdx", { eager: true });
 const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
   title: p.frontmatter.title,
   subtitle: p.frontmatter.subtitle,
@@ -30,7 +30,10 @@ const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
 }));
 ---
 
-<Layout title={`${SITE_NAME} | プロジェクト`}>
+<Layout
+  title={`${SITE_NAME} | プロジェクト`}
+  description="7591yjのソフトウェアプロジェクト"
+>
   <main>
     <section>
       <PageHeading module="MODULE.001///" title="プロジェクト" />
@@ -46,6 +49,5 @@ const allProjects: Project[] = Object.values(mdxModules).map((p) => ({
         client:visible
       />
     </section>
-
   </main>
 </Layout>
