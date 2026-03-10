@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Swiper from "swiper";
-import { Autoplay, EffectFade, Navigation } from "swiper/modules";
+import type Swiper from "swiper";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
@@ -37,22 +36,35 @@ export default function HeroCarousel({
   const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    let mounted = true;
+    let instance: Swiper | null = null;
 
-    const instance = new Swiper(containerRef.current, {
-      modules: [Autoplay, EffectFade, Navigation],
-      effect: "fade",
-      autoplay: { delay: 5000, disableOnInteraction: false },
-      navigation: {
-        prevEl: ".hero-carousel__prev",
-        nextEl: ".hero-carousel__next",
-      },
-      loop: true,
-    });
-    swiperRef.current = instance;
+    async function initSwiper() {
+      if (!containerRef.current) return;
+
+      const [{ default: Swiper }, { Autoplay, EffectFade, Navigation }] =
+        await Promise.all([import("swiper"), import("swiper/modules")]);
+
+      if (!mounted || !containerRef.current) return;
+
+      instance = new Swiper(containerRef.current, {
+        modules: [Autoplay, EffectFade, Navigation],
+        effect: "fade",
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        navigation: {
+          prevEl: ".hero-carousel__prev",
+          nextEl: ".hero-carousel__next",
+        },
+        loop: true,
+      });
+      swiperRef.current = instance;
+    }
+
+    void initSwiper();
 
     return () => {
-      instance.destroy(true, true);
+      mounted = false;
+      instance?.destroy(true, true);
       swiperRef.current = null;
     };
   }, []);
@@ -71,13 +83,6 @@ export default function HeroCarousel({
 
   return (
     <div className={`hero-carousel${fullscreen ? " hero-carousel--fullscreen" : ""}`}>
-      {/* Image preload hints */}
-      {slides.map((slide) =>
-        slide.image ? (
-          <link key={slide.image} rel="preload" as="image" href={slide.image} />
-        ) : null,
-      )}
-
       <div ref={containerRef} className="swiper hero-carousel__swiper">
         <div className="swiper-wrapper">
           {slides.map((slide, i) => (
@@ -88,6 +93,8 @@ export default function HeroCarousel({
                     src={slide.image}
                     alt={slide.project.title}
                     className="hero-carousel__image"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    decoding="async"
                   />
                   <InteractiveDotGrid
                     className="hero-carousel__dot-grid"

@@ -34,6 +34,7 @@ export default function InteractiveDotGrid({
 
     let animId = 0;
     let running = false;
+    let visible = false;
     let mouseX = -9999;
     let mouseY = -9999;
 
@@ -61,6 +62,11 @@ export default function InteractiveDotGrid({
       }
     }
 
+    function paintStaticGrid() {
+      ctx!.clearRect(0, 0, cw, ch);
+      ctx!.drawImage(offscreen, 0, 0);
+    }
+
     function resize() {
       const rect = canvas!.getBoundingClientRect();
       dpr = window.devicePixelRatio || 1;
@@ -76,22 +82,29 @@ export default function InteractiveDotGrid({
 
       displaced.clear();
       buildStaticGrid();
+      paintStaticGrid();
     }
 
     function onMouseMove(e: MouseEvent) {
       const rect = canvas!.getBoundingClientRect();
       mouseX = (e.clientX - rect.left) * dpr;
       mouseY = (e.clientY - rect.top) * dpr;
+      startLoop();
     }
 
     function onMouseLeave() {
       mouseX = -9999;
       mouseY = -9999;
+      if (displaced.size === 0) {
+        stopLoop();
+        paintStaticGrid();
+        return;
+      }
+      startLoop();
     }
 
     function draw() {
-      ctx!.clearRect(0, 0, cw, ch);
-      ctx!.drawImage(offscreen, 0, 0);
+      paintStaticGrid();
 
       const rr = repelRadius * dpr;
       const rr2 = rr * rr;
@@ -154,11 +167,17 @@ export default function InteractiveDotGrid({
         }
       }
 
-      if (running) animId = requestAnimationFrame(draw);
+      const shouldContinue = visible && (mouseX > -5000 || displaced.size > 0);
+      if (shouldContinue) {
+        animId = requestAnimationFrame(draw);
+      } else {
+        running = false;
+        animId = 0;
+      }
     }
 
     function startLoop() {
-      if (running) return;
+      if (running || !visible) return;
       running = true;
       animId = requestAnimationFrame(draw);
     }
@@ -177,8 +196,12 @@ export default function InteractiveDotGrid({
     // Pause the rAF loop when the canvas is scrolled out of view
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) startLoop();
-        else stopLoop();
+        visible = entry.isIntersecting;
+        if (!visible) {
+          stopLoop();
+          return;
+        }
+        paintStaticGrid();
       },
       { threshold: 0 },
     );
