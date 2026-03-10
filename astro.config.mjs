@@ -13,6 +13,7 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
   site: "https://7591yj.com",
+  prefetch: false,
   i18n: {
     locales: ["en", "ja", "ko"],
     defaultLocale: "en",
@@ -58,4 +59,3 @@ export default defineConfig({
     ],
   },
 });
-
