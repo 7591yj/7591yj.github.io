@@ -89,25 +89,33 @@ const padded = String(index).padStart(3, "0");
   /* ---- Card ---- */
   .blog-entry__card {
     --cut: 0.75rem;
+    --card-border: var(--color-border);
+    --card-fill: var(--color-bg-secondary);
     flex: 1;
     display: block;
     position: relative;
-    background: var(--color-border);
+    background: var(--card-border);
     clip-path: var(--clip-cutoff);
     padding: 1px;
     text-decoration: none;
-    transition: background var(--duration-normal) var(--ease-out-expo);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .blog-entry__card:hover {
-    background: var(--color-border-hover);
+    --card-fill: color-mix(
+      in srgb,
+      var(--color-bg-secondary) 72%,
+      var(--color-bg-primary)
+    );
     color: inherit;
+    transform: translateY(-2px);
   }
 
   .blog-entry__card-inner {
     --cut: 0.75rem;
-    background: var(--color-bg-secondary);
+    background: var(--card-fill);
     clip-path: var(--clip-cutoff);
+    transition: background var(--duration-normal) var(--ease-out-expo);
     padding: 1.5rem 2rem;
     display: flex;
     flex-direction: column;
@@ -151,11 +159,6 @@ const padded = String(index).padStart(3, "0");
     background: var(--color-bg-tertiary);
     color: var(--color-text-muted);
     border: 1px solid var(--color-border);
-    transition: border-color var(--duration-fast) ease;
-  }
-
-  .blog-entry__card:hover .blog-entry__tag {
-    border-color: var(--color-border-hover);
   }
 
   /* ---- Title ---- */
@@ -168,6 +171,11 @@ const padded = String(index).padStart(3, "0");
     display: inline-flex;
     align-items: center;
     gap: 0.35em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .blog-entry__card:hover .blog-entry__title {
+    color: var(--color-accent);
   }
 
   .blog-entry__arrow {
