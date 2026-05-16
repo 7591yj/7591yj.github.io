@@ -6,8 +6,6 @@ import Layout from "../../layouts/Layout.astro";
 import HeroCarousel from "../../components/carousel/HeroCarousel.tsx";
 import SectionBlock from "../../components/SectionBlock.astro";
 import BlogPostCard from "../../components/BlogPostCard.astro";
-import Button from "../../components/Button.astro";
-import { SITE_NAME } from "../../consts";
 import { useTranslations } from "../../i18n/ui";
 
 const posts = (await getCollection("blogJa")).map((entry) => ({
@@ -82,6 +80,65 @@ const t = useTranslations(Astro.currentLocale);
       />
     </section>
 
+    <!-- ============ ABOUT ============ -->
+    <section class="preview-section">
+      <SectionBlock title="プロフィール///">
+        <div class="section-bar" aria-hidden="true">
+          <div class="section-bar__info">
+            <span class="section-bar__accent">DOSSIER</span>
+            <span class="section-bar__sep">//</span>
+            <span>CURRENT</span>
+            <span class="section-bar__sep">//</span>
+            <span>SIGNAL OK</span>
+          </div>
+        </div>
+
+        <div class="about-dossier" data-animate>
+          <div class="about-dossier__statement">
+            <p>
+              インフラを<span class="statement-keyword">見える</span>ものに、<br
+              />
+              インターフェースを<span class="statement-keyword">触れられる</span
+              >ものに、<br />
+              状態を<span class="statement-keyword">予測できる</span
+              >ものにする、<br />
+              静かな実働システムをつくっています。
+            </p>
+          </div>
+
+          <dl class="about-dossier__facts">
+            <div>
+              <dt>Focus</dt>
+              <dd>
+                <ul>
+                  <li>ホームラボ運用</li>
+                  <li>触感のあるUI</li>
+                  <li>再現可能な環境</li>
+                </ul>
+              </dd>
+            </div>
+            <div>
+              <dt>Stack</dt>
+              <dd>
+                <ul>
+                  <li>TypeScript</li>
+                  <li>React</li>
+                  <li>Svelte</li>
+                  <li>Python</li>
+                  <li>コンテナ</li>
+                  <li>Nix</li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+
+          <a
+            class="about-dossier__link"
+            href={getRelativeLocaleUrl("ja", "/about")}>View full dossier →</a
+          >
+        </div>
+      </SectionBlock>
+    </section>
     <!-- ============ BLOG ============ -->
     <section class="preview-section">
       <SectionBlock title="記事///">
@@ -157,100 +214,10 @@ const t = useTranslations(Astro.currentLocale);
           </div>
         </div>
 
-        <div class="section-action" data-animate>
-          <Button href={getRelativeLocaleUrl("ja", "/blog")}>記事一覧</Button>
-        </div>
-      </SectionBlock>
-    </section>
-
-    <!-- ============ ABOUT ============ -->
-    <section class="preview-section">
-      <SectionBlock title="プロフィール///">
-        <!-- Ticker strip -->
-        <div class="ticker" aria-hidden="true">
-          <div class="ticker__track">
-            {
-              [0, 1].map(() => (
-                <span class="ticker__segment">
-                  {[0, 1, 2].map(() => (
-                    <>
-                      <span>WHO IS THIS</span>
-                      <span class="ticker__dot" />
-                      <span>PROFILE LOADED</span>
-                      <span class="ticker__dot" />
-                      <span>CLEARANCE OK</span>
-                      <span class="ticker__dot" />
-                      <span>DOSSIER READY</span>
-                      <span class="ticker__dot" />
-                    </>
-                  ))}
-                </span>
-              ))
-            }
-          </div>
-        </div>
-
-        <!-- About HUD display -->
-        <div class="about-hud">
-          <div class="dot-grid dot-grid--faint"></div>
-          <div class="about-hud__inner">
-            <!-- Terminal block -->
-            <div class="terminal-block" data-animate>
-              <div class="terminal-block__header">
-                <span class="led led--active led--sm"></span>
-                <span>未解決チケット // 3件</span>
-              </div>
-              <div class="terminal-block__body">
-                <p class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span> ホームラボはどこまで追い込めるか？
-                </p>
-                <p class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span> インターフェースに意図と生気を与えるものは何か？
-                </p>
-                <p class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span> 宣言的な設定は、いつ再現性から非実用性へと転じるのか？
-                </p>
-                <p class="terminal-line terminal-line--cursor">
-                  <span class="terminal-prompt">&gt;</span>
-                  <span class="terminal-cursor"></span>
-                </p>
-              </div>
-            </div>
-
-            <!-- Profile card -->
-            <div class="profile-card" data-animate>
-              <div class="profile-card__header">
-                <span>プロフィール</span>
-              </div>
-              <div class="profile-card__body">
-                <div class="profile-meta">
-                  <span class="profile-meta__label">ハンドル</span>
-                  <span class="profile-meta__value">{SITE_NAME}</span>
-
-                  <span class="profile-meta__label">興味分野</span>
-                  <span class="profile-meta__value">
-                    Web、コンテナ化、Linux、UI/UX
-                  </span>
-
-                  <span class="profile-meta__label">スタック</span>
-                  <span class="profile-meta__value">
-                    TS / React / Svelte / Python
-                  </span>
-
-                  <span class="profile-meta__label">ステータス</span>
-                  <span class="profile-meta__value profile-meta__value--status">
-                    <span class="led led--active led--sm"></span>
-                    稼動中
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section-action" data-animate>
-          <Button href={getRelativeLocaleUrl("ja", "/about")}
-            >詳細プロフィール</Button
+        <div class="section-link-row" data-animate>
+          <a
+            class="section-text-link"
+            href={getRelativeLocaleUrl("ja", "/blog")}>View all dispatches →</a
           >
         </div>
       </SectionBlock>
