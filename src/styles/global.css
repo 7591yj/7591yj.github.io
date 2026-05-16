@@ -42,7 +42,7 @@
 
 @theme {
   --font-shippori: var(--font-shippori);
-  --font-plemol: "PlemolJP";
+  --font-plemol: "PlemolJP", system-ui, sans-serif;
 }
 
 /* Theme transition */
