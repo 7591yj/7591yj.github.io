@@ -244,6 +244,49 @@ export default function HeroCarousel({
         </div>
       </div>
 
+      <div className="hero-carousel__mobile-strip" aria-label="Featured project selector">
+        <button
+          className="hero-carousel__mobile-play"
+          type="button"
+          aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
+          disabled={reduceMotion}
+          data-haptic="nudge"
+          onClick={toggleAutoplay}
+        >
+          <svg className="hero-carousel__mobile-play-icon" viewBox="0 0 32 32" fill="currentColor">
+            {playing ? (
+              <path d="M12 8h3v16h-3zM17 8h3v16h-3z" />
+            ) : (
+              <path d="M10 8l14 8-14 8z" />
+            )}
+          </svg>
+        </button>
+        <span className="hero-carousel__mobile-counter" aria-live="polite">
+          {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+        </span>
+        <div className="hero-carousel__mobile-list">
+          {slides.map((slide, i) => (
+            <button
+              key={`mobile-${slide.project.title}-${i}`}
+              type="button"
+              className={`hero-carousel__mobile-item${
+                activeIndex === i ? " hero-carousel__mobile-item--active" : ""
+              }`}
+              aria-label={`Show project ${i + 1}: ${slide.project.title}`}
+              aria-current={activeIndex === i ? "true" : undefined}
+              onClick={(event) => selectProject(i, event.currentTarget)}
+            >
+              <span className="hero-carousel__mobile-item-index">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="hero-carousel__mobile-item-title">
+                {slide.project.title}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <nav className="hero-carousel__nav">
         <button
           className="hero-carousel__stop btn btn--icon btn--md"
