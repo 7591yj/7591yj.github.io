@@ -12,11 +12,21 @@
 /* ========================================
  * Size Variants
  * ======================================== */
-.content-carousel--xs { max-width: 320px; }
-.content-carousel--sm { max-width: 480px; }
-.content-carousel--md { max-width: 640px; }
-.content-carousel--lg { max-width: 800px; }
-.content-carousel--xl { max-width: 100%; }
+.content-carousel--xs {
+  max-width: 320px;
+}
+.content-carousel--sm {
+  max-width: 480px;
+}
+.content-carousel--md {
+  max-width: 640px;
+}
+.content-carousel--lg {
+  max-width: 800px;
+}
+.content-carousel--xl {
+  max-width: 100%;
+}
 
 /* ========================================
  * Image Area

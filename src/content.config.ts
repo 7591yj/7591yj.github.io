@@ -4,18 +4,28 @@ import { glob } from "astro/loaders";
 const postSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-  date: z.string().optional(),
+  date: z.string(),
   tags: z.array(z.string()).optional(),
 });
 
 const projectSchema = z.object({
   title: z.string(),
   subtitle: z.string(),
-  status: z.string().optional(),
+  status: z.enum([
+    "released",
+    "in development",
+    "planned",
+    "prototype",
+    "paused",
+    "archived",
+  ]),
   current: z.boolean().optional(),
-  category: z.string().optional(),
+  category: z.enum(["software", "personal"]).optional(),
+  desc: z.array(z.string()).default([]),
+  tags: z.array(z.string()).default([]),
   tech: z.array(z.string()).default([]),
   images: z.array(z.string()).optional(),
+  link: z.string().optional(),
 });
 
 const blog = defineCollection({

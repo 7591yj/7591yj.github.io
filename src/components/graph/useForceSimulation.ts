@@ -61,10 +61,19 @@ export function useForceSimulation(
   }, []);
 
   const setHovered = useCallback((id: string | null) => {
-    if (id === null) { hoveredRef.current = null; return; }
+    if (id === null) {
+      hoveredRef.current = null;
+      return;
+    }
     const idx = nodesRef.current.findIndex((n) => n.id === id);
     hoveredRef.current = idx >= 0 ? idx : null;
-    if (idx >= 0) { const n = nodesRef.current[idx]; if (n) { n.vx = 0; n.vy = 0; } }
+    if (idx >= 0) {
+      const n = nodesRef.current[idx];
+      if (n) {
+        n.vx = 0;
+        n.vy = 0;
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -152,8 +161,14 @@ export function useForceSimulation(
         const size = nodeSizes[i] || nodeSizes[0];
         const halfW = size.width / 2;
         const halfH = size.height / 2;
-        node.x = Math.max(cfg.padding + halfW, Math.min(containerSize.width - cfg.padding - halfW, node.x));
-        node.y = Math.max(cfg.padding + halfH, Math.min(containerSize.height - cfg.padding - halfH, node.y));
+        node.x = Math.max(
+          cfg.padding + halfW,
+          Math.min(containerSize.width - cfg.padding - halfW, node.x),
+        );
+        node.y = Math.max(
+          cfg.padding + halfH,
+          Math.min(containerSize.height - cfg.padding - halfH, node.y),
+        );
       }
 
       onTick(new Map(ns.map((n) => [n.id, { x: n.x, y: n.y }])));
@@ -176,7 +191,14 @@ export function useForceSimulation(
       cancelAnimationFrame(rafRef.current);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [enabled, containerSize.width, containerSize.height, edges, nodeSizes, onTick]);
+  }, [
+    enabled,
+    containerSize.width,
+    containerSize.height,
+    edges,
+    nodeSizes,
+    onTick,
+  ]);
 
   return { startDrag, moveDrag, endDrag, setHovered };
 }

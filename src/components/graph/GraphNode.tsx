@@ -30,7 +30,7 @@ export default function GraphNode({
   const normalizedBasePath = internalBasePath.replace(/\/$/, "");
   const linkTarget = project.slug
     ? `${normalizedBasePath}/${project.slug}`
-    : project.href ?? undefined;
+    : (project.href ?? undefined);
   const isExternal = !project.slug && !!project.href;
 
   const handleLinkPointerDown = (e: React.PointerEvent) => {

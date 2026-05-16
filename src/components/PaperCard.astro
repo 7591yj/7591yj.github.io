@@ -9,7 +9,9 @@ interface Props {
 const { href = "#", disabled } = Astro.props;
 ---
 
-<div class="paper-item p-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+<div
+  class="paper-item p-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4"
+>
   <p class="flex-10">
     <slot />
   </p>

@@ -27,9 +27,7 @@ const softwareProjects = (await getCollection("projectsJa"))
     frontmatter: entry.data,
     slug: entry.id,
   }))
-  .filter(
-  (p) => p.frontmatter.category === "software",
-);
+  .filter((p) => p.frontmatter.category === "software");
 
 const sortedProjects = [...softwareProjects].sort((a, b) => {
   const aHas = a.frontmatter.images && a.frontmatter.images.length > 0 ? 0 : 1;

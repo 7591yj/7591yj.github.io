@@ -13,7 +13,7 @@ tmux new-session -d -s "$SESSION" -n "dev" -c "$PROJECT_DIR" "$SHELL_BIN -il"
 tmux set-option -t "$SESSION" remain-on-exit on
 tmux new-window -t "$SESSION" -n "nvim" -c "$PROJECT_DIR" "$SHELL_BIN -il"
 tmux new-window -t "$SESSION" -n "shell" -c "$PROJECT_DIR" "$SHELL_BIN -il"
-tmux send-keys -t "$SESSION:dev" "devenv up" C-m
+tmux send-keys -t "$SESSION:dev" "pnpm dev" C-m
 tmux send-keys -t "$SESSION:nvim" "nvim" C-m
 tmux select-window -t "$SESSION:nvim"
 

@@ -11,8 +11,8 @@ interface Frontmatter {
   tags?: string[];
 }
 
-const { title, date, description, tags } =
-  Astro.props.frontmatter as Frontmatter;
+const { title, date, description, tags } = Astro.props
+  .frontmatter as Frontmatter;
 const headings = Astro.props.headings ?? [];
 const locale = Astro.currentLocale ?? "en";
 const t = useTranslations(locale);

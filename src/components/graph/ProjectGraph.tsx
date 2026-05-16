@@ -79,13 +79,14 @@ export default function ProjectGraph({
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [positions, setPositions] = useState<Map<string, { x: number; y: number }>>(new Map());
+  const [positions, setPositions] = useState<
+    Map<string, { x: number; y: number }>
+  >(new Map());
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [entered, setEntered] = useState(false);
   const [simulationReady, setSimulationReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const nodesRef = useRef<GraphNodeType[]>([]);
 
   // Filter state
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
@@ -95,7 +96,6 @@ export default function ProjectGraph({
   const {
     projectNodes,
     uniqueTechs,
-    techIdSet,
     techIds,
     edges,
     adjacency,
@@ -144,7 +144,6 @@ export default function ProjectGraph({
     return {
       projectNodes,
       uniqueTechs,
-      techIdSet,
       techIds,
       edges,
       adjacency: adj,
@@ -212,12 +211,18 @@ export default function ProjectGraph({
 
   // Trigger entry animation on mount
   useEffect(() => {
-    setEntered(true);
+    const frame = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
-  // Initialize node positions once container is measured
-  useEffect(() => {
-    if (containerSize.width === 0 || isMobile) return;
+  const initialGraph = useMemo(() => {
+    if (containerSize.width === 0 || isMobile) {
+      return {
+        positions: new Map<string, { x: number; y: number }>(),
+        nodes: [],
+      };
+    }
+
     const initPos = initialPositions(
       projectNodes,
       techIds,
@@ -245,20 +250,23 @@ export default function ProjectGraph({
         vy: 0,
       })),
     ];
-    nodesRef.current = nodes;
-    setPositions(initPos);
 
-    // Start physics after entry animation completes
+    return { positions: initPos, nodes };
+  }, [containerSize, isMobile, projectNodes, techIds, uniqueTechs]);
+
+  // Start physics after entry animation completes
+  useEffect(() => {
+    if (initialGraph.nodes.length === 0) return;
     const timer = setTimeout(() => setSimulationReady(true), 500);
     return () => clearTimeout(timer);
-  }, [containerSize.width, containerSize.height, isMobile, projectNodes, techIds, uniqueTechs]);
+  }, [initialGraph.nodes.length]);
 
   const onTick = useCallback((pos: Map<string, { x: number; y: number }>) => {
     setPositions(new Map(pos));
   }, []);
 
   const { startDrag, moveDrag, endDrag, setHovered } = useForceSimulation(
-    nodesRef.current,
+    initialGraph.nodes,
     edges,
     containerSize,
     nodeSizes,
@@ -266,10 +274,16 @@ export default function ProjectGraph({
     simulationReady && !isMobile,
   );
 
-  const hoverNode = useCallback((id: string | null) => {
-    setHoveredNode(id);
-    setHovered(id);
-  }, [setHovered]);
+  const renderPositions =
+    positions.size > 0 ? positions : initialGraph.positions;
+
+  const hoverNode = useCallback(
+    (id: string | null) => {
+      setHoveredNode(id);
+      setHovered(id);
+    },
+    [setHovered],
+  );
 
   const handlePointerDown = (index: number) => (e: React.PointerEvent) => {
     if (isMobile) return;
@@ -370,10 +384,10 @@ export default function ProjectGraph({
             zIndex: 1,
           }}
         >
-          {positions.size > 0 &&
+          {renderPositions.size > 0 &&
             edges.map((edge, i) => {
-              const sp = positions.get(edge.source);
-              const tp = positions.get(edge.target);
+              const sp = renderPositions.get(edge.source);
+              const tp = renderPositions.get(edge.target);
               if (!sp || !tp) return null;
               return (
                 <GraphEdge
@@ -391,9 +405,9 @@ export default function ProjectGraph({
         </svg>
 
         {/* Project node layer */}
-        {positions.size > 0 &&
+        {renderPositions.size > 0 &&
           projectNodes.map((p, i) => {
-            const pos = positions.get(p.id);
+            const pos = renderPositions.get(p.id);
             if (!pos) return null;
             return (
               <div
@@ -429,11 +443,11 @@ export default function ProjectGraph({
           })}
 
         {/* Tech node layer */}
-        {positions.size > 0 &&
+        {renderPositions.size > 0 &&
           uniqueTechs.map((t, i) => {
             const idx = projectNodes.length + i;
             const techId = `tech:${t}`;
-            const pos = positions.get(techId);
+            const pos = renderPositions.get(techId);
             if (!pos) return null;
             return (
               <div

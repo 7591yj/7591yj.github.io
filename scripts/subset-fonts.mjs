@@ -8,11 +8,18 @@
  * Re-run `astro build` afterwards to bundle the smaller fonts into dist/
  *
  * Usage:
- *   bun run build && bun run subset-fonts && bun run build
- *   or the combined alias: bun run build:optimized
+ *   pnpm build && pnpm subset-fonts && pnpm build
+ *   or the combined alias: pnpm build:optimized
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  statSync,
+} from "fs";
 import { join, resolve } from "path";
 import subsetFont from "subset-font";
 
@@ -34,7 +41,9 @@ if (!existsSync(DIST)) {
 }
 
 if (!existsSync(SOURCES_DIR)) {
-  console.error("Error: font-sources/ not found. It should be committed to the repo.");
+  console.error(
+    "Error: font-sources/ not found. It should be committed to the repo.",
+  );
   process.exit(1);
 }
 
@@ -103,4 +112,4 @@ for (const filename of FONT_FILES) {
   console.log(`${filename}: ${originalKB} KB → ${subsetKB} KB  (−${saving}%)`);
 }
 
-console.log("\nDone. Run `bun run build` again to bundle the subset fonts.");
+console.log("\nDone. Run `pnpm build` again to bundle the subset fonts.");

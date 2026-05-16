@@ -1,5 +1,4 @@
 ---
-import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
@@ -77,16 +76,19 @@ const jsonLd =
     <meta name="twitter:description" content={metaDescription} />
     <meta name="twitter:image" content={ogImage} />
 
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(jsonLd)}
+    />
 
     {noindex && <meta name="robots" content="noindex" />}
 
-    <ViewTransitions />
     <script is:inline>
       (function () {
         function resolveTheme() {
-          var stored = localStorage.getItem("theme");
-          var systemDark = window.matchMedia(
+          const stored = localStorage.getItem("theme");
+          const systemDark = window.matchMedia(
             "(prefers-color-scheme: dark)",
           ).matches;
           return stored === "system" || !stored

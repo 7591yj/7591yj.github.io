@@ -18,10 +18,7 @@ const minDepth = Math.min(...headings.map((h) => h.depth));
   <ul class="toc__list">
     {
       headings.map((h) => (
-        <li
-          class="toc__item"
-          style={`--indent: ${h.depth - minDepth}`}
-        >
+        <li class="toc__item" style={`--indent: ${h.depth - minDepth}`}>
           <a class="toc__link" href={`#${h.slug}`} data-slug={h.slug}>
             {h.text}
           </a>

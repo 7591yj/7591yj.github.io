@@ -111,9 +111,15 @@ export default function InteractiveDotGrid({
       const strength = repelStrength * dpr;
 
       const minCol = Math.max(0, Math.floor((mouseX - rr) / spacingPx) - 1);
-      const maxCol = Math.min(cols - 1, Math.ceil((mouseX + rr) / spacingPx) + 1);
+      const maxCol = Math.min(
+        cols - 1,
+        Math.ceil((mouseX + rr) / spacingPx) + 1,
+      );
       const minRow = Math.max(0, Math.floor((mouseY - rr) / spacingPx) - 1);
-      const maxRow = Math.min(rows - 1, Math.ceil((mouseY + rr) / spacingPx) + 1);
+      const maxRow = Math.min(
+        rows - 1,
+        Math.ceil((mouseY + rr) / spacingPx) + 1,
+      );
 
       ctx!.fillStyle = dotColor;
 

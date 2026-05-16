@@ -11,35 +11,37 @@ interface Props {
 const { lines } = Astro.props;
 
 const badge: Record<string, string> = {
-  ok:   "  ok  ",
+  ok: "  ok  ",
   warn: " warn ",
-  err:  "  err ",
+  err: "  err ",
   info: " .... ",
 };
 ---
 
 <div class="boot">
-  {lines.map(({ text, type = "info" }, i) => (
-    <div class={`boot__line boot__line--${type}`} style={`--i:${i}`}>
-      <span class="boot__badge">{badge[type]}</span>
-      <span class="boot__text">{text}</span>
-    </div>
-  ))}
+  {
+    lines.map(({ text, type = "info" }, i) => (
+      <div class={`boot__line boot__line--${type}`} style={`--i:${i}`}>
+        <span class="boot__badge">{badge[type]}</span>
+        <span class="boot__text">{text}</span>
+      </div>
+    ))
+  }
 </div>
 
 <style>
   /* github-light token colors (default) */
   .boot {
-    --boot-ok:   #116329;
+    --boot-ok: #116329;
     --boot-warn: #9a6700;
-    --boot-err:  #cf222e;
+    --boot-err: #cf222e;
   }
 
   /* github-dark token colors */
   :global([data-theme="dark"]) .boot {
-    --boot-ok:   #3fb950;
+    --boot-ok: #3fb950;
     --boot-warn: #e3b341;
-    --boot-err:  #ff7b72;
+    --boot-err: #ff7b72;
   }
 
   .boot {
@@ -67,19 +69,33 @@ const badge: Record<string, string> = {
     letter-spacing: 0;
   }
 
-  .boot__line--ok   .boot__badge { color: var(--boot-ok); }
-  .boot__line--warn .boot__badge { color: var(--boot-warn); }
-  .boot__line--err  .boot__badge { color: var(--boot-err); }
-  .boot__line--info .boot__badge { color: var(--color-text-muted); }
+  .boot__line--ok .boot__badge {
+    color: var(--boot-ok);
+  }
+  .boot__line--warn .boot__badge {
+    color: var(--boot-warn);
+  }
+  .boot__line--err .boot__badge {
+    color: var(--boot-err);
+  }
+  .boot__line--info .boot__badge {
+    color: var(--color-text-muted);
+  }
 
   .boot__text {
     color: var(--color-text-secondary);
   }
 
-  .boot__line--err  .boot__text { color: var(--boot-err); }
-  .boot__line--warn .boot__text { color: var(--color-text-primary); }
+  .boot__line--err .boot__text {
+    color: var(--boot-err);
+  }
+  .boot__line--warn .boot__text {
+    color: var(--color-text-primary);
+  }
 
   @keyframes boot-appear {
-    to { opacity: 1; }
+    to {
+      opacity: 1;
+    }
   }
 </style>
