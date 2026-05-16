@@ -3,7 +3,6 @@ import type Swiper from "swiper";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-import InteractiveDotGrid from "../InteractiveDotGrid";
 import "./HeroCarousel.css";
 
 interface ProjectSlide {
@@ -34,6 +33,8 @@ export default function HeroCarousel({
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
   const [playing, setPlaying] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [mapOpen, setMapOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -57,6 +58,7 @@ export default function HeroCarousel({
         },
         loop: true,
       });
+      instance.on("slideChange", () => setActiveIndex(instance?.realIndex ?? 0));
       swiperRef.current = instance;
     }
 
@@ -81,6 +83,16 @@ export default function HeroCarousel({
     }
   }
 
+  function selectProject(index: number, trigger?: HTMLButtonElement) {
+    const swiper = swiperRef.current;
+    if (!swiper) return;
+    swiper.slideToLoop(index);
+    swiper.autoplay.stop();
+    setPlaying(false);
+    setActiveIndex(index);
+    trigger?.blur();
+  }
+
   return (
     <div
       className={`hero-carousel${fullscreen ? " hero-carousel--fullscreen" : ""}`}
@@ -98,21 +110,9 @@ export default function HeroCarousel({
                     loading={i === 0 ? "eager" : "lazy"}
                     decoding="async"
                   />
-                  <InteractiveDotGrid
-                    className="hero-carousel__dot-grid"
-                    gridSpacing={16}
-                    dotSize={1}
-                    dotColor="rgba(0, 0, 0, 0.8)"
-                  />
                 </>
               ) : (
                 <div className="hero-carousel__fallback">
-                  <InteractiveDotGrid
-                    className="hero-carousel__dot-grid"
-                    gridSpacing={16}
-                    dotSize={1}
-                    dotColor="rgba(0, 0, 0, 0.8)"
-                  />
                   <span className="hero-carousel__fallback-title">
                     {slide.project.title}
                   </span>
@@ -185,6 +185,45 @@ export default function HeroCarousel({
                 </a>
               </div>
             </div>
+          ))}
+        </div>
+      </div>
+
+      <div
+        className={`hero-carousel__project-rail${mapOpen ? " hero-carousel__project-rail--open" : ""}`}
+        aria-label="Featured project index"
+      >
+        <div className="hero-carousel__rail-header">
+          <span className="hero-carousel__rail-label">MAP · {slides.length}</span>
+          {slides.length > 3 && (
+            <button
+              type="button"
+              className="hero-carousel__rail-expand"
+              aria-expanded={mapOpen}
+              onClick={() => setMapOpen((open) => !open)}
+            >
+              {mapOpen ? "LESS" : "MORE"}
+            </button>
+          )}
+        </div>
+        <div className="hero-carousel__rail-list">
+          {slides.map((slide, i) => (
+            <button
+              key={`${slide.project.title}-${i}`}
+              type="button"
+              className={`hero-carousel__rail-item${
+                activeIndex === i ? " hero-carousel__rail-item--active" : ""
+              }`}
+              aria-current={activeIndex === i ? "true" : undefined}
+              onClick={(event) => selectProject(i, event.currentTarget)}
+            >
+              <span className="hero-carousel__rail-index">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="hero-carousel__rail-title">
+                {slide.project.title}
+              </span>
+            </button>
           ))}
         </div>
       </div>
