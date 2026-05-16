@@ -606,38 +606,7 @@
  * ======================================== */
 @media (max-width: 768px) {
   .hero-carousel__project-rail {
-    top: auto;
-    right: 1rem;
-    bottom: 12.25rem;
-    left: 1rem;
-    width: auto;
-  }
-
-  .hero-carousel__rail-label {
-    margin-left: 0;
-  }
-
-  .hero-carousel__rail-list {
-    max-height: none;
-    flex-direction: row;
-    gap: 0.45rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .hero-carousel__rail-list::-webkit-scrollbar {
     display: none;
-  }
-
-  .hero-carousel__rail-item {
-    grid-template-columns: auto;
-    min-width: 9.5rem;
-    min-height: 0;
-  }
-
-  .hero-carousel__rail-item:hover,
-  .hero-carousel__rail-item:focus-visible {
-    transform: translateY(-0.15rem);
   }
 
   .hero-carousel__project-overlay {
