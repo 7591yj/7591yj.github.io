@@ -211,6 +211,13 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cursor {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* Profile card */
 .profile-card {
   --cut: 0.75rem;

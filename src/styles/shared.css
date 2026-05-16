@@ -59,6 +59,13 @@
   animation-play-state: paused;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track {
+    animation: none;
+    transform: translateX(0);
+  }
+}
+
 .ticker__segment {
   display: flex;
   align-items: center;

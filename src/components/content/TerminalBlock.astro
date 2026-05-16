@@ -177,6 +177,13 @@ const {
     }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .term__cursor {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
   /* Output */
   .term__output {
     margin-top: 0.6rem;

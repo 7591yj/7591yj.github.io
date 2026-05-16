@@ -32,6 +32,8 @@ export default function HeroCarousel({
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
+  const reduceMotionRef = useRef(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [playing, setPlaying] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [mapOpen, setMapOpen] = useState(false);
@@ -48,17 +50,29 @@ export default function HeroCarousel({
 
       if (!mounted || !containerRef.current) return;
 
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      reduceMotionRef.current = reduceMotion;
+      setReduceMotion(reduceMotion);
+      setPlaying(!reduceMotion);
+
       instance = new Swiper(containerRef.current, {
         modules: [Autoplay, EffectFade, Navigation],
-        effect: "fade",
-        autoplay: { delay: 5000, disableOnInteraction: false },
+        effect: reduceMotion ? "slide" : "fade",
+        speed: reduceMotion ? 0 : 300,
+        autoplay: reduceMotion
+          ? false
+          : { delay: 5000, disableOnInteraction: false },
         navigation: {
           prevEl: ".hero-carousel__prev",
           nextEl: ".hero-carousel__next",
         },
         loop: true,
       });
-      instance.on("slideChange", () => setActiveIndex(instance?.realIndex ?? 0));
+      instance.on("slideChange", () =>
+        setActiveIndex(instance?.realIndex ?? 0),
+      );
       swiperRef.current = instance;
     }
 
@@ -73,7 +87,7 @@ export default function HeroCarousel({
 
   function toggleAutoplay() {
     const swiper = swiperRef.current;
-    if (!swiper) return;
+    if (!swiper || reduceMotionRef.current) return;
     if (swiper.autoplay.running) {
       swiper.autoplay.stop();
       setPlaying(false);
@@ -194,7 +208,9 @@ export default function HeroCarousel({
         aria-label="Featured project index"
       >
         <div className="hero-carousel__rail-header">
-          <span className="hero-carousel__rail-label">MAP · {slides.length}</span>
+          <span className="hero-carousel__rail-label">
+            MAP · {slides.length}
+          </span>
           {slides.length > 3 && (
             <button
               type="button"
@@ -232,6 +248,7 @@ export default function HeroCarousel({
         <button
           className="hero-carousel__stop btn btn--icon btn--md"
           aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
+          disabled={reduceMotion}
           data-haptic="nudge"
           onClick={toggleAutoplay}
         >

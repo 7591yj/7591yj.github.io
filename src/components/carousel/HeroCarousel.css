@@ -39,7 +39,7 @@
   gap: 0.35rem;
   z-index: 10;
   color: rgba(255, 255, 255, 0.5);
-  animation: scroll-bounce 2s var(--ease-in-out-quart) infinite;
+  animation: scroll-cue-drift 2.4s var(--ease-out-expo) infinite;
   pointer-events: none;
 }
 
@@ -55,15 +55,22 @@
   height: 1rem;
 }
 
-@keyframes scroll-bounce {
+@keyframes scroll-cue-drift {
   0%,
   100% {
     transform: translateX(-50%) translateY(0);
-    opacity: 0.5;
+    opacity: 0.42;
   }
-  50% {
-    transform: translateX(-50%) translateY(0.5rem);
-    opacity: 1;
+  55% {
+    transform: translateX(-50%) translateY(0.28rem);
+    opacity: 0.82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel__scroll-indicator {
+    animation: none;
+    opacity: 0.65;
   }
 }
 
