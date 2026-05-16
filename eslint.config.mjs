@@ -6,7 +6,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default [
   {
     ignores: ["dist/", ".astro/", "node_modules/", "public/fonts/"],
   },
@@ -41,4 +41,4 @@ export default tseslint.config(
       ...jsxA11y.configs.recommended.rules,
     },
   },
-);
+];

@@ -49,7 +49,7 @@ export default function PatternPreview() {
   const trigger = async (name: string, pulses: readonly Vibration[]) => {
     if (active) return;
     setActive(name);
-    await haptics.current?.trigger(pulses);
+    await haptics.current?.trigger([...pulses]);
     setActive(null);
   };
 

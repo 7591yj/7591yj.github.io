@@ -4,20 +4,18 @@ import Layout from "../../layouts/Layout.astro";
 import PageHeading from "../../components/PageHeading.astro";
 import BlogPostCard from "../../components/BlogPostCard.astro";
 import { SITE_NAME } from "../../consts";
+import { getCollection } from "astro:content";
 
-const blogModules = import.meta.glob<{
-  frontmatter: Record<string, unknown>;
-  url: string;
-}>("./blog/*.mdx", { eager: true });
-const posts = Object.values(blogModules);
+const posts = (await getCollection("blogJa")).map((entry) => ({
+  frontmatter: entry.data,
+  url: `/ja/blog/${entry.id}`,
+}));
 
-const sorted = posts
-  .filter((p) => p.frontmatter.title)
-  .sort(
-    (a, b) =>
-      new Date(b.frontmatter.date).getTime() -
-      new Date(a.frontmatter.date).getTime(),
-  );
+const sorted = posts.sort(
+  (a, b) =>
+    new Date(b.frontmatter.date).getTime() -
+    new Date(a.frontmatter.date).getTime(),
+);
 
 const now = Date.now();
 const thirtyDays = 30 * 24 * 60 * 60 * 1000;

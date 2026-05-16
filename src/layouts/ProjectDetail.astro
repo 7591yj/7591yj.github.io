@@ -19,7 +19,7 @@ const headings = Astro.props.headings ?? [];
 const locale = Astro.currentLocale ?? "en";
 const t = useTranslations(locale);
 
-const statusLabels: Record<Frontmatter["status"], string> = {
+const statusLabels: Record<ProjectStatus, string> = {
   released: t("status.released"),
   "in development": t("status.inDevelopment"),
   planned: t("status.planned"),
