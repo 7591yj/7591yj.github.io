@@ -17,7 +17,7 @@ Live at **[7591yj.com](https://www.7591yj.com/)**
 | Icons         | [astro-icon](https://github.com/natemoo-re/astro-icon) with [Carbon](https://carbondesignsystem.com/elements/icons/library/) icon set |
 | Animations    | [Lottie](https://airbnb.io/lottie/) via lottie-react                                                                                  |
 | i18n          | Astro built-in i18n (en, ja, ko)                                                                                                      |
-| Package mgr   | [Bun](https://bun.sh) via [Nix](https://nixos.org/)                                                                                   |
+| Package mgr   | [pnpm](https://pnpm.io) via [Nix flakes](https://nixos.wiki/wiki/Flakes)                                                              |
 
 ## Project Structure
 
@@ -84,29 +84,31 @@ src/
 
 ## Getting Started
 
-> The project environment is defined in `devenv.nix` and auto-loaded via
-> `direnv`. `devenv` is expected to already be installed on the system.
+> The project environment is defined in `flake.nix` and auto-loaded via
+> `direnv`.
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) (or Node.js 22+)
+- [Nix](https://nixos.org/) with flakes enabled
+- [direnv](https://direnv.net/)
 
 ### Commands
 
 | Command           | Action                                             |
 | :---------------- | :------------------------------------------------- |
-| `direnv allow`    | Enable automatic `devenv` activation for this repo |
-| `bun install`     | Install dependencies                               |
-| `devenv up`       | Start local dev server at `localhost:4321`         |
-| `bun run build`   | Build production site to `./dist/`                 |
-| `bun run preview` | Preview production build locally                   |
+| `direnv allow`    | Enable automatic Nix flake activation for this repo |
+| `pnpm install`    | Install dependencies                               |
+| `pnpm dev`        | Start local dev server at `localhost:4321`         |
+| `pnpm build`      | Build production site to `./dist/`                 |
+| `pnpm preview`    | Preview production build locally                   |
 | `./dev.sh`        | Launch tmux session (dev server + nvim + shell)    |
 
 ### Recommended Workflow
 
-1. Ensure `devenv` is installed on your system.
+1. Ensure Nix flakes and direnv are available on your system.
 2. Run `direnv allow` in the repo root.
-3. Use `./dev.sh` to attach or create the tmux workspace.
+3. Run `pnpm install`.
+4. Use `./dev.sh` to attach or create the tmux workspace.
 
 ## Fonts
 
