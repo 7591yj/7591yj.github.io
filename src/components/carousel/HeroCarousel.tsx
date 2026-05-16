@@ -82,7 +82,9 @@ export default function HeroCarousel({
   }
 
   return (
-    <div className={`hero-carousel${fullscreen ? " hero-carousel--fullscreen" : ""}`}>
+    <div
+      className={`hero-carousel${fullscreen ? " hero-carousel--fullscreen" : ""}`}
+    >
       <div ref={containerRef} className="swiper hero-carousel__swiper">
         <div className="swiper-wrapper">
           {slides.map((slide, i) => (
@@ -166,7 +168,9 @@ export default function HeroCarousel({
                   <div className="hero-carousel__project-header">
                     <h3 className="hero-carousel__project-title">
                       {slide.project.title}
-                      <span className="hero-carousel__project-arrow">&rarr;</span>
+                      <span className="hero-carousel__project-arrow">
+                        &rarr;
+                      </span>
                     </h3>
                   </div>
                   <p className="hero-carousel__project-subtitle">

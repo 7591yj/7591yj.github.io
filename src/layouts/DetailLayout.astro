@@ -17,11 +17,26 @@ interface Props {
   publishDate?: string;
 }
 
-const { title, module, headingTitle, backLinkHref, backLinkLabel, headings, subtitle, description, type, publishDate } =
-  Astro.props;
+const {
+  title,
+  module,
+  headingTitle,
+  backLinkHref,
+  backLinkLabel,
+  headings,
+  subtitle,
+  description,
+  type,
+  publishDate,
+} = Astro.props;
 ---
 
-<Layout title={title} description={description} type={type} publishDate={publishDate}>
+<Layout
+  title={title}
+  description={description}
+  type={type}
+  publishDate={publishDate}
+>
   <main>
     <section class="header">
       <PageHeading module={module} title={headingTitle}>
@@ -39,11 +54,13 @@ const { title, module, headingTitle, backLinkHref, backLinkLabel, headings, subt
         <a class="back-link" href={backLinkHref}>&larr; {backLinkLabel}</a>
       </div>
 
-      {headings.length > 0 && (
-        <aside class="detail__sidebar">
-          <TableOfContents headings={headings} />
-        </aside>
-      )}
+      {
+        headings.length > 0 && (
+          <aside class="detail__sidebar">
+            <TableOfContents headings={headings} />
+          </aside>
+        )
+      }
     </section>
   </main>
 </Layout>
@@ -81,18 +98,20 @@ const { title, module, headingTitle, backLinkHref, backLinkLabel, headings, subt
   }
 
   function setupSweeps() {
-    document.querySelectorAll("[data-sweep]:not([data-sweep-ready])").forEach((el) => {
-      el.setAttribute("data-sweep-ready", "");
-      const io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) return;
-          io.disconnect();
-          el.classList.add("is-swept");
-        },
-        { threshold: 1.0 }
-      );
-      io.observe(el);
-    });
+    document
+      .querySelectorAll("[data-sweep]:not([data-sweep-ready])")
+      .forEach((el) => {
+        el.setAttribute("data-sweep-ready", "");
+        const io = new IntersectionObserver(
+          ([entry]) => {
+            if (!entry.isIntersecting) return;
+            io.disconnect();
+            el.classList.add("is-swept");
+          },
+          { threshold: 1.0 },
+        );
+        io.observe(el);
+      });
   }
 
   function setupSweepInv() {
@@ -106,7 +125,7 @@ const { title, module, headingTitle, backLinkHref, backLinkLabel, headings, subt
             io.disconnect();
             el.classList.add("is-swept");
           },
-          { threshold: 0.5 }
+          { threshold: 0.5 },
         );
         io.observe(el);
       });

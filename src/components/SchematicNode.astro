@@ -16,8 +16,7 @@ const { project, class: className } = Astro.props;
         class:list={[
           "schematic-node__led",
           project.status === "released" ? "led--released" : "led--indev",
-        ]}
-      />
+        ]}></span>
       <h3 class="font-shippori text-xl">{project.title}</h3>
     </div>
     <p class="schematic-node__subtitle">{project.subtitle}</p>

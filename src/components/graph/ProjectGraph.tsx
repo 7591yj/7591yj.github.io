@@ -79,7 +79,9 @@ export default function ProjectGraph({
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [positions, setPositions] = useState<Map<string, { x: number; y: number }>>(new Map());
+  const [positions, setPositions] = useState<
+    Map<string, { x: number; y: number }>
+  >(new Map());
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [entered, setEntered] = useState(false);
@@ -251,7 +253,14 @@ export default function ProjectGraph({
     // Start physics after entry animation completes
     const timer = setTimeout(() => setSimulationReady(true), 500);
     return () => clearTimeout(timer);
-  }, [containerSize.width, containerSize.height, isMobile, projectNodes, techIds, uniqueTechs]);
+  }, [
+    containerSize.width,
+    containerSize.height,
+    isMobile,
+    projectNodes,
+    techIds,
+    uniqueTechs,
+  ]);
 
   const onTick = useCallback((pos: Map<string, { x: number; y: number }>) => {
     setPositions(new Map(pos));
@@ -266,10 +275,13 @@ export default function ProjectGraph({
     simulationReady && !isMobile,
   );
 
-  const hoverNode = useCallback((id: string | null) => {
-    setHoveredNode(id);
-    setHovered(id);
-  }, [setHovered]);
+  const hoverNode = useCallback(
+    (id: string | null) => {
+      setHoveredNode(id);
+      setHovered(id);
+    },
+    [setHovered],
+  );
 
   const handlePointerDown = (index: number) => (e: React.PointerEvent) => {
     if (isMobile) return;

@@ -33,7 +33,11 @@ export default defineConfig({
         {
           behavior: "append",
           content: { type: "text", value: " #" },
-          properties: { class: "heading-anchor", ariaHidden: true, tabIndex: -1 },
+          properties: {
+            class: "heading-anchor",
+            ariaHidden: true,
+            tabIndex: -1,
+          },
         },
       ],
     ],

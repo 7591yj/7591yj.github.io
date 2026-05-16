@@ -13,8 +13,8 @@ interface Frontmatter {
   link?: string;
 }
 
-const { title, subtitle, year, status, link } =
-  Astro.props.frontmatter as Frontmatter;
+const { title, subtitle, year, status, link } = Astro.props
+  .frontmatter as Frontmatter;
 const headings = Astro.props.headings ?? [];
 const locale = Astro.currentLocale ?? "en";
 const t = useTranslations(locale);

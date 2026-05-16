@@ -7,7 +7,13 @@ interface Props {
   [key: string]: any;
 }
 
-const { src, alt = "", imgSize = "100%", class: className, ...rest } = Astro.props;
+const {
+  src,
+  alt = "",
+  imgSize = "100%",
+  class: className,
+  ...rest
+} = Astro.props;
 ---
 
 <div class:list={["cut-img", className]} style={`--img-size: ${imgSize}`}>

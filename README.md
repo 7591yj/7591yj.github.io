@@ -94,14 +94,14 @@ src/
 
 ### Commands
 
-| Command           | Action                                             |
-| :---------------- | :------------------------------------------------- |
-| `direnv allow`    | Enable automatic Nix flake activation for this repo |
-| `pnpm install`    | Install dependencies                               |
-| `pnpm dev`        | Start local dev server at `localhost:4321`         |
-| `pnpm build`      | Build production site to `./dist/`                 |
-| `pnpm preview`    | Preview production build locally                   |
-| `./dev.sh`        | Launch tmux session (dev server + nvim + shell)    |
+| Command        | Action                                              |
+| :------------- | :-------------------------------------------------- |
+| `direnv allow` | Enable automatic Nix flake activation for this repo |
+| `pnpm install` | Install dependencies                                |
+| `pnpm dev`     | Start local dev server at `localhost:4321`          |
+| `pnpm build`   | Build production site to `./dist/`                  |
+| `pnpm preview` | Preview production build locally                    |
+| `./dev.sh`     | Launch tmux session (dev server + nvim + shell)     |
 
 ### Recommended Workflow
 

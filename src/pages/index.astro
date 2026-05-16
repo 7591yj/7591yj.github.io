@@ -26,9 +26,7 @@ const softwareProjects = (await getCollection("projects"))
     frontmatter: entry.data,
     slug: entry.id,
   }))
-  .filter(
-  (p) => p.frontmatter.category === "software",
-);
+  .filter((p) => p.frontmatter.category === "software");
 
 const sortedProjects = [...softwareProjects].sort((a, b) => {
   const aHas = a.frontmatter.images && a.frontmatter.images.length > 0 ? 0 : 1;
@@ -204,8 +202,8 @@ const t = useTranslations(locale);
               </div>
               <div class="terminal-block__body">
                 <p class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span> How far can you push
-                  a homelab before it pushes back?
+                  <span class="terminal-prompt">&gt;</span> How far can you push a
+                  homelab before it pushes back?
                 </p>
                 <p class="terminal-line">
                   <span class="terminal-prompt">&gt;</span> What makes an interface

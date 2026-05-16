@@ -31,11 +31,13 @@ export default function FilterBar({
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -55,7 +57,10 @@ export default function FilterBar({
               <button
                 key={tag}
                 className={`project-filter__chip ${activeTags.has(tag) ? "project-filter__chip--active" : ""}`}
-                onClick={() => { onToggleTag(tag); triggerHaptic(TICK); }}
+                onClick={() => {
+                  onToggleTag(tag);
+                  triggerHaptic(TICK);
+                }}
               >
                 {tag}
               </button>
@@ -70,7 +75,9 @@ export default function FilterBar({
               className={`project-filter__dropdown-trigger ${techCount > 0 ? "project-filter__dropdown-trigger--active" : ""}`}
               onClick={() => setOpen((v) => !v)}
             >
-              {techCount > 0 ? techSelectedTemplate.replace("{count}", String(techCount)) : selectTechLabel}
+              {techCount > 0
+                ? techSelectedTemplate.replace("{count}", String(techCount))
+                : selectTechLabel}
               <span aria-hidden>▾</span>
             </button>
             {open && (
@@ -79,7 +86,10 @@ export default function FilterBar({
                   <button
                     key={tech}
                     className="project-filter__dropdown-item"
-                    onClick={() => { onToggleTech(tech); triggerHaptic(TICK); }}
+                    onClick={() => {
+                      onToggleTech(tech);
+                      triggerHaptic(TICK);
+                    }}
                   >
                     <span
                       className={`project-filter__dropdown-check ${activeTechs.has(tech) ? "project-filter__dropdown-check--active" : ""}`}

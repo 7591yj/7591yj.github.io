@@ -16,7 +16,7 @@ export function useHaptics() {
 
     // syncs when HapticsNotice writes data-sound-fallback on toggle
     const observer = new MutationObserver(() =>
-      instance.setDebug(localStorage.getItem(SOUND_KEY) === "on")
+      instance.setDebug(localStorage.getItem(SOUND_KEY) === "on"),
     );
     observer.observe(document.documentElement, {
       attributes: true,
