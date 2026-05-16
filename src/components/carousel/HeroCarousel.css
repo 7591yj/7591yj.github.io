@@ -401,6 +401,54 @@
   color: var(--color-accent);
 }
 
+.hero-carousel__motion-control--paused {
+  color: var(--color-text-muted);
+  cursor: help;
+}
+
+.hero-carousel__motion-control--paused::before {
+  background: color-mix(in srgb, var(--color-border) 75%, var(--color-bg-tertiary));
+}
+
+.hero-carousel__motion-control--paused::after {
+  background: color-mix(in srgb, var(--color-bg-tertiary) 72%, transparent);
+}
+
+.hero-carousel__motion-control--paused:hover,
+.hero-carousel__motion-control--paused:focus-visible {
+  color: var(--color-text-muted);
+}
+
+.hero-carousel__motion-tooltip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.55rem);
+  z-index: 20;
+  width: max-content;
+  max-width: min(16rem, calc(100vw - 2rem));
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-family: monospace;
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.25rem);
+  transition:
+    opacity var(--duration-fast) var(--ease-out-expo),
+    transform var(--duration-fast) var(--ease-out-expo);
+}
+
+.hero-carousel__motion-control--paused:hover .hero-carousel__motion-tooltip,
+.hero-carousel__motion-control--paused:focus-visible .hero-carousel__motion-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Icon */
 .hero-carousel .btn__icon {
   position: relative;
@@ -631,6 +679,7 @@
   }
 
   .hero-carousel__mobile-play {
+    position: relative;
     display: inline-flex;
     width: calc(var(--font-size-lg) * 2.39);
     min-height: calc(var(--font-size-lg) * 2.39);
@@ -643,9 +692,17 @@
     cursor: pointer;
   }
 
-  .hero-carousel__mobile-play:disabled {
+  .hero-carousel__mobile-play.hero-carousel__motion-control--paused {
+    background: color-mix(in srgb, var(--color-bg-tertiary) 72%, transparent);
     color: var(--color-text-muted);
-    cursor: not-allowed;
+    cursor: help;
+  }
+
+  .hero-carousel__mobile-play .hero-carousel__motion-tooltip {
+    right: auto;
+    left: 0.5rem;
+    bottom: calc(100% + 0.5rem);
+    max-width: min(16rem, calc(100vw - 1rem));
   }
 
   .hero-carousel__mobile-play-icon {

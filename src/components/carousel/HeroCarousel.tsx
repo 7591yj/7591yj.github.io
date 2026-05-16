@@ -37,6 +37,11 @@ export default function HeroCarousel({
   const [playing, setPlaying] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [mapOpen, setMapOpen] = useState(false);
+  const autoplayLabel = reduceMotion
+    ? "Motion paused by preference"
+    : playing
+      ? "Pause autoplay"
+      : "Resume autoplay";
 
   useEffect(() => {
     let mounted = true;
@@ -246,10 +251,12 @@ export default function HeroCarousel({
 
       <div className="hero-carousel__mobile-strip" aria-label="Featured project selector">
         <button
-          className="hero-carousel__mobile-play"
+          className={`hero-carousel__mobile-play${reduceMotion ? " hero-carousel__motion-control--paused" : ""}`}
           type="button"
-          aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
-          disabled={reduceMotion}
+          aria-label={autoplayLabel}
+          aria-disabled={reduceMotion}
+          title={autoplayLabel}
+          data-reduced-label={reduceMotion ? autoplayLabel : undefined}
           data-haptic="nudge"
           onClick={toggleAutoplay}
         >
@@ -260,6 +267,11 @@ export default function HeroCarousel({
               <path d="M10 8l14 8-14 8z" />
             )}
           </svg>
+          {reduceMotion && (
+            <span className="hero-carousel__motion-tooltip" role="status">
+              {autoplayLabel}
+            </span>
+          )}
         </button>
         <span className="hero-carousel__mobile-counter" aria-live="polite">
           {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
@@ -289,9 +301,11 @@ export default function HeroCarousel({
 
       <nav className="hero-carousel__nav">
         <button
-          className="hero-carousel__stop btn btn--icon btn--md"
-          aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
-          disabled={reduceMotion}
+          className={`hero-carousel__stop btn btn--icon btn--md${reduceMotion ? " hero-carousel__motion-control--paused" : ""}`}
+          aria-label={autoplayLabel}
+          aria-disabled={reduceMotion}
+          title={autoplayLabel}
+          data-reduced-label={reduceMotion ? autoplayLabel : undefined}
           data-haptic="nudge"
           onClick={toggleAutoplay}
         >
@@ -302,6 +316,11 @@ export default function HeroCarousel({
               <path d="M10 8l14 8-14 8z" />
             )}
           </svg>
+          {reduceMotion && (
+            <span className="hero-carousel__motion-tooltip" role="status">
+              {autoplayLabel}
+            </span>
+          )}
         </button>
         <button
           className="hero-carousel__prev btn btn--icon btn--md"
