@@ -85,8 +85,8 @@ const jsonLd =
     <script is:inline>
       (function () {
         function resolveTheme() {
-          var stored = localStorage.getItem("theme");
-          var systemDark = window.matchMedia(
+          const stored = localStorage.getItem("theme");
+          const systemDark = window.matchMedia(
             "(prefers-color-scheme: dark)",
           ).matches;
           return stored === "system" || !stored

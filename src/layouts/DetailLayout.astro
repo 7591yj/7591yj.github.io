@@ -91,7 +91,9 @@ const {
             btn.textContent = "COPY";
             btn.classList.remove("copied");
           }, 2000);
-        } catch {}
+        } catch {
+          // Clipboard access may be unavailable; leave button unchanged.
+        }
       });
       pre.appendChild(btn);
     });

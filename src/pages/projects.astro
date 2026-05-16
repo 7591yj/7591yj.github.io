@@ -10,7 +10,7 @@ import { useTranslations } from "../i18n/ui";
 const t = useTranslations(Astro.currentLocale);
 
 const mdxModules = import.meta.glob<{
-  frontmatter: Record<string, any>;
+  frontmatter: Record<string, unknown>;
   url: string;
 }>("./projects/*.mdx", { eager: true });
 const allProjects: Project[] = Object.values(mdxModules).map((p) => ({

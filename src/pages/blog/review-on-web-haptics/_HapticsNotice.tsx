@@ -14,9 +14,12 @@ export default function HapticsNotice() {
     const vibratesNatively = WebHaptics.isSupported;
     const hasFakeLabelHaptics =
       !WebHaptics.isSupported && navigator.maxTouchPoints > 0;
-    setSupported(vibratesNatively || hasFakeLabelHaptics);
+    const supportedNow = vibratesNatively || hasFakeLabelHaptics;
     const stored = localStorage.getItem(SOUND_KEY) === "on";
-    setSoundOn(stored);
+    queueMicrotask(() => {
+      setSupported(supportedNow);
+      setSoundOn(stored);
+    });
     // debug is the library's audio fallback mechanism, not actual debugging
     haptics.current = new WebHaptics({ debug: stored, showSwitch: false });
     // write attribute so useHaptics instances on the page can sync

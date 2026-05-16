@@ -6,7 +6,7 @@ import BlogPostCard from "../../components/BlogPostCard.astro";
 import { SITE_NAME } from "../../consts";
 
 const blogModules = import.meta.glob<{
-  frontmatter: Record<string, any>;
+  frontmatter: Record<string, unknown>;
   url: string;
 }>("./blog/*.mdx", { eager: true });
 const posts = Object.values(blogModules);
