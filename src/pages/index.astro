@@ -5,8 +5,6 @@ import Layout from "../layouts/Layout.astro";
 import HeroCarousel from "../components/carousel/HeroCarousel.tsx";
 import SectionBlock from "../components/SectionBlock.astro";
 import BlogPostCard from "../components/BlogPostCard.astro";
-import Button from "../components/Button.astro";
-import { SITE_NAME } from "../consts";
 import { useTranslations } from "../i18n/ui";
 
 const posts = (await getCollection("blog")).map((entry) => ({
@@ -89,11 +87,9 @@ const t = useTranslations(locale);
           <div class="section-bar__info">
             <span class="section-bar__accent">WRITING.FEED</span>
             <span class="section-bar__sep">//</span>
-            <span>LAST TX {latestDate}</span>
+            <span>LATEST {latestDate}</span>
             <span class="section-bar__sep">//</span>
-            <span>{latestPosts.length} DISPATCHES</span>
-            <span class="section-bar__sep">//</span>
-            <span>SIGNAL OK</span>
+            <span>{latestPosts.length} ARTICLES</span>
           </div>
         </div>
 
@@ -157,102 +153,59 @@ const t = useTranslations(locale);
           </div>
         </div>
 
-        <div class="section-action" data-animate>
-          <Button href="/blog">All Dispatches</Button>
+        <div class="section-link-row" data-animate>
+          <a class="section-text-link" href="/blog">View all dispatches →</a>
         </div>
       </SectionBlock>
     </section>
-
     <!-- ============ ABOUT ============ -->
     <section class="preview-section">
       <SectionBlock title="ABOUT///">
-        <!-- Ticker strip -->
-        <div class="ticker" aria-hidden="true">
-          <div class="ticker__track">
-            {
-              [0, 1].map(() => (
-                <span class="ticker__segment">
-                  {[0, 1, 2].map(() => (
-                    <>
-                      <span>WHO IS THIS</span>
-                      <span class="ticker__dot" />
-                      <span>PROFILE LOADED</span>
-                      <span class="ticker__dot" />
-                      <span>CLEARANCE OK</span>
-                      <span class="ticker__dot" />
-                      <span>DOSSIER READY</span>
-                      <span class="ticker__dot" />
-                    </>
-                  ))}
-                </span>
-              ))
-            }
+        <div class="section-bar" aria-hidden="true">
+          <div class="section-bar__info">
+            <span class="section-bar__accent">DOSSIER</span>
+            <span class="section-bar__sep">//</span>
+            <span>CURRENT</span>
           </div>
         </div>
 
-        <!-- About HUD display -->
-        <div class="about-hud">
-          <div class="dot-grid dot-grid--faint"></div>
-          <div class="about-hud__inner">
-            <!-- Terminal block -->
-            <div class="terminal-block" data-animate>
-              <div class="terminal-block__header">
-                <span class="led led--active led--sm"></span>
-                <span>UNRESOLVED TICKETS // 3 OPEN</span>
-              </div>
-              <div class="terminal-block__body">
-                <p class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span> How far can you push a
-                  homelab before it pushes back?
-                </p>
-                <p class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span> What makes an interface
-                  feel deliberate and alive?
-                </p>
-                <p class="terminal-line">
-                  <span class="terminal-prompt">&gt;</span> When does a declarative
-                  config cross from reproducible into impractical?
-                </p>
-                <p class="terminal-line terminal-line--cursor">
-                  <span class="terminal-prompt">&gt;</span>
-                  <span class="terminal-cursor"></span>
-                </p>
-              </div>
-            </div>
-
-            <!-- Profile card -->
-            <div class="profile-card" data-animate>
-              <div class="profile-card__header">
-                <span>PROFILE</span>
-              </div>
-              <div class="profile-card__body">
-                <div class="profile-meta">
-                  <span class="profile-meta__label">HANDLE</span>
-                  <span class="profile-meta__value">{SITE_NAME}</span>
-
-                  <span class="profile-meta__label">INTERESTS</span>
-                  <span class="profile-meta__value">
-                    Web, Containerization, Linux, UI/UX
-                  </span>
-
-                  <span class="profile-meta__label">STACK</span>
-                  <span class="profile-meta__value">
-                    TS / React / Svelte / Python
-                  </span>
-
-                  <span class="profile-meta__label">STATUS</span>
-                  <span class="profile-meta__value profile-meta__value--status">
-                    <span class="led led--active led--sm"></span>
-                    ACTIVE
-                  </span>
-                </div>
-              </div>
-            </div>
+        <div class="about-dossier" data-animate>
+          <div class="about-dossier__statement">
+            <p>
+              I build calm, working systems that make infrastructure <span
+                class="statement-keyword">visible</span
+              >, interfaces <span class="statement-keyword">tactile</span>, and
+              state <span class="statement-keyword">predictable</span>.
+            </p>
           </div>
-        </div>
 
-        <div class="section-action" data-animate>
-          <Button href="/about">Full Dossier</Button>
+          <dl class="about-dossier__facts">
+            <div>
+              <dt>Focus</dt>
+              <dd>
+                <ul>
+                  <li>Homelab operations</li>
+                  <li>Tactile UI</li>
+                  <li>Reproducible setups</li>
+                </ul>
+              </dd>
+            </div>
+            <div>
+              <dt>Stack</dt>
+              <dd>
+                <ul>
+                  <li>TypeScript</li>
+                  <li>Python</li>
+                  <li>Nix</li>
+                  <li>React</li>
+                  <li>Svelte</li>
+                  <li>Containers</li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+
+          <a class="about-dossier__link" href="/about">View full dossier →</a>
         </div>
       </SectionBlock>
     </section>

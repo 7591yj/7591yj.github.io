@@ -21,6 +21,8 @@ const sizeClass: Record<string, string> = {
 export default function ContentCarousel({ images, size = "xl" }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
+  const reduceMotionRef = useRef(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const [playing, setPlaying] = useState(true);
@@ -29,9 +31,19 @@ export default function ContentCarousel({ images, size = "xl" }: Props) {
   useEffect(() => {
     if (!containerRef.current || !prevRef.current || !nextRef.current) return;
 
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    reduceMotionRef.current = reduceMotion;
+    setReduceMotion(reduceMotion);
+    setPlaying(!reduceMotion);
+
     const instance = new Swiper(containerRef.current, {
       modules: [Autoplay, Navigation],
-      autoplay: { delay: 5000, disableOnInteraction: false },
+      speed: reduceMotion ? 0 : 300,
+      autoplay: reduceMotion
+        ? false
+        : { delay: 5000, disableOnInteraction: false },
       navigation: {
         prevEl: prevRef.current,
         nextEl: nextRef.current,
@@ -53,7 +65,7 @@ export default function ContentCarousel({ images, size = "xl" }: Props) {
 
   function toggleAutoplay() {
     const swiper = swiperRef.current;
-    if (!swiper) return;
+    if (!swiper || reduceMotionRef.current) return;
     if (swiper.autoplay.running) {
       swiper.autoplay.stop();
       setPlaying(false);
@@ -88,6 +100,7 @@ export default function ContentCarousel({ images, size = "xl" }: Props) {
           <button
             className="content-carousel__btn"
             aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
+            disabled={reduceMotion}
             data-haptic="nudge"
             onClick={toggleAutoplay}
           >

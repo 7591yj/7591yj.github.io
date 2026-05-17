@@ -3,7 +3,7 @@
  * ================================================ */
 
 .prose {
-  font-family: "PlemolJP", monospace;
+  font-family: "PlemolJP", system-ui, sans-serif;
   color: var(--color-text-secondary);
   font-size: var(--font-size-xl);
   line-height: 1.7;
@@ -72,7 +72,7 @@
 }
 
 .prose code {
-  font-family: "PlemolJP", monospace;
+  font-family: "PlemolJP", system-ui, sans-serif;
   font-size: 0.85em;
   padding: 0.15em 0.35em;
   background: var(--color-bg-tertiary);
@@ -111,7 +111,7 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  font-family: "PlemolJP", monospace;
+  font-family: "PlemolJP", system-ui, sans-serif;
   font-size: var(--font-size-xs);
   padding: 0.2em 0.6em;
   background: var(--color-bg-tertiary);

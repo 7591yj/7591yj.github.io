@@ -3,7 +3,6 @@ import type Swiper from "swiper";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-import InteractiveDotGrid from "../InteractiveDotGrid";
 import "./HeroCarousel.css";
 
 interface ProjectSlide {
@@ -33,7 +32,16 @@ export default function HeroCarousel({
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
+  const reduceMotionRef = useRef(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [playing, setPlaying] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [mapOpen, setMapOpen] = useState(false);
+  const autoplayLabel = reduceMotion
+    ? "Motion paused by preference"
+    : playing
+      ? "Pause autoplay"
+      : "Resume autoplay";
 
   useEffect(() => {
     let mounted = true;
@@ -47,16 +55,29 @@ export default function HeroCarousel({
 
       if (!mounted || !containerRef.current) return;
 
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      reduceMotionRef.current = reduceMotion;
+      setReduceMotion(reduceMotion);
+      setPlaying(!reduceMotion);
+
       instance = new Swiper(containerRef.current, {
         modules: [Autoplay, EffectFade, Navigation],
-        effect: "fade",
-        autoplay: { delay: 5000, disableOnInteraction: false },
+        effect: reduceMotion ? "slide" : "fade",
+        speed: reduceMotion ? 0 : 300,
+        autoplay: reduceMotion
+          ? false
+          : { delay: 5000, disableOnInteraction: false },
         navigation: {
           prevEl: ".hero-carousel__prev",
           nextEl: ".hero-carousel__next",
         },
         loop: true,
       });
+      instance.on("slideChange", () =>
+        setActiveIndex(instance?.realIndex ?? 0),
+      );
       swiperRef.current = instance;
     }
 
@@ -71,7 +92,7 @@ export default function HeroCarousel({
 
   function toggleAutoplay() {
     const swiper = swiperRef.current;
-    if (!swiper) return;
+    if (!swiper || reduceMotionRef.current) return;
     if (swiper.autoplay.running) {
       swiper.autoplay.stop();
       setPlaying(false);
@@ -79,6 +100,16 @@ export default function HeroCarousel({
       swiper.autoplay.start();
       setPlaying(true);
     }
+  }
+
+  function selectProject(index: number, trigger?: HTMLButtonElement) {
+    const swiper = swiperRef.current;
+    if (!swiper) return;
+    swiper.slideToLoop(index);
+    swiper.autoplay.stop();
+    setPlaying(false);
+    setActiveIndex(index);
+    trigger?.blur();
   }
 
   return (
@@ -98,21 +129,9 @@ export default function HeroCarousel({
                     loading={i === 0 ? "eager" : "lazy"}
                     decoding="async"
                   />
-                  <InteractiveDotGrid
-                    className="hero-carousel__dot-grid"
-                    gridSpacing={16}
-                    dotSize={1}
-                    dotColor="rgba(0, 0, 0, 0.8)"
-                  />
                 </>
               ) : (
                 <div className="hero-carousel__fallback">
-                  <InteractiveDotGrid
-                    className="hero-carousel__dot-grid"
-                    gridSpacing={16}
-                    dotSize={1}
-                    dotColor="rgba(0, 0, 0, 0.8)"
-                  />
                   <span className="hero-carousel__fallback-title">
                     {slide.project.title}
                   </span>
@@ -189,10 +208,104 @@ export default function HeroCarousel({
         </div>
       </div>
 
+      <div
+        className={`hero-carousel__project-rail${mapOpen ? " hero-carousel__project-rail--open" : ""}`}
+        aria-label="Featured project index"
+      >
+        <div className="hero-carousel__rail-header">
+          <span className="hero-carousel__rail-label">
+            MAP · {slides.length}
+          </span>
+          {slides.length > 3 && (
+            <button
+              type="button"
+              className="hero-carousel__rail-expand"
+              aria-expanded={mapOpen}
+              onClick={() => setMapOpen((open) => !open)}
+            >
+              {mapOpen ? "LESS" : "MORE"}
+            </button>
+          )}
+        </div>
+        <div className="hero-carousel__rail-list">
+          {slides.map((slide, i) => (
+            <button
+              key={`${slide.project.title}-${i}`}
+              type="button"
+              className={`hero-carousel__rail-item${
+                activeIndex === i ? " hero-carousel__rail-item--active" : ""
+              }`}
+              aria-current={activeIndex === i ? "true" : undefined}
+              onClick={(event) => selectProject(i, event.currentTarget)}
+            >
+              <span className="hero-carousel__rail-index">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="hero-carousel__rail-title">
+                {slide.project.title}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="hero-carousel__mobile-strip" aria-label="Featured project selector">
+        <button
+          className={`hero-carousel__mobile-play${reduceMotion ? " hero-carousel__motion-control--paused" : ""}`}
+          type="button"
+          aria-label={autoplayLabel}
+          aria-disabled={reduceMotion}
+          title={autoplayLabel}
+          data-reduced-label={reduceMotion ? autoplayLabel : undefined}
+          data-haptic="nudge"
+          onClick={toggleAutoplay}
+        >
+          <svg className="hero-carousel__mobile-play-icon" viewBox="0 0 32 32" fill="currentColor">
+            {playing ? (
+              <path d="M12 8h3v16h-3zM17 8h3v16h-3z" />
+            ) : (
+              <path d="M10 8l14 8-14 8z" />
+            )}
+          </svg>
+          {reduceMotion && (
+            <span className="hero-carousel__motion-tooltip" role="status">
+              {autoplayLabel}
+            </span>
+          )}
+        </button>
+        <span className="hero-carousel__mobile-counter" aria-live="polite">
+          {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+        </span>
+        <div className="hero-carousel__mobile-list">
+          {slides.map((slide, i) => (
+            <button
+              key={`mobile-${slide.project.title}-${i}`}
+              type="button"
+              className={`hero-carousel__mobile-item${
+                activeIndex === i ? " hero-carousel__mobile-item--active" : ""
+              }`}
+              aria-label={`Show project ${i + 1}: ${slide.project.title}`}
+              aria-current={activeIndex === i ? "true" : undefined}
+              onClick={(event) => selectProject(i, event.currentTarget)}
+            >
+              <span className="hero-carousel__mobile-item-index">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="hero-carousel__mobile-item-title">
+                {slide.project.title}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <nav className="hero-carousel__nav">
         <button
-          className="hero-carousel__stop btn btn--icon btn--md"
-          aria-label={playing ? "Pause autoplay" : "Resume autoplay"}
+          className={`hero-carousel__stop btn btn--icon btn--md${reduceMotion ? " hero-carousel__motion-control--paused" : ""}`}
+          aria-label={autoplayLabel}
+          aria-disabled={reduceMotion}
+          title={autoplayLabel}
+          data-reduced-label={reduceMotion ? autoplayLabel : undefined}
           data-haptic="nudge"
           onClick={toggleAutoplay}
         >
@@ -203,6 +316,11 @@ export default function HeroCarousel({
               <path d="M10 8l14 8-14 8z" />
             )}
           </svg>
+          {reduceMotion && (
+            <span className="hero-carousel__motion-tooltip" role="status">
+              {autoplayLabel}
+            </span>
+          )}
         </button>
         <button
           className="hero-carousel__prev btn btn--icon btn--md"

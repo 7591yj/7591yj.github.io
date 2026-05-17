@@ -42,7 +42,7 @@
 
 @theme {
   --font-shippori: var(--font-shippori);
-  --font-plemol: "PlemolJP";
+  --font-plemol: "PlemolJP", system-ui, sans-serif;
 }
 
 /* Theme transition */
@@ -80,6 +80,12 @@ html {
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
