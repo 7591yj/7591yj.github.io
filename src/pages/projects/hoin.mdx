@@ -1,0 +1,73 @@
+---
+layout: ../../layouts/ProjectDetail.astro
+title: "hoin"
+subtitle: "Local web UI / CLI for image character classification"
+year: 2023
+status: released
+link: "https://github.com/hoinworks/"
+desc:
+  - "Built a local-first workflow for sorting image collections with ONNX-based character classifiers"
+  - "Implemented both a Rust CLI and a browser UI for previewing, applying, and reverting categorization plans"
+  - "Designed model-package metadata so classifiers can be developed, released, and installed independently"
+tech:
+  - Typescript
+  - Rust
+tags:
+  - frontend
+  - cli
+category: personal
+---
+
+### Project Overview
+
+> `hoin` is a result of collaborative work with [Midori](https://github.com/faransansj).
+
+A local web UI / CLI for image character classification.
+
+`hoin` consists of the main repo with the same name providing the web UI / CLI / Electron app, and models for targeted character classification.
+
+### Technical Stack
+
+- **Rust** powers the `hoin` CLI, filesystem operations, model package resolution, image preprocessing, and ONNX inference path.
+- **ONNX Runtime** is used through Rust bindings so model packages can ship portable classifier artifacts instead of application-specific code.
+- **TypeScript / Node.js** power the local web server and JSON API, including folder browsing, thumbnail generation, model discovery, preview/apply flows, progress reporting, and revert actions.
+- **Vite+** builds the browser UI and keeps the frontend lightweight enough to ship as part of the local release package.
+- **Shared Rust metadata schema** defines the model manifest contract used by both the app and independent model repositories.
+
+### Key Features
+
+- **CLI categorization workflow**
+  - Runs one-shot classification against a target directory.
+  - Supports dry-run previews before moving files.
+  - Emits JSON output for moves, skipped files, failures, already-categorized entries, and summary data.
+  - Supports confidence threshold filtering through `--min-confidence`.
+- **Local web UI**
+  - Browses allowed local folders and model directories.
+  - Shows thumbnails, selected files, planned destination folders, categorize status, and progress.
+  - Applies categorization plans and can revert performed moves.
+- **Model package system**
+  - Selects models through `--model-dir`, `HOIN_MODEL_DIR`, or local `./models` discovery.
+  - Reads `hoin-model.json` manifests containing ONNX artifact paths and class routing metadata.
+  - Supports localized destination paths, including Japanese labels when model metadata provides them.
+- **Release-oriented packaging**
+  - Separates application releases from model releases.
+  - Allows each model repository to own its training workflow, artifacts, release process, and adapter code.
+
+### Problem Solved
+
+Image character datasets often start as a messy folder of unsorted files. Sorting them manually is slow, repetitive, and error-prone, especially when the target taxonomy has many visually similar classes.
+
+`hoin` reduces that friction by turning classification into a local, reviewable workflow:
+
+1. Pick a model package.
+2. Preview where files would be moved.
+3. Apply the plan only after checking the result.
+4. Revert moves when the output needs correction.
+
+The project intentionally keeps the workflow local and single-user. Files stay on the user's machine, while the app focuses on making batch classification safer than a black-box script that immediately mutates the directory.
+
+### Highlights
+
+Built the application as a model-agnostic tool rather than a single hard-coded classifier. The CLI, web UI, and metadata schema can work with separately released model packages, which keeps the core app maintainable while still allowing targeted character classifiers to evolve independently.
+
+The most important design decision was making categorization previewable. Both CLI dry-runs and the web UI's preview/apply flow make filesystem changes explicit before execution, which is essential for a tool that reorganizes a user's local image collection.
