@@ -18,6 +18,35 @@ const sizeClass: Record<string, string> = {
   xl: "content-carousel--xl",
 };
 
+function contentMotionOptions(reduceMotion: boolean) {
+  return reduceMotion
+    ? { speed: 0, autoplay: false as const }
+    : {
+        speed: 300,
+        autoplay: { delay: 5000, disableOnInteraction: false },
+      };
+}
+
+function createContentSwiper(
+  container: HTMLDivElement,
+  prev: HTMLButtonElement,
+  next: HTMLButtonElement,
+  reduceMotion: boolean,
+  onChange: (realIndex: number) => void,
+) {
+  return new Swiper(container, {
+    modules: [Autoplay, Navigation],
+    ...contentMotionOptions(reduceMotion),
+    navigation: { prevEl: prev, nextEl: next },
+    loop: true,
+    on: {
+      slideChange(swiper) {
+        onChange(swiper.realIndex);
+      },
+    },
+  });
+}
+
 export default function ContentCarousel({ images, size = "xl" }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
@@ -29,32 +58,25 @@ export default function ContentCarousel({ images, size = "xl" }: Props) {
   const [activeIndex, setActiveIndex] = useState(1);
 
   useEffect(() => {
-    if (!containerRef.current || !prevRef.current || !nextRef.current) return;
+    const container = containerRef.current;
+    const prev = prevRef.current;
+    const next = nextRef.current;
+    if (!container || !prev || !next) return;
 
-    const reduceMotion = window.matchMedia(
+    const motion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    reduceMotionRef.current = reduceMotion;
-    setReduceMotion(reduceMotion);
-    setPlaying(!reduceMotion);
+    reduceMotionRef.current = motion;
+    setReduceMotion(motion);
+    setPlaying(!motion);
 
-    const instance = new Swiper(containerRef.current, {
-      modules: [Autoplay, Navigation],
-      speed: reduceMotion ? 0 : 300,
-      autoplay: reduceMotion
-        ? false
-        : { delay: 5000, disableOnInteraction: false },
-      navigation: {
-        prevEl: prevRef.current,
-        nextEl: nextRef.current,
-      },
-      loop: true,
-      on: {
-        slideChange(swiper) {
-          setActiveIndex(swiper.realIndex + 1);
-        },
-      },
-    });
+    const instance = createContentSwiper(
+      container,
+      prev,
+      next,
+      motion,
+      (realIndex) => setActiveIndex(realIndex + 1),
+    );
     swiperRef.current = instance;
 
     return () => {
