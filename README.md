@@ -10,7 +10,7 @@ Live at **[7591yj.com](https://www.7591yj.com/)**
 
 | Layer         | Technology                                                                                                                            |
 | :------------ | :------------------------------------------------------------------------------------------------------------------------------------ |
-| Framework     | [Astro](https://astro.build) 5 with [View Transitions](https://docs.astro.build/en/guides/view-transitions/)                          |
+| Framework     | [Astro](https://astro.build) 7 with [View Transitions](https://docs.astro.build/en/guides/view-transitions/)                          |
 | Styling       | [Tailwind CSS](https://tailwindcss.com) 4 + custom design tokens                                                                      |
 | Interactivity | [React](https://react.dev) 19, [Framer Motion](https://motion.dev), [Swiper](https://swiperjs.com)                                    |
 | Content       | [MDX](https://mdxjs.com) with remark-gfm, rehype-slug, rehype-autolink-headings                                                       |
@@ -23,63 +23,15 @@ Live at **[7591yj.com](https://www.7591yj.com/)**
 
 ```text
 src/
-├── assets/                # Static assets (SVGs)
-├── components/
-│   ├── carousel/          # Swiper-based hero carousel
-│   ├── content/           # MDX content components
-│   │   ├── Accordion.astro
-│   │   ├── BootSequence.astro
-│   │   ├── ColorText.astro
-│   │   ├── ContentCarousel.tsx
-│   │   ├── ContentImage.astro
-│   │   ├── ImageGrid.astro
-│   │   ├── NixOSLogo.astro
-│   │   ├── TableOfContents.astro
-│   │   └── TerminalBlock.astro
-│   ├── graph/             # Force-simulation project graph
-│   ├── motion/            # Framer Motion wrappers (FadeInSection, StaggerGrid)
-│   ├── BlogPostCard.astro
-│   ├── Button.astro
-│   ├── EducationCard.astro
-│   ├── Footer.astro
-│   ├── Header.astro       # Sticky nav with hamburger menu
-│   ├── ImageContainer.astro
-│   ├── InteractiveDotGrid.tsx
-│   ├── LanguageSelect.astro
-│   ├── PageHeading.astro
-│   ├── SchematicNode.astro
-│   ├── SectionBlock.astro
-│   └── ThemeToggle.astro  # Light / dark mode
-├── icons/                 # Custom SVG icons
-├── layouts/
-│   ├── Layout.astro       # Base layout with theme management
-│   ├── DetailLayout.astro # Two-column layout with sidebar TOC
-│   ├── BlogDetail.astro   # Blog post layout
-│   └── ProjectDetail.astro
-├── pages/
-│   ├── index.astro        # Home
-│   ├── projects.astro     # Interactive project explorer
-│   ├── blog.astro         # Blog listing
-│   ├── about.astro
-│   ├── projects/*.mdx     # Individual project write-ups
-│   ├── blog/*.mdx         # Blog posts
-│   ├── ja/                # Japanese locale
-│   ├── 404.astro
-│   └── 500.astro
-├── scripts/               # Client-side scripts
-│   ├── theme.ts           # Theme persistence (localStorage + system pref)
-│   ├── header-scroll.ts   # Header transparency on scroll
-│   ├── scramble-text.ts   # Text scramble animation
-│   └── scroll-animate.ts  # Scroll-triggered entrance animations
-├── styles/
-│   ├── global.css         # Tailwind imports & global resets
-│   ├── tokens.css         # Design tokens (colors, spacing, timing)
-│   ├── animations.css     # Keyframes & transition classes
-│   ├── grid.css           # Grid layout utilities
-│   ├── prose.css          # Typography for long-form content
-│   └── shared.css         # Shared patterns (LED indicators, ticker strips, dot grids)
-├── consts.ts              # Site-wide constants (name, socials, etc.)
-└── types.ts               # Shared TypeScript interfaces
+├── components/     # Reusable Astro and React UI components
+├── layouts/        # Shared page layouts
+├── pages/          # Routes, localized pages, and MDX content
+├── scripts/        # Client-side behavior
+├── styles/         # Global CSS, design tokens, and prose styles
+├── icons/          # Custom SVG icons
+├── assets/         # Static source assets
+├── consts.ts       # Site-wide constants
+└── types.ts        # Shared TypeScript types
 ```
 
 ## Getting Started
@@ -94,14 +46,17 @@ src/
 
 ### Commands
 
-| Command        | Action                                              |
-| :------------- | :-------------------------------------------------- |
-| `direnv allow` | Enable automatic Nix flake activation for this repo |
-| `pnpm install` | Install dependencies                                |
-| `pnpm dev`     | Start local dev server at `localhost:4321`          |
-| `pnpm build`   | Build production site to `./dist/`                  |
-| `pnpm preview` | Preview production build locally                    |
-| `./dev.sh`     | Launch tmux session (dev server + nvim + shell)     |
+| Command          | Action                                              |
+| :--------------- | :-------------------------------------------------- |
+| `direnv allow`   | Enable automatic Nix flake activation for this repo |
+| `pnpm install`   | Install dependencies                                |
+| `pnpm dev`       | Start local dev server at `localhost:4321`          |
+| `pnpm build`     | Build production site to `./dist/`                  |
+| `pnpm preview`   | Preview production build locally                    |
+| `pnpm lint`      | Run ESLint                                          |
+| `pnpm typecheck` | Run Astro type checks                               |
+| `pnpm check`     | Run formatting, lint, and type checks               |
+| `./dev.sh`       | Launch tmux session (dev server + nvim + shell)     |
 
 ### Recommended Workflow
 
@@ -119,7 +74,7 @@ Open Font License, Version 1.1** — see
 license text.
 
 [Shippori Mincho](https://fonts.google.com/specimen/Shippori+Mincho) is loaded
-via Astro's experimental Google Fonts integration.
+via Astro's built-in Fonts API.
 
 ## License
 
