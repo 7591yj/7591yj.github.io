@@ -14,6 +14,123 @@ interface Props {
 
 const DRAG_THRESHOLD = 5;
 
+interface LinkTarget {
+  href?: string;
+  isExternal: boolean;
+}
+
+function resolveLinkTarget(project: Project, basePath: string): LinkTarget {
+  const normalized = basePath.replace(/\/$/, "");
+  if (project.slug) {
+    return { href: `${normalized}/${project.slug}`, isExternal: false };
+  }
+  return { href: project.href ?? undefined, isExternal: !!project.href };
+}
+
+function nodeBodyClassName(hasLink: boolean, isCurrent: boolean): string {
+  const classes = ["graph-node"];
+  if (!hasLink) classes.push("graph-node--no-link");
+  if (isCurrent) classes.push("graph-node--current");
+  return classes.join(" ");
+}
+
+function borderClassName(isCurrent: boolean, highlighted: boolean): string {
+  const classes = ["graph-node__border"];
+  if (isCurrent) classes.push("graph-node__border--current");
+  if (highlighted) classes.push("graph-node__border--highlighted");
+  return classes.join(" ");
+}
+
+function borderStyleFor(
+  project: Project,
+  highlighted: boolean,
+): React.CSSProperties {
+  if (project.current && !highlighted) return {};
+  return {
+    background: highlighted
+      ? "var(--color-border-hover)"
+      : "var(--color-border)",
+  };
+}
+
+function nodeBodyStyle(
+  style: React.CSSProperties,
+  dimmed: boolean,
+): React.CSSProperties {
+  return {
+    ...style,
+    opacity: dimmed ? 0.4 : 1,
+    transition: "opacity 0.3s ease",
+  };
+}
+
+function ledClassName(status: string): string {
+  return `graph-node__led ${status === "released" ? "led--released" : "led--indev"}`;
+}
+
+function isDragSquashable(
+  origin: { x: number; y: number } | null,
+  e: React.MouseEvent,
+): boolean {
+  if (!origin) return false;
+  const dx = e.clientX - origin.x;
+  const dy = e.clientY - origin.y;
+  return Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD;
+}
+
+function arrowGlyph(isExternal: boolean): string {
+  return isExternal ? "\u2197" : "\u2192";
+}
+
+function externalLinkProps(
+  isExternal: boolean,
+): React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  return isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {};
+}
+
+interface LinkAnchorProps {
+  project: Project;
+  link: LinkTarget;
+}
+
+function LinkAnchor({ project, link }: LinkAnchorProps) {
+  const pointerOrigin = useRef<{ x: number; y: number } | null>(null);
+
+  const onLinkPointerDown = (e: React.PointerEvent) => {
+    pointerOrigin.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const onLinkClick = (e: React.MouseEvent) => {
+    if (isDragSquashable(pointerOrigin.current, e)) e.preventDefault();
+    pointerOrigin.current = null;
+  };
+
+  return (
+    <a
+      className="graph-node__title graph-node__title--link"
+      href={link.href}
+      {...externalLinkProps(link.isExternal)}
+      onPointerDown={onLinkPointerDown}
+      onClick={onLinkClick}
+    >
+      {project.title}
+      <span className="graph-node__arrow">{arrowGlyph(link.isExternal)}</span>
+    </a>
+  );
+}
+
+interface NodeTitleProps {
+  project: Project;
+  link: LinkTarget;
+}
+
+function NodeTitle({ project, link }: NodeTitleProps) {
+  if (link.href === undefined) {
+    return <h3 className="graph-node__title">{project.title}</h3>;
+  }
+  return <LinkAnchor project={project} link={link} />;
+}
+
 export default function GraphNode({
   project,
   dimmed,
@@ -24,91 +141,25 @@ export default function GraphNode({
   onPointerLeave,
   internalBasePath = "/projects",
 }: Props) {
-  const pointerOrigin = useRef<{ x: number; y: number } | null>(null);
-
-  const hasLink = !!(project.slug || project.href);
-  const normalizedBasePath = internalBasePath.replace(/\/$/, "");
-  const linkTarget = project.slug
-    ? `${normalizedBasePath}/${project.slug}`
-    : (project.href ?? undefined);
-  const isExternal = !project.slug && !!project.href;
-
-  const handleLinkPointerDown = (e: React.PointerEvent) => {
-    pointerOrigin.current = { x: e.clientX, y: e.clientY };
-  };
-
-  const handleLinkClick = (e: React.MouseEvent) => {
-    if (pointerOrigin.current) {
-      const dx = e.clientX - pointerOrigin.current.x;
-      const dy = e.clientY - pointerOrigin.current.y;
-      if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
-        e.preventDefault();
-      }
-    }
-    pointerOrigin.current = null;
-  };
-
-  const nodeClasses = [
-    "graph-node",
-    !hasLink && "graph-node--no-link",
-    project.current && "graph-node--current",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const borderClasses = [
-    "graph-node__border",
-    project.current && "graph-node__border--current",
-    highlighted && "graph-node__border--highlighted",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const borderStyle: React.CSSProperties =
-    project.current && !highlighted
-      ? {}
-      : {
-          background: highlighted
-            ? "var(--color-border-hover)"
-            : "var(--color-border)",
-        };
+  const link = resolveLinkTarget(project, internalBasePath);
+  const hasLink = link.href !== undefined;
 
   return (
     <div
-      className={nodeClasses}
-      style={{
-        ...style,
-        opacity: dimmed ? 0.4 : 1,
-        transition: "opacity 0.3s ease",
-      }}
+      className={nodeBodyClassName(hasLink, !!project.current)}
+      style={nodeBodyStyle(style, dimmed)}
       onPointerDown={onPointerDown}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
     >
-      <div className={borderClasses} style={borderStyle}>
+      <div
+        className={borderClassName(!!project.current, highlighted)}
+        style={borderStyleFor(project, highlighted)}
+      >
         <div className="graph-node__inner">
           <div className="graph-node__header">
-            <span
-              className={`graph-node__led ${project.status === "released" ? "led--released" : "led--indev"}`}
-            />
-            {hasLink ? (
-              <a
-                className="graph-node__title graph-node__title--link"
-                href={linkTarget}
-                {...(isExternal
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-                onPointerDown={handleLinkPointerDown}
-                onClick={handleLinkClick}
-              >
-                {project.title}
-                <span className="graph-node__arrow">
-                  {isExternal ? "\u2197" : "\u2192"}
-                </span>
-              </a>
-            ) : (
-              <h3 className="graph-node__title">{project.title}</h3>
-            )}
+            <span className={ledClassName(project.status)} />
+            <NodeTitle project={project} link={link} />
           </div>
           <p className="graph-node__subtitle">{project.subtitle}</p>
           <div className="graph-node__tech">
