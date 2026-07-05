@@ -1,4 +1,6 @@
 ---
+import BlogEntryMeta from "./BlogEntryMeta.astro";
+
 interface Props {
   url: string;
   title: string;
@@ -29,20 +31,7 @@ const padded = String(index).padStart(3, "0");
   <!-- card body -->
   <a class="blog-entry__card" href={url}>
     <div class="blog-entry__card-inner">
-      <div class="blog-entry__meta">
-        {isNew && <span class="blog-entry__led" />}
-        <span class="blog-entry__date">{date}</span>
-        {
-          tags && tags.length > 0 && (
-            <>
-              <span class="blog-entry__sep">//</span>
-              {tags.map((t) => (
-                <span class="blog-entry__tag">{t}</span>
-              ))}
-            </>
-          )
-        }
-      </div>
+      <BlogEntryMeta isNew={isNew} date={date} tags={tags} />
 
       <h3 class="blog-entry__title font-shippori">
         <span>{title}</span>
@@ -120,45 +109,6 @@ const padded = String(index).padStart(3, "0");
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-  }
-
-  /* ---- Meta row ---- */
-  .blog-entry__meta {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .blog-entry__led {
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: 50%;
-    background-color: var(--color-accent);
-    box-shadow: 0 0 6px var(--color-accent);
-    flex-shrink: 0;
-  }
-
-  .blog-entry__date {
-    font-family: monospace;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    letter-spacing: 0.04em;
-  }
-
-  .blog-entry__sep {
-    font-family: monospace;
-    font-size: var(--font-size-2xs);
-    color: var(--color-border-hover);
-  }
-
-  .blog-entry__tag {
-    font-family: monospace;
-    font-size: var(--font-size-2xs);
-    padding: 0.15em 0.5em;
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
   }
 
   /* ---- Title ---- */

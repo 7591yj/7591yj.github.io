@@ -1,0 +1,33 @@
+---
+interface Props {
+  entryCount: number;
+  latestDate: string;
+}
+
+const { entryCount, latestDate } = Astro.props;
+---
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    {
+      [0, 1].map(() => (
+        <span class="ticker__segment">
+          {[0, 1, 2].map(() => (
+            <>
+              <span>SIGNAL CLEAR</span>
+              <span class="ticker__dot" />
+              <span>{entryCount} ENTRIES LOADED</span>
+              <span class="ticker__dot" />
+              <span>LATEST {latestDate}</span>
+              <span class="ticker__dot" />
+              <span>SYS.BLOG ACTIVE</span>
+              <span class="ticker__dot" />
+              <span>TRANSMISSION OK</span>
+              <span class="ticker__dot" />
+            </>
+          ))}
+        </span>
+      ))
+    }
+  </div>
+</div>
