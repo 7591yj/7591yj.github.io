@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Vibration } from "web-haptics";
+import type { Vibration, WebHaptics } from "web-haptics";
 import { useHaptics } from "./_haptics";
 import { KEYPRESS, SWITCH, BOOT, PING, CONFIRM, TICK } from "../../../haptics";
 
@@ -12,32 +12,44 @@ const PATTERNS = [
   { name: "TICK", pulses: TICK },
 ] as const;
 
+async function runPattern(
+  instance: WebHaptics | null,
+  pulses: readonly Vibration[],
+) {
+  if (instance) await instance.trigger([...pulses]);
+}
+
+function PulseSegment({ p, total }: { p: Vibration; total: number }) {
+  const intensity = p.intensity ?? 0.5;
+  const delay = p.delay ?? 0;
+  return (
+    <span className="pulse-viz__segment">
+      {delay > 0 && (
+        <span
+          className="pulse-viz__gap"
+          style={{ width: `${(delay / total) * 100}%` }}
+        />
+      )}
+      <span
+        className="pulse-viz__bar"
+        style={{
+          width: `${(p.duration / total) * 100}%`,
+          height: `${Math.round(4 + intensity * 24)}px`,
+          opacity: 0.4 + intensity * 0.6,
+        }}
+      />
+    </span>
+  );
+}
+
 function PulseViz({ pulses }: { pulses: readonly Vibration[] }) {
   const total = pulses.reduce((sum, p) => sum + (p.delay ?? 0) + p.duration, 0);
 
   return (
     <div className="pulse-viz" aria-hidden="true">
-      {pulses.map((p, i) => {
-        const intensity = p.intensity ?? 0.5;
-        return (
-          <span key={i} className="pulse-viz__segment">
-            {(p.delay ?? 0) > 0 && (
-              <span
-                className="pulse-viz__gap"
-                style={{ width: `${((p.delay ?? 0) / total) * 100}%` }}
-              />
-            )}
-            <span
-              className="pulse-viz__bar"
-              style={{
-                width: `${(p.duration / total) * 100}%`,
-                height: `${Math.round(4 + intensity * 24)}px`,
-                opacity: 0.4 + intensity * 0.6,
-              }}
-            />
-          </span>
-        );
-      })}
+      {pulses.map((p, i) => (
+        <PulseSegment key={i} p={p} total={total} />
+      ))}
     </div>
   );
 }
@@ -46,12 +58,12 @@ export default function PatternPreview() {
   const haptics = useHaptics();
   const [active, setActive] = useState<string | null>(null);
 
-  const trigger = async (name: string, pulses: readonly Vibration[]) => {
+  async function trigger(name: string, pulses: readonly Vibration[]) {
     if (active) return;
     setActive(name);
-    await haptics.current?.trigger([...pulses]);
+    await runPattern(haptics.current, pulses);
     setActive(null);
-  };
+  }
 
   return (
     <section

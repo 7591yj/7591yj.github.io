@@ -1,11 +1,67 @@
 import { useState } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useHaptics } from "./_haptics";
 import { KEYPRESS, SWITCH, PING, CONFIRM, TICK } from "../../../haptics";
 
 type ShowcaseKind = "responsive" | "frameworks" | "spa" | "pwa";
 
 // --- Responsive ---
+
+function ResponsiveToggle({
+  desktop,
+  onChange,
+}: {
+  desktop: boolean;
+  onChange: (next: boolean) => void;
+}) {
+  return (
+    <div className="solution-toggle">
+      <button
+        className={!desktop ? "is-active" : ""}
+        onClick={() => onChange(false)}
+      >
+        Phone
+      </button>
+      <button
+        className={desktop ? "is-active" : ""}
+        onClick={() => onChange(true)}
+      >
+        Desktop
+      </button>
+      <span className="solution-control__value">
+        {desktop ? "Desktop" : "Phone"}
+      </span>
+    </div>
+  );
+}
+
+const responsiveGridStyle = (desktop: boolean): CSSProperties => ({
+  gridTemplateColumns: desktop ? "280px minmax(0, 1fr)" : "minmax(0, 1fr)",
+  minWidth: desktop ? "640px" : undefined,
+  gap: "16px",
+  padding: "16px",
+  maxWidth: "1100px",
+  margin: "0 auto",
+});
+
+function ResponsivePreview({ desktop }: { desktop: boolean }) {
+  return (
+    <div
+      className="responsive-preview__frame"
+      style={{ width: desktop ? 840 : 360 }}
+    >
+      <div
+        className="responsive-preview__grid"
+        style={responsiveGridStyle(desktop)}
+      >
+        <div className="responsive-preview__block responsive-preview__block--accent">
+          Sidebar
+        </div>
+        <div className="responsive-preview__block">Main content</div>
+      </div>
+    </div>
+  );
+}
 
 function ResponsiveShowcase() {
   const haptics = useHaptics();
@@ -22,48 +78,10 @@ function ResponsiveShowcase() {
       aria-label="Responsive web design demo"
     >
       <div className="solution-inline__controls">
-        <div className="solution-toggle">
-          <button
-            className={!desktop ? "is-active" : ""}
-            onClick={() => toggle(false)}
-          >
-            Phone
-          </button>
-          <button
-            className={desktop ? "is-active" : ""}
-            onClick={() => toggle(true)}
-          >
-            Desktop
-          </button>
-          <span className="solution-control__value">
-            {desktop ? "Desktop" : "Phone"}
-          </span>
-        </div>
+        <ResponsiveToggle desktop={desktop} onChange={toggle} />
       </div>
       <div className="responsive-preview" aria-live="polite">
-        <div
-          className="responsive-preview__frame"
-          style={{ width: desktop ? 840 : 360 }}
-        >
-          <div
-            className="responsive-preview__grid"
-            style={{
-              gridTemplateColumns: desktop
-                ? "280px minmax(0, 1fr)"
-                : "minmax(0, 1fr)",
-              minWidth: desktop ? "640px" : undefined,
-              gap: "16px",
-              padding: "16px",
-              maxWidth: "1100px",
-              margin: "0 auto",
-            }}
-          >
-            <div className="responsive-preview__block responsive-preview__block--accent">
-              Sidebar
-            </div>
-            <div className="responsive-preview__block">Main content</div>
-          </div>
-        </div>
+        <ResponsivePreview desktop={desktop} />
         <div className="responsive-preview__legend">
           <span className="legend-chip">.page</span>
           <span className="legend-chip">.layout</span>
@@ -217,6 +235,114 @@ const fmtTime = (d: Date) =>
     second: "2-digit",
   });
 
+const ledClass = (offline: boolean) =>
+  `led ${offline ? "led--hollow" : "led--active"}`;
+
+const pwaStatusLabel = (offline: boolean) => (offline ? "Offline" : "Online");
+
+const toggleLabel = (offline: boolean) =>
+  offline ? "Go online" : "Go offline";
+
+const pwaPayload = (cachedAt: Date | null): string | null =>
+  cachedAt ? `Payload: "Status synced at ${fmtTime(cachedAt)}."` : null;
+
+const pwaCacheNote = (offline: boolean, cachedAt: Date) =>
+  offline
+    ? `From cache · ${fmtTime(cachedAt)}`
+    : `Cached · ${fmtTime(cachedAt)}`;
+
+function PwaControls({
+  offline,
+  onFetch,
+  onToggle,
+}: {
+  offline: boolean;
+  onFetch: () => void;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="pwa-compare__controls">
+      <span className={ledClass(offline)} />
+      <span className="pwa-compare__status-label">
+        {pwaStatusLabel(offline)}
+      </span>
+      <button onClick={onFetch} disabled={offline}>
+        Fetch update
+      </button>
+      <button className={offline ? "is-active" : ""} onClick={onToggle}>
+        {toggleLabel(offline)}
+      </button>
+    </div>
+  );
+}
+
+function PwaPanel({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="pwa-compare__panel">
+      <div className="pwa-compare__panel-title">{title}</div>
+      <div className="pwa-compare__content">{children}</div>
+    </div>
+  );
+}
+
+function WithoutPwaBody({
+  offline,
+  payload,
+}: {
+  offline: boolean;
+  payload: string | null;
+}) {
+  if (offline) {
+    return (
+      <>
+        <p className="pwa-compare__error">Network error</p>
+        <p className="pwa-compare__note">
+          No cached data · Cannot serve offline
+        </p>
+      </>
+    );
+  }
+  if (payload) {
+    return (
+      <>
+        <p className="pwa-compare__payload">{payload}</p>
+        <p className="pwa-compare__note">Live from network</p>
+      </>
+    );
+  }
+  return <p className="pwa-compare__note">No data yet. Fetch while online.</p>;
+}
+
+function WithPwaBody({
+  offline,
+  payload,
+  cachedAt,
+}: {
+  offline: boolean;
+  payload: string | null;
+  cachedAt: Date | null;
+}) {
+  if (payload) {
+    return (
+      <>
+        <p className="pwa-compare__payload">{payload}</p>
+        <p className="pwa-compare__note">{pwaCacheNote(offline, cachedAt!)}</p>
+      </>
+    );
+  }
+  if (offline) {
+    return (
+      <>
+        <p className="pwa-compare__error">Network error</p>
+        <p className="pwa-compare__note">
+          No cache yet. Fetch while online first.
+        </p>
+      </>
+    );
+  }
+  return <p className="pwa-compare__note">No data yet. Fetch while online.</p>;
+}
+
 function PwaShowcase() {
   const haptics = useHaptics();
   const [offline, setOffline] = useState(false);
@@ -228,82 +354,32 @@ function PwaShowcase() {
     setCachedAt(new Date());
   };
 
-  const payload = cachedAt
-    ? `Payload: "Status synced at ${fmtTime(cachedAt)}."`
-    : null;
+  const goOnlineToggle = () => {
+    haptics.current?.trigger(SWITCH);
+    setOffline((v) => !v);
+  };
+
+  const payload = pwaPayload(cachedAt);
 
   return (
     <section className="solutions-inline" aria-label="PWA demo">
       <div className="pwa-compare">
-        <div className="pwa-compare__controls">
-          <span className={`led ${offline ? "led--hollow" : "led--active"}`} />
-          <span className="pwa-compare__status-label">
-            {offline ? "Offline" : "Online"}
-          </span>
-          <button onClick={fetchUpdate} disabled={offline}>
-            Fetch update
-          </button>
-          <button
-            className={offline ? "is-active" : ""}
-            onClick={() => {
-              haptics.current?.trigger(SWITCH);
-              setOffline((v) => !v);
-            }}
-          >
-            {offline ? "Go online" : "Go offline"}
-          </button>
-        </div>
-
+        <PwaControls
+          offline={offline}
+          onFetch={fetchUpdate}
+          onToggle={goOnlineToggle}
+        />
         <div className="pwa-compare__panels">
-          <div className="pwa-compare__panel">
-            <div className="pwa-compare__panel-title">Without PWA</div>
-            <div className="pwa-compare__content">
-              {offline ? (
-                <>
-                  <p className="pwa-compare__error">Network error</p>
-                  <p className="pwa-compare__note">
-                    No cached data · Cannot serve offline
-                  </p>
-                </>
-              ) : payload ? (
-                <>
-                  <p className="pwa-compare__payload">{payload}</p>
-                  <p className="pwa-compare__note">Live from network</p>
-                </>
-              ) : (
-                <p className="pwa-compare__note">
-                  No data yet. Fetch while online.
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="pwa-compare__panel">
-            <div className="pwa-compare__panel-title">With PWA</div>
-            <div className="pwa-compare__content">
-              {payload ? (
-                <>
-                  <p className="pwa-compare__payload">{payload}</p>
-                  <p className="pwa-compare__note">
-                    {offline
-                      ? `From cache · ${fmtTime(cachedAt!)}`
-                      : `Cached · ${fmtTime(cachedAt!)}`}
-                  </p>
-                </>
-              ) : offline ? (
-                <>
-                  <p className="pwa-compare__error">Network error</p>
-                  <p className="pwa-compare__note">
-                    No cache yet. Fetch while online first.
-                  </p>
-                </>
-              ) : (
-                <p className="pwa-compare__note">
-                  No data yet. Fetch while online.
-                </p>
-              )}
-            </div>
-          </div>
+          <PwaPanel title="Without PWA">
+            <WithoutPwaBody offline={offline} payload={payload} />
+          </PwaPanel>
+          <PwaPanel title="With PWA">
+            <WithPwaBody
+              offline={offline}
+              payload={payload}
+              cachedAt={cachedAt}
+            />
+          </PwaPanel>
         </div>
       </div>
     </section>

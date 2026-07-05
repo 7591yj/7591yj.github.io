@@ -9,29 +9,31 @@ function pct(ms: number) {
   return `${(ms / WINDOW_MS) * 100}%`;
 }
 
+type Bar = { start: number; width: number };
+
+const androidBars = (onTime: number): Bar[] => {
+  const bars: Bar[] = [];
+  for (let t = 0; t < WINDOW_MS; t += PWM_CYCLE) {
+    const width = Math.min(onTime, WINDOW_MS - t);
+    if (width > 0) bars.push({ start: t, width });
+  }
+  return bars;
+};
+
+const iosTicks = (interval: number): number[] => {
+  const ticks: number[] = [];
+  for (let t = 0; t <= WINDOW_MS; t += interval) ticks.push(t);
+  return ticks;
+};
+
 export default function IntensityMatrix() {
   const [intensity, setIntensity] = useState(0.7);
 
   const onTime = intensity * PWM_CYCLE;
   const offTime = (1 - intensity) * PWM_CYCLE;
   const toggleInterval = TOGGLE_MIN + (1 - intensity) * TOGGLE_MAX;
-
-  // Android: generate on-blocks per PWM cycle within the window
-  const androidBars: { start: number; width: number }[] = [];
-  let t = 0;
-  while (t < WINDOW_MS) {
-    const w = Math.min(onTime, WINDOW_MS - t);
-    if (w > 0) androidBars.push({ start: t, width: w });
-    t += PWM_CYCLE;
-  }
-
-  // iOS: place tick marks at computed interval
-  const iosTicks: number[] = [];
-  let tt = 0;
-  while (tt <= WINDOW_MS) {
-    iosTicks.push(tt);
-    tt += toggleInterval;
-  }
+  const bars = androidBars(onTime);
+  const ticks = iosTicks(toggleInterval);
 
   return (
     <section
@@ -66,7 +68,7 @@ export default function IntensityMatrix() {
             </span>
           </div>
           <div className="intensity-track" aria-hidden="true">
-            {androidBars.map((bar, i) => (
+            {bars.map((bar, i) => (
               <span
                 key={i}
                 className="intensity-track__bar"
@@ -86,7 +88,7 @@ export default function IntensityMatrix() {
             </span>
           </div>
           <div className="intensity-track" aria-hidden="true">
-            {iosTicks.map((tick, i) => (
+            {ticks.map((tick, i) => (
               <span
                 key={i}
                 className="intensity-track__tick"
