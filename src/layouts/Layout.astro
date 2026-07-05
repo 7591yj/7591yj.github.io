@@ -28,6 +28,7 @@ const {
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image ?? SITE_OG_IMAGE, Astro.site).href;
 const metaDescription = description ?? SITE_DESCRIPTION;
+const robotsMetaContent = noindex ? "noindex" : undefined;
 
 const jsonLd =
   type === "article"
@@ -82,7 +83,7 @@ const jsonLd =
       set:html={JSON.stringify(jsonLd)}
     />
 
-    {noindex && <meta name="robots" content="noindex" />}
+    {robotsMetaContent && <meta name="robots" content={robotsMetaContent} />}
 
     <script is:inline>
       (function () {

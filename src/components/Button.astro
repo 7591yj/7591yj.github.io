@@ -22,12 +22,13 @@ const {
 } = Astro.props;
 const Tag = href ? "a" : "button";
 const hasLabel = Astro.slots.has("default");
+const ariaDisabled = disabled ? "true" : undefined;
 ---
 
 <Tag
   class:list={["btn", `btn--${variant}`, `btn--${size}`, className]}
   href={href}
-  aria-disabled={disabled ? "true" : undefined}
+  aria-disabled={ariaDisabled}
   data-haptic="nudge"
   {...rest}
 >

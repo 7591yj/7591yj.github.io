@@ -27,11 +27,15 @@ const softwareProjects = (await getCollection("projectsJa"))
   }))
   .filter((p) => p.frontmatter.category === "software");
 
-const sortedProjects = [...softwareProjects].sort((a, b) => {
-  const aHas = a.frontmatter.images && a.frontmatter.images.length > 0 ? 0 : 1;
-  const bHas = b.frontmatter.images && b.frontmatter.images.length > 0 ? 0 : 1;
-  return aHas - bHas;
-});
+function projectHasImages(project: {
+  frontmatter: { images?: string[] };
+}): boolean {
+  return !!project.frontmatter.images && project.frontmatter.images.length > 0;
+}
+
+const sortedProjects = [...softwareProjects].sort(
+  (a, b) => Number(!projectHasImages(a)) - Number(!projectHasImages(b)),
+);
 
 const slides = sortedProjects.map((p) => ({
   image: p.frontmatter.images?.[0],

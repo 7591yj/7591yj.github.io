@@ -1,34 +1,47 @@
 let cleanupCurrent: (() => void) | null = null;
 
-function init() {
-  cleanupCurrent?.();
-  cleanupCurrent = null;
+function setHeaderTransparent(header: HTMLElement, transparent: boolean): void {
+  header.classList.toggle("header--transparent", transparent);
+  header.classList.toggle("header--scrolled", !transparent);
+}
 
+function handleHeroIntersection(
+  header: HTMLElement,
+  entries: IntersectionObserverEntry[],
+): void {
+  setHeaderTransparent(header, entries[0]?.isIntersecting ?? false);
+}
+
+function disconnectObserver(observer: IntersectionObserver): void {
+  observer.disconnect();
+}
+
+function resolveHeaderAndHero(): [HTMLElement, HTMLElement] | null {
   const header = document.querySelector<HTMLElement>(
     "[data-transparent-header]",
   );
   const hero = document.querySelector<HTMLElement>(
     ".hero-carousel--fullscreen",
   );
+  if (!header || !hero) return null;
+  return [header, hero];
+}
 
-  if (!header || !hero) return;
+function init() {
+  cleanupCurrent?.();
+  cleanupCurrent = null;
+
+  const pair = resolveHeaderAndHero();
+  if (!pair) return;
+  const [header, hero] = pair;
 
   // Set the correct state immediately
   if (window.scrollY < 1) {
-    header.classList.add("header--transparent");
-    header.classList.remove("header--scrolled");
+    setHeaderTransparent(header, true);
   }
 
   const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        header.classList.add("header--transparent");
-        header.classList.remove("header--scrolled");
-      } else {
-        header.classList.remove("header--transparent");
-        header.classList.add("header--scrolled");
-      }
-    },
+    handleHeroIntersection.bind(null, header),
     {
       rootMargin: "-56px 0px 0px 0px",
       threshold: 0,
@@ -36,9 +49,7 @@ function init() {
   );
 
   observer.observe(hero);
-  cleanupCurrent = () => {
-    observer.disconnect();
-  };
+  cleanupCurrent = disconnectObserver.bind(null, observer) as () => void;
 }
 
 document.addEventListener("astro:before-swap", () => {
