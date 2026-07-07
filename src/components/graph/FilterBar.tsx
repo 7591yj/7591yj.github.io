@@ -21,6 +21,11 @@ interface Props {
   clearLabel: string;
 }
 
+const CHIP_CLASS = "project-filter__chip";
+const DROPDOWN_TRIGGER_CLASS = "project-filter__dropdown-trigger";
+const DROPDOWN_CHECK_CLASS = "project-filter__dropdown-check";
+const COUNT_PLACEHOLDER = "{count}";
+
 function optionalClass(enabled: boolean, className: string): string {
   return enabled ? className : "";
 }
@@ -38,21 +43,21 @@ function hasSelections(
 
 function chipClassName(active: boolean): string {
   return className([
-    "project-filter__chip",
+    CHIP_CLASS,
     optionalClass(active, "project-filter__chip--active"),
   ]);
 }
 
 function dropdownTriggerClassName(active: boolean): string {
   return className([
-    "project-filter__dropdown-trigger",
+    DROPDOWN_TRIGGER_CLASS,
     optionalClass(active, "project-filter__dropdown-trigger--active"),
   ]);
 }
 
 function dropdownCheckClassName(active: boolean): string {
   return className([
-    "project-filter__dropdown-check",
+    DROPDOWN_CHECK_CLASS,
     optionalClass(active, "project-filter__dropdown-check--active"),
   ]);
 }
@@ -63,7 +68,7 @@ function techButtonLabel(
   fallbackLabel: string,
 ): string {
   if (selectedCount === 0) return fallbackLabel;
-  return selectedTemplate.replace("{count}", String(selectedCount));
+  return selectedTemplate.replace(COUNT_PLACEHOLDER, String(selectedCount));
 }
 
 function tick() {

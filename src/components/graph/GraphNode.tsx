@@ -13,6 +13,10 @@ interface Props {
 }
 
 const DRAG_THRESHOLD = 5;
+const NO_LINK_CLASS = "graph-node--no-link";
+const CURRENT_CLASS = "graph-node--current";
+const BORDER_CURRENT_CLASS = "graph-node__border--current";
+const BORDER_HIGHLIGHTED_CLASS = "graph-node__border--highlighted";
 
 interface LinkTarget {
   href?: string;
@@ -29,15 +33,15 @@ function resolveLinkTarget(project: Project, basePath: string): LinkTarget {
 
 function nodeBodyClassName(hasLink: boolean, isCurrent: boolean): string {
   const classes = ["graph-node"];
-  if (!hasLink) classes.push("graph-node--no-link");
-  if (isCurrent) classes.push("graph-node--current");
+  if (!hasLink) classes.push(NO_LINK_CLASS);
+  if (isCurrent) classes.push(CURRENT_CLASS);
   return classes.join(" ");
 }
 
 function borderClassName(isCurrent: boolean, highlighted: boolean): string {
   const classes = ["graph-node__border"];
-  if (isCurrent) classes.push("graph-node__border--current");
-  if (highlighted) classes.push("graph-node__border--highlighted");
+  if (isCurrent) classes.push(BORDER_CURRENT_CLASS);
+  if (highlighted) classes.push(BORDER_HIGHLIGHTED_CLASS);
   return classes.join(" ");
 }
 

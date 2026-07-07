@@ -1,4 +1,5 @@
 import { useRef, useCallback, useEffect } from "react";
+import type { RefObject } from "react";
 import type { GraphNode, GraphEdge } from "./graphUtils";
 
 interface SimulationConfig {
@@ -199,6 +200,150 @@ function stepSimulation(
   integrateNodes(ns, cfg, containerSize, nodeSizes, excluded);
 }
 
+interface DragControls {
+  startDrag: (index: number) => void;
+  moveDrag: (x: number, y: number) => void;
+  endDrag: () => void;
+  setHovered: (id: string | null) => void;
+}
+
+interface DragControlState extends DragControls {
+  draggedRef: RefObject<number | null>;
+  hoveredRef: RefObject<number | null>;
+}
+
+function useGraphDragControls(
+  nodesRef: RefObject<GraphNode[]>,
+): DragControlState {
+  const draggedRef = useRef<number | null>(null);
+  const hoveredRef = useRef<number | null>(null);
+
+  const startDrag = useCallback((index: number) => {
+    draggedRef.current = index;
+  }, []);
+
+  const moveDrag = useCallback(
+    (x: number, y: number) => {
+      if (draggedRef.current !== null) {
+        const n = nodesRef.current[draggedRef.current];
+        if (n) {
+          n.x = x;
+          n.y = y;
+          n.vx = 0;
+          n.vy = 0;
+        }
+      }
+    },
+    [nodesRef],
+  );
+
+  const endDrag = useCallback(() => {
+    draggedRef.current = null;
+  }, []);
+
+  const setHovered = useCallback(
+    (id: string | null) => {
+      if (id === null) {
+        hoveredRef.current = null;
+        return;
+      }
+      const idx = findNodeIndex(nodesRef.current, id);
+      hoveredRef.current = idx >= 0 ? idx : null;
+      const n = nodesRef.current[idx];
+      if (n) {
+        n.vx = 0;
+        n.vy = 0;
+      }
+    },
+    [nodesRef],
+  );
+
+  return { draggedRef, hoveredRef, startDrag, moveDrag, endDrag, setHovered };
+}
+
+function startSimulationLoop(
+  nodesRef: RefObject<GraphNode[]>,
+  edges: GraphEdge[],
+  containerSize: { width: number; height: number },
+  nodeSizes: { width: number; height: number }[],
+  onTick: (positions: Map<string, { x: number; y: number }>) => void,
+  draggedRef: RefObject<number | null>,
+  hoveredRef: RefObject<number | null>,
+  rafRef: RefObject<number>,
+  timeRef: RefObject<number>,
+): () => void {
+  const cfg = DEFAULT_CONFIG;
+  const cx = containerSize.width / 2;
+  const cy = containerSize.height / 2;
+
+  const tick = () => {
+    const ns = nodesRef.current;
+    const t = (timeRef.current += 1);
+    stepSimulation(ns, edges, cfg, cx, cy, containerSize, nodeSizes, t, [
+      draggedRef.current,
+      hoveredRef.current,
+    ]);
+    onTick(buildPositionMap(ns));
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  rafRef.current = requestAnimationFrame(tick);
+
+  // Pause when tab hidden
+  const handleVisibility = () => {
+    if (document.hidden) {
+      cancelAnimationFrame(rafRef.current);
+    } else {
+      rafRef.current = requestAnimationFrame(tick);
+    }
+  };
+  document.addEventListener("visibilitychange", handleVisibility);
+
+  return () => {
+    cancelAnimationFrame(rafRef.current);
+    document.removeEventListener("visibilitychange", handleVisibility);
+  };
+}
+
+function useSimulationLoop(
+  nodesRef: RefObject<GraphNode[]>,
+  edges: GraphEdge[],
+  containerSize: { width: number; height: number },
+  nodeSizes: { width: number; height: number }[],
+  onTick: (positions: Map<string, { x: number; y: number }>) => void,
+  enabled: boolean,
+  draggedRef: RefObject<number | null>,
+  hoveredRef: RefObject<number | null>,
+): void {
+  const rafRef = useRef<number>(0);
+  const timeRef = useRef(0);
+
+  useEffect(() => {
+    if (!enabled || containerSize.width === 0) return;
+    return startSimulationLoop(
+      nodesRef,
+      edges,
+      containerSize,
+      nodeSizes,
+      onTick,
+      draggedRef,
+      hoveredRef,
+      rafRef,
+      timeRef,
+    );
+  }, [
+    enabled,
+    containerSize.width,
+    containerSize.height,
+    edges,
+    nodeSizes,
+    onTick,
+    nodesRef,
+    draggedRef,
+    hoveredRef,
+  ]);
+}
+
 export function useForceSimulation(
   nodes: GraphNode[],
   edges: GraphEdge[],
@@ -208,92 +353,25 @@ export function useForceSimulation(
   enabled: boolean,
 ) {
   const nodesRef = useRef(nodes);
-  const rafRef = useRef<number>(0);
-  const draggedRef = useRef<number | null>(null);
-  const hoveredRef = useRef<number | null>(null);
-  const timeRef = useRef(0);
 
   // Keep nodes ref up to date
   useEffect(() => {
     nodesRef.current = nodes;
   }, [nodes]);
 
-  const startDrag = useCallback((index: number) => {
-    draggedRef.current = index;
-  }, []);
+  const { draggedRef, hoveredRef, startDrag, moveDrag, endDrag, setHovered } =
+    useGraphDragControls(nodesRef);
 
-  const moveDrag = useCallback((x: number, y: number) => {
-    if (draggedRef.current !== null) {
-      const n = nodesRef.current[draggedRef.current];
-      if (n) {
-        n.x = x;
-        n.y = y;
-        n.vx = 0;
-        n.vy = 0;
-      }
-    }
-  }, []);
-
-  const endDrag = useCallback(() => {
-    draggedRef.current = null;
-  }, []);
-
-  const setHovered = useCallback((id: string | null) => {
-    if (id === null) {
-      hoveredRef.current = null;
-      return;
-    }
-    const idx = findNodeIndex(nodesRef.current, id);
-    hoveredRef.current = idx >= 0 ? idx : null;
-    const n = nodesRef.current[idx];
-    if (n) {
-      n.vx = 0;
-      n.vy = 0;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!enabled || containerSize.width === 0) return;
-
-    const cfg = DEFAULT_CONFIG;
-    const cx = containerSize.width / 2;
-    const cy = containerSize.height / 2;
-
-    const tick = () => {
-      const ns = nodesRef.current;
-      const t = (timeRef.current += 1);
-      stepSimulation(ns, edges, cfg, cx, cy, containerSize, nodeSizes, t, [
-        draggedRef.current,
-        hoveredRef.current,
-      ]);
-      onTick(buildPositionMap(ns));
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-
-    // Pause when tab hidden
-    const handleVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(rafRef.current);
-      } else {
-        rafRef.current = requestAnimationFrame(tick);
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
-  }, [
-    enabled,
-    containerSize.width,
-    containerSize.height,
+  useSimulationLoop(
+    nodesRef,
     edges,
+    containerSize,
     nodeSizes,
     onTick,
-  ]);
+    enabled,
+    draggedRef,
+    hoveredRef,
+  );
 
   return { startDrag, moveDrag, endDrag, setHovered };
 }

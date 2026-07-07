@@ -58,9 +58,9 @@ function useContainerMeasurement(
 
   useEffect(() => {
     const measure = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      if (mobile || !containerRef.current) return;
+      const isMobileViewport = window.innerWidth <= 768;
+      setIsMobile(isMobileViewport);
+      if (isMobileViewport || !containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       setContainerSize({ width: rect.width, height: GRAPH_HEIGHT });
     };
@@ -96,12 +96,17 @@ function useSimulationReady(nodeCount: number): boolean {
   return simulationReady;
 }
 
+const SCALE_FULL = "scale(1)";
+const SCALE_ENTRY = "scale(0.92)";
+const SCALE_MOBILE_ENTRY = "scale(0.95)";
+const OPACITY_TRANSITION = "opacity 0.3s ease";
+
 function entryScale(entered: boolean): string {
-  return entered ? "scale(1)" : "scale(0.92)";
+  return entered ? SCALE_FULL : SCALE_ENTRY;
 }
 
 function mobileEntryScale(entered: boolean): string {
-  return entered ? "scale(1)" : "scale(0.95)";
+  return entered ? SCALE_FULL : SCALE_MOBILE_ENTRY;
 }
 
 function mobileOpacity(entered: boolean, dimmed: boolean): number {
@@ -119,7 +124,7 @@ function delayedEntryTransition(index: number, delayMs: number): string {
 
 function nodeTransition(simulationReady: boolean, index: number): string {
   return simulationReady
-    ? "opacity 0.3s ease"
+    ? OPACITY_TRANSITION
     : delayedEntryTransition(index, 80);
 }
 
@@ -129,7 +134,7 @@ function techTransition(
   index: number,
 ): string {
   return simulationReady
-    ? "opacity 0.3s ease"
+    ? OPACITY_TRANSITION
     : delayedEntryTransition(projectCount + index, 60);
 }
 
@@ -578,8 +583,12 @@ interface GraphCanvasProps {
   internalBasePath?: string;
 }
 
-function GraphCanvas({
-  containerRef,
+type CanvasLayersProps = Omit<
+  GraphCanvasProps,
+  "containerRef" | "onPointerMove" | "onPointerUp"
+>;
+
+function CanvasLayers({
   containerSize,
   projectNodes,
   uniqueTechs,
@@ -589,22 +598,12 @@ function GraphCanvas({
   entered,
   simulationReady,
   dragging,
-  onPointerMove,
-  onPointerUp,
   onPointerDown,
   onHover,
   internalBasePath,
-}: GraphCanvasProps) {
+}: CanvasLayersProps) {
   return (
-    <div
-      ref={containerRef}
-      className="project-graph"
-      style={graphCanvasStyle(dragging)}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerLeave={onPointerUp}
-    >
-      <div className="project-graph__dot-grid" />
+    <>
       <EdgeLayer
         edges={edges}
         positions={positions}
@@ -634,6 +633,28 @@ function GraphCanvas({
         onPointerDown={onPointerDown}
         onHover={onHover}
       />
+    </>
+  );
+}
+
+function GraphCanvas({
+  containerRef,
+  dragging,
+  onPointerMove,
+  onPointerUp,
+  ...layerProps
+}: GraphCanvasProps) {
+  return (
+    <div
+      ref={containerRef}
+      className="project-graph"
+      style={graphCanvasStyle(dragging)}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerLeave={onPointerUp}
+    >
+      <div className="project-graph__dot-grid" />
+      <CanvasLayers dragging={dragging} {...layerProps} />
     </div>
   );
 }
@@ -703,6 +724,85 @@ function canMoveDrag(dragging: boolean, isMobile: boolean): boolean {
   return dragging && !isMobile;
 }
 
+interface GraphPositionOptions {
+  graphData: ReturnType<typeof buildProjectGraphData>;
+  initialGraph: ReturnType<typeof buildInitialGraph>;
+  containerSize: { width: number; height: number };
+  simulationReady: boolean;
+  isMobile: boolean;
+}
+
+function useGraphPositions({
+  graphData,
+  initialGraph,
+  containerSize,
+  simulationReady,
+  isMobile,
+}: GraphPositionOptions) {
+  const [positions, setPositions] = useState<PositionMap>(new Map());
+  const onTick = useCallback((pos: PositionMap) => {
+    setPositions(new Map(pos));
+  }, []);
+  const controls = useForceSimulation(
+    initialGraph.nodes,
+    graphData.edges,
+    containerSize,
+    graphData.nodeSizes,
+    onTick,
+    simulationReady && !isMobile,
+  );
+
+  return {
+    ...controls,
+    positions: positions.size > 0 ? positions : initialGraph.positions,
+  };
+}
+
+interface PointerDragOptions {
+  containerRef: RefObject<HTMLDivElement | null>;
+  isMobile: boolean;
+  startDrag: (index: number) => void;
+  moveDrag: (x: number, y: number) => void;
+  endDrag: () => void;
+}
+
+function usePointerDragHandlers({
+  containerRef,
+  isMobile,
+  startDrag,
+  moveDrag,
+  endDrag,
+}: PointerDragOptions) {
+  const [dragging, setDragging] = useState(false);
+
+  const handlePointerDown = useCallback(
+    (index: number) => (e: PointerEvent) => {
+      if (isMobile) return;
+      e.preventDefault();
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      setDragging(true);
+      startDrag(index);
+    },
+    [isMobile, startDrag],
+  );
+
+  const handlePointerMove = useCallback(
+    (e: PointerEvent) => {
+      if (!canMoveDrag(dragging, isMobile)) return;
+      const offset = pointerOffset(containerRef, e);
+      if (offset) moveDrag(offset.x, offset.y);
+    },
+    [containerRef, dragging, isMobile, moveDrag],
+  );
+
+  const handlePointerUp = useCallback(() => {
+    setDragging(false);
+    endDrag();
+  }, [endDrag]);
+
+  return { dragging, handlePointerDown, handlePointerMove, handlePointerUp };
+}
+
 function useGraphInteractions(
   containerRef: RefObject<HTMLDivElement | null>,
   graphData: ReturnType<typeof buildProjectGraphData>,
@@ -712,73 +812,51 @@ function useGraphInteractions(
   simulationReady: boolean,
   isMobile: boolean,
 ) {
-  const [positions, setPositions] = useState<PositionMap>(new Map());
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const [dragging, setDragging] = useState(false);
-
-  const onTick = useCallback((pos: PositionMap) => {
-    setPositions(new Map(pos));
-  }, []);
-
-  const { startDrag, moveDrag, endDrag, setHovered } = useForceSimulation(
-    initialGraph.nodes,
-    graphData.edges,
+  const graphPositions = useGraphPositions({
+    graphData,
+    initialGraph,
     containerSize,
-    graphData.nodeSizes,
-    onTick,
-    simulationReady && !isMobile,
-  );
-
+    simulationReady,
+    isMobile,
+  });
+  const dragHandlers = usePointerDragHandlers({
+    containerRef,
+    isMobile,
+    startDrag: graphPositions.startDrag,
+    moveDrag: graphPositions.moveDrag,
+    endDrag: graphPositions.endDrag,
+  });
   const hoverNode = useCallback(
     (id: string | null) => {
       setHoveredNode(id);
-      setHovered(id);
+      graphPositions.setHovered(id);
     },
-    [setHovered],
+    [graphPositions],
   );
 
-  const handlePointerDown = (index: number) => (e: PointerEvent) => {
-    if (isMobile) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    setDragging(true);
-    startDrag(index);
-  };
-
-  const handlePointerMove = (e: PointerEvent) => {
-    if (!canMoveDrag(dragging, isMobile)) return;
-    const offset = pointerOffset(containerRef, e);
-    if (!offset) return;
-    moveDrag(offset.x, offset.y);
-  };
-
-  const handlePointerUp = () => {
-    setDragging(false);
-    endDrag();
-  };
-
   return {
-    dragging,
     hoverNode,
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-    positions: positions.size > 0 ? positions : initialGraph.positions,
+    positions: graphPositions.positions,
     visibility: getGraphVisibility(
       hoveredNode,
       matchedIds,
       graphData.adjacency,
     ),
+    ...dragHandlers,
   };
+}
+
+interface FilterLabels {
+  selectTechLabel: string;
+  techSelectedTemplate: string;
+  clearLabel: string;
 }
 
 function filterControlsFor(
   graphData: ReturnType<typeof buildProjectGraphData>,
   filters: ReturnType<typeof useProjectFilters>,
-  labels: Pick<
-    Props,
-    "selectTechLabel" | "techSelectedTemplate" | "clearLabel"
-  >,
+  labels: FilterLabels,
 ) {
   return (
     <FilterControls
@@ -792,6 +870,86 @@ function filterControlsFor(
       selectTechLabel={labels.selectTechLabel}
       techSelectedTemplate={labels.techSelectedTemplate}
       clearLabel={labels.clearLabel}
+    />
+  );
+}
+
+interface DesktopGraphViewProps {
+  containerRef: RefObject<HTMLDivElement | null>;
+  containerSize: { width: number; height: number };
+  filterControls: ReactNode;
+  graph: ReturnType<typeof usePreparedGraph>;
+  interactions: ReturnType<typeof useGraphInteractions>;
+  entered: boolean;
+  internalBasePath?: string;
+}
+
+function DesktopGraphView({
+  containerRef,
+  containerSize,
+  filterControls,
+  graph,
+  interactions,
+  entered,
+  internalBasePath,
+}: DesktopGraphViewProps) {
+  return (
+    <>
+      {filterControls}
+      <GraphCanvas
+        containerRef={containerRef}
+        containerSize={containerSize}
+        projectNodes={graph.graphData.projectNodes}
+        uniqueTechs={graph.graphData.uniqueTechs}
+        edges={graph.graphData.edges}
+        positions={interactions.positions}
+        visibility={interactions.visibility}
+        entered={entered}
+        simulationReady={graph.simulationReady}
+        dragging={interactions.dragging}
+        onPointerMove={interactions.handlePointerMove}
+        onPointerUp={interactions.handlePointerUp}
+        onPointerDown={interactions.handlePointerDown}
+        onHover={interactions.hoverNode}
+        internalBasePath={internalBasePath}
+      />
+    </>
+  );
+}
+
+interface ProjectGraphContentProps extends DesktopGraphViewProps {
+  isMobile: boolean;
+}
+
+function ProjectGraphContent({
+  isMobile,
+  filterControls,
+  graph,
+  interactions,
+  entered,
+  internalBasePath,
+  ...desktopProps
+}: ProjectGraphContentProps) {
+  if (isMobile) {
+    return (
+      <MobileGraphView
+        filterControls={filterControls}
+        projectNodes={graph.graphData.projectNodes}
+        visibility={interactions.visibility}
+        entered={entered}
+        internalBasePath={internalBasePath}
+      />
+    );
+  }
+
+  return (
+    <DesktopGraphView
+      filterControls={filterControls}
+      graph={graph}
+      interactions={interactions}
+      entered={entered}
+      internalBasePath={internalBasePath}
+      {...desktopProps}
     />
   );
 }
@@ -829,38 +987,16 @@ export default function ProjectGraph({
     clearLabel,
   });
 
-  if (isMobile) {
-    return (
-      <MobileGraphView
-        filterControls={filterControls}
-        projectNodes={graph.graphData.projectNodes}
-        visibility={interactions.visibility}
-        entered={entered}
-        internalBasePath={internalBasePath}
-      />
-    );
-  }
-
   return (
-    <>
-      {filterControls}
-      <GraphCanvas
-        containerRef={containerRef}
-        containerSize={containerSize}
-        projectNodes={graph.graphData.projectNodes}
-        uniqueTechs={graph.graphData.uniqueTechs}
-        edges={graph.graphData.edges}
-        positions={interactions.positions}
-        visibility={interactions.visibility}
-        entered={entered}
-        simulationReady={graph.simulationReady}
-        dragging={interactions.dragging}
-        onPointerMove={interactions.handlePointerMove}
-        onPointerUp={interactions.handlePointerUp}
-        onPointerDown={interactions.handlePointerDown}
-        onHover={interactions.hoverNode}
-        internalBasePath={internalBasePath}
-      />
-    </>
+    <ProjectGraphContent
+      containerRef={containerRef}
+      containerSize={containerSize}
+      filterControls={filterControls}
+      graph={graph}
+      interactions={interactions}
+      entered={entered}
+      isMobile={isMobile}
+      internalBasePath={internalBasePath}
+    />
   );
 }

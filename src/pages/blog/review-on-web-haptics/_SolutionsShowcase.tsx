@@ -151,7 +151,69 @@ function FrameworksShowcase() {
 const routes = ["Feed", "Profile", "Settings"] as const;
 type Route = (typeof routes)[number];
 
-function SpaShowcase() {
+function SpaTabs({
+  route,
+  onNavigate,
+}: {
+  route: Route;
+  onNavigate: (r: Route) => void;
+}) {
+  return (
+    <div className="spa-preview__tabs" role="tablist">
+      {routes.map((r) => (
+        <button
+          key={r}
+          className={`spa-preview__tab ${route === r ? "is-active" : ""}`}
+          role="tab"
+          aria-selected={route === r}
+          onClick={() => onNavigate(r)}
+        >
+          {r}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function SpaPanelHeader({
+  route,
+  canGoBack,
+  onBack,
+}: {
+  route: Route;
+  canGoBack: boolean;
+  onBack: () => void;
+}) {
+  return (
+    <div className="spa-preview__panel-header">
+      <span className="spa-preview__route">{route}</span>
+      <button
+        className="spa-preview__back"
+        onClick={onBack}
+        disabled={!canGoBack}
+      >
+        Back
+      </button>
+    </div>
+  );
+}
+
+function SpaCounter({
+  count,
+  onIncrement,
+}: {
+  count: number;
+  onIncrement: () => void;
+}) {
+  return (
+    <div className="spa-preview__counter">
+      <strong>{count}</strong>
+      <button onClick={onIncrement}>Increment</button>
+    </div>
+  );
+}
+
+function useSpaState() {
   const haptics = useHaptics();
   const [route, setRoute] = useState<Route>("Feed");
   const [history, setHistory] = useState<Route[]>(["Feed"]);
@@ -179,47 +241,32 @@ function SpaShowcase() {
     });
   };
 
+  const increment = () => {
+    haptics.current?.trigger(CONFIRM);
+    setCounters((prev) => ({ ...prev, [route]: prev[route] + 1 }));
+  };
+
+  return { route, history, counters, navigate, goBack, increment };
+}
+
+function SpaShowcase() {
+  const { route, history, counters, navigate, goBack, increment } =
+    useSpaState();
+
   return (
     <section className="solutions-inline" aria-label="SPA demo">
       <div className="spa-preview">
-        <div className="spa-preview__tabs" role="tablist">
-          {routes.map((r) => (
-            <button
-              key={r}
-              className={`spa-preview__tab ${route === r ? "is-active" : ""}`}
-              role="tab"
-              aria-selected={route === r}
-              onClick={() => navigate(r)}
-            >
-              {r}
-            </button>
-          ))}
-        </div>
+        <SpaTabs route={route} onNavigate={navigate} />
         <div className="spa-preview__panel" role="tabpanel">
-          <div className="spa-preview__panel-header">
-            <span className="spa-preview__route">{route}</span>
-            <button
-              className="spa-preview__back"
-              onClick={goBack}
-              disabled={history.length <= 1}
-            >
-              Back
-            </button>
-          </div>
+          <SpaPanelHeader
+            route={route}
+            canGoBack={history.length > 1}
+            onBack={goBack}
+          />
           <p className="spa-preview__copy">
             This view has its own state counter stored in memory.
           </p>
-          <div className="spa-preview__counter">
-            <strong>{counters[route]}</strong>
-            <button
-              onClick={() => {
-                haptics.current?.trigger(CONFIRM);
-                setCounters((prev) => ({ ...prev, [route]: prev[route] + 1 }));
-              }}
-            >
-              Increment
-            </button>
-          </div>
+          <SpaCounter count={counters[route]} onIncrement={increment} />
         </div>
       </div>
     </section>

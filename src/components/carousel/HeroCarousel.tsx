@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 import type Swiper from "swiper";
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -29,13 +30,16 @@ function computeAutoplayLabel(reduceMotion: boolean, playing: boolean): string {
   return playing ? "Pause autoplay" : "Resume autoplay";
 }
 
+const HERO_AUTOPLAY_DELAY_MS = 5000;
+const SLIDE_CHANGE_EVENT = "slideChange";
+
 function heroMotionOptions(reduceMotion: boolean) {
   return reduceMotion
     ? { effect: "slide" as const, speed: 0, autoplay: false as const }
     : {
         effect: "fade" as const,
         speed: 300,
-        autoplay: { delay: 5000, disableOnInteraction: false },
+        autoplay: { delay: HERO_AUTOPLAY_DELAY_MS, disableOnInteraction: false },
       };
 }
 
@@ -287,6 +291,65 @@ function PlayControl({
   );
 }
 
+function ProjectRailHeader({
+  count,
+  mapOpen,
+  onToggleMap,
+}: {
+  count: number;
+  mapOpen: boolean;
+  onToggleMap: () => void;
+}) {
+  return (
+    <div className="hero-carousel__rail-header">
+      <span className="hero-carousel__rail-label">MAP · {count}</span>
+      {count > 3 && (
+        <button
+          type="button"
+          className="hero-carousel__rail-expand"
+          aria-expanded={mapOpen}
+          onClick={onToggleMap}
+        >
+          {mapOpen ? "LESS" : "MORE"}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function ProjectRailList({
+  slides,
+  activeIndex,
+  onSelect,
+}: {
+  slides: ProjectSlide[];
+  activeIndex: number;
+  onSelect: (index: number, trigger: HTMLButtonElement) => void;
+}) {
+  return (
+    <div className="hero-carousel__rail-list">
+      {slides.map((slide, i) => (
+        <button
+          key={`${slide.project.title}-${i}`}
+          type="button"
+          className={`hero-carousel__rail-item${
+            activeIndex === i ? " hero-carousel__rail-item--active" : ""
+          }`}
+          aria-current={activeIndex === i ? "true" : undefined}
+          onClick={(event) => onSelect(i, event.currentTarget)}
+        >
+          <span className="hero-carousel__rail-index">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span className="hero-carousel__rail-title">
+            {slide.project.title}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function ProjectRail({
   slides,
   activeIndex,
@@ -307,39 +370,50 @@ function ProjectRail({
       }`}
       aria-label="Featured project index"
     >
-      <div className="hero-carousel__rail-header">
-        <span className="hero-carousel__rail-label">MAP · {slides.length}</span>
-        {slides.length > 3 && (
-          <button
-            type="button"
-            className="hero-carousel__rail-expand"
-            aria-expanded={mapOpen}
-            onClick={onToggleMap}
-          >
-            {mapOpen ? "LESS" : "MORE"}
-          </button>
-        )}
-      </div>
-      <div className="hero-carousel__rail-list">
-        {slides.map((slide, i) => (
-          <button
-            key={`${slide.project.title}-${i}`}
-            type="button"
-            className={`hero-carousel__rail-item${
-              activeIndex === i ? " hero-carousel__rail-item--active" : ""
-            }`}
-            aria-current={activeIndex === i ? "true" : undefined}
-            onClick={(event) => onSelect(i, event.currentTarget)}
-          >
-            <span className="hero-carousel__rail-index">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <span className="hero-carousel__rail-title">
-              {slide.project.title}
-            </span>
-          </button>
-        ))}
-      </div>
+      <ProjectRailHeader
+        count={slides.length}
+        mapOpen={mapOpen}
+        onToggleMap={onToggleMap}
+      />
+      <ProjectRailList
+        slides={slides}
+        activeIndex={activeIndex}
+        onSelect={onSelect}
+      />
+    </div>
+  );
+}
+
+function MobileList({
+  slides,
+  activeIndex,
+  onSelect,
+}: {
+  slides: ProjectSlide[];
+  activeIndex: number;
+  onSelect: (index: number, trigger: HTMLButtonElement) => void;
+}) {
+  return (
+    <div className="hero-carousel__mobile-list">
+      {slides.map((slide, i) => (
+        <button
+          key={`mobile-${slide.project.title}-${i}`}
+          type="button"
+          className={`hero-carousel__mobile-item${
+            activeIndex === i ? " hero-carousel__mobile-item--active" : ""
+          }`}
+          aria-label={`Show project ${i + 1}: ${slide.project.title}`}
+          aria-current={activeIndex === i ? "true" : undefined}
+          onClick={(event) => onSelect(i, event.currentTarget)}
+        >
+          <span className="hero-carousel__mobile-item-index">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span className="hero-carousel__mobile-item-title">
+            {slide.project.title}
+          </span>
+        </button>
+      ))}
     </div>
   );
 }
@@ -378,27 +452,11 @@ function MobileStrip({
         {String(activeIndex + 1).padStart(2, "0")} /{" "}
         {String(slides.length).padStart(2, "0")}
       </span>
-      <div className="hero-carousel__mobile-list">
-        {slides.map((slide, i) => (
-          <button
-            key={`mobile-${slide.project.title}-${i}`}
-            type="button"
-            className={`hero-carousel__mobile-item${
-              activeIndex === i ? " hero-carousel__mobile-item--active" : ""
-            }`}
-            aria-label={`Show project ${i + 1}: ${slide.project.title}`}
-            aria-current={activeIndex === i ? "true" : undefined}
-            onClick={(event) => onSelect(i, event.currentTarget)}
-          >
-            <span className="hero-carousel__mobile-item-index">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <span className="hero-carousel__mobile-item-title">
-              {slide.project.title}
-            </span>
-          </button>
-        ))}
-      </div>
+      <MobileList
+        slides={slides}
+        activeIndex={activeIndex}
+        onSelect={onSelect}
+      />
     </div>
   );
 }
@@ -464,12 +522,81 @@ function ScrollIndicator() {
   );
 }
 
-export default function HeroCarousel({
-  slides,
-  fullscreen,
-  releasedLabel,
-  inDevelopmentLabel,
-}: Props) {
+function initHeroSwiperEffect(
+  containerRef: { current: HTMLDivElement | null },
+  swiperRef: { current: Swiper | null },
+  reduceMotionRef: { current: boolean },
+  setReduceMotion: Dispatch<SetStateAction<boolean>>,
+  setPlaying: Dispatch<SetStateAction<boolean>>,
+  setActiveIndex: Dispatch<SetStateAction<number>>,
+): () => void {
+  let isMounted = true;
+  let instance: Swiper | null = null;
+
+  void (async () => {
+    if (!containerRef.current) return;
+    const [{ default: Swiper }, { Autoplay, EffectFade, Navigation }] =
+      await Promise.all([import("swiper"), import("swiper/modules")]);
+    if (!isMounted || !containerRef.current) return;
+    const motion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    reduceMotionRef.current = motion;
+    setReduceMotion(motion);
+    setPlaying(!motion);
+    instance = new Swiper(containerRef.current, {
+      modules: [Autoplay, EffectFade, Navigation],
+      ...heroMotionOptions(motion),
+      navigation: {
+        prevEl: ".hero-carousel__prev",
+        nextEl: ".hero-carousel__next",
+      },
+      loop: true,
+    });
+    instance.on(SLIDE_CHANGE_EVENT, () => setActiveIndex(instance?.realIndex ?? 0));
+    swiperRef.current = instance;
+  })();
+
+  return () => {
+    isMounted = false;
+    instance?.destroy(true, true);
+    swiperRef.current = null;
+  };
+}
+
+function toggleHeroAutoplay(
+  swiperRef: { current: Swiper | null },
+  reduceMotionRef: { current: boolean },
+  setPlaying: Dispatch<SetStateAction<boolean>>,
+) {
+  const swiper = swiperRef.current;
+  if (!swiper || reduceMotionRef.current) return;
+  if (swiper.autoplay.running) {
+    swiper.autoplay.stop();
+    setPlaying(false);
+  } else {
+    swiper.autoplay.start();
+    setPlaying(true);
+  }
+}
+
+function selectHeroProject(
+  swiperRef: { current: Swiper | null },
+  index: number,
+  trigger: HTMLButtonElement | undefined,
+  setPlaying: Dispatch<SetStateAction<boolean>>,
+  setActiveIndex: Dispatch<SetStateAction<number>>,
+) {
+  const swiper = swiperRef.current;
+  if (!swiper) return;
+  swiper.slideToLoop(index);
+  swiper.autoplay.stop();
+  setPlaying(false);
+  setActiveIndex(index);
+  trigger?.blur();
+}
+
+function useHeroCarousel() {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<Swiper | null>(null);
   const reduceMotionRef = useRef(false);
@@ -477,117 +604,163 @@ export default function HeroCarousel({
   const [playing, setPlaying] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [mapOpen, setMapOpen] = useState(false);
-  const autoplayLabel = computeAutoplayLabel(reduceMotion, playing);
 
-  useEffect(() => {
-    let mounted = true;
-    let instance: Swiper | null = null;
+  useEffect(
+    () =>
+      initHeroSwiperEffect(
+        containerRef,
+        swiperRef,
+        reduceMotionRef,
+        setReduceMotion,
+        setPlaying,
+        setActiveIndex,
+      ),
+    [],
+  );
 
-    async function initSwiper() {
-      if (!containerRef.current) return;
+  const toggleAutoplay = () =>
+    toggleHeroAutoplay(swiperRef, reduceMotionRef, setPlaying);
+  const selectProject = (index: number, trigger?: HTMLButtonElement) =>
+    selectHeroProject(swiperRef, index, trigger, setPlaying, setActiveIndex);
 
-      const [{ default: Swiper }, { Autoplay, EffectFade, Navigation }] =
-        await Promise.all([import("swiper"), import("swiper/modules")]);
+  return {
+    containerRef,
+    reduceMotion,
+    playing,
+    activeIndex,
+    mapOpen,
+    toggleAutoplay,
+    selectProject,
+    toggleMap: () => setMapOpen((open) => !open),
+  };
+}
 
-      if (!mounted || !containerRef.current) return;
+function heroCarouselClass(fullscreen?: boolean): string {
+  return fullscreen
+    ? "hero-carousel hero-carousel--fullscreen"
+    : "hero-carousel";
+}
 
-      const motion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      reduceMotionRef.current = motion;
-      setReduceMotion(motion);
-      setPlaying(!motion);
-
-      instance = new Swiper(containerRef.current, {
-        modules: [Autoplay, EffectFade, Navigation],
-        ...heroMotionOptions(motion),
-        navigation: {
-          prevEl: ".hero-carousel__prev",
-          nextEl: ".hero-carousel__next",
-        },
-        loop: true,
-      });
-      instance.on("slideChange", () =>
-        setActiveIndex(instance?.realIndex ?? 0),
-      );
-      swiperRef.current = instance;
-    }
-
-    void initSwiper();
-
-    return () => {
-      mounted = false;
-      instance?.destroy(true, true);
-      swiperRef.current = null;
-    };
-  }, []);
-
-  function toggleAutoplay() {
-    const swiper = swiperRef.current;
-    if (!swiper || reduceMotionRef.current) return;
-    if (swiper.autoplay.running) {
-      swiper.autoplay.stop();
-      setPlaying(false);
-    } else {
-      swiper.autoplay.start();
-      setPlaying(true);
-    }
-  }
-
-  function selectProject(index: number, trigger?: HTMLButtonElement) {
-    const swiper = swiperRef.current;
-    if (!swiper) return;
-    swiper.slideToLoop(index);
-    swiper.autoplay.stop();
-    setPlaying(false);
-    setActiveIndex(index);
-    trigger?.blur();
-  }
-
+function HeroSwiper({
+  containerRef,
+  slides,
+  releasedLabel,
+  inDevelopmentLabel,
+}: {
+  containerRef: RefObject<HTMLDivElement | null>;
+  slides: ProjectSlide[];
+  releasedLabel: string;
+  inDevelopmentLabel: string;
+}) {
   return (
-    <div
-      className={`hero-carousel${fullscreen ? " hero-carousel--fullscreen" : ""}`}
-    >
-      <div ref={containerRef} className="swiper hero-carousel__swiper">
-        <div className="swiper-wrapper">
-          {slides.map((slide, i) => (
-            <HeroSlide
-              key={slide.image ?? `fallback-${i}`}
-              slide={slide}
-              index={i}
-              releasedLabel={releasedLabel}
-              inDevelopmentLabel={inDevelopmentLabel}
-            />
-          ))}
-        </div>
+    <div ref={containerRef} className="swiper hero-carousel__swiper">
+      <div className="swiper-wrapper">
+        {slides.map((slide, i) => (
+          <HeroSlide
+            key={slide.image ?? `fallback-${i}`}
+            slide={slide}
+            index={i}
+            releasedLabel={releasedLabel}
+            inDevelopmentLabel={inDevelopmentLabel}
+          />
+        ))}
       </div>
+    </div>
+  );
+}
 
+interface HeroControlsProps {
+  slides: ProjectSlide[];
+  activeIndex: number;
+  mapOpen: boolean;
+  playing: boolean;
+  reduceMotion: boolean;
+  autoplayLabel: string;
+  onToggleAutoplay: () => void;
+  onSelect: (index: number, trigger: HTMLButtonElement) => void;
+  onToggleMap: () => void;
+  fullscreen?: boolean;
+}
+
+function HeroControls({
+  slides,
+  activeIndex,
+  mapOpen,
+  playing,
+  reduceMotion,
+  autoplayLabel,
+  onToggleAutoplay,
+  onSelect,
+  onToggleMap,
+  fullscreen,
+}: HeroControlsProps) {
+  return (
+    <>
       <ProjectRail
         slides={slides}
         activeIndex={activeIndex}
         mapOpen={mapOpen}
-        onToggleMap={() => setMapOpen((open) => !open)}
-        onSelect={selectProject}
+        onToggleMap={onToggleMap}
+        onSelect={onSelect}
       />
-
       <MobileStrip
         slides={slides}
         activeIndex={activeIndex}
         playing={playing}
         reduceMotion={reduceMotion}
         autoplayLabel={autoplayLabel}
-        onToggleAutoplay={toggleAutoplay}
-        onSelect={selectProject}
+        onToggleAutoplay={onToggleAutoplay}
+        onSelect={onSelect}
       />
-
       <HeroNav
         playing={playing}
         reduceMotion={reduceMotion}
         autoplayLabel={autoplayLabel}
-        onToggleAutoplay={toggleAutoplay}
+        onToggleAutoplay={onToggleAutoplay}
       />
-
       {fullscreen && <ScrollIndicator />}
+    </>
+  );
+}
+
+export default function HeroCarousel({
+  slides,
+  fullscreen,
+  releasedLabel,
+  inDevelopmentLabel,
+}: Props) {
+  const {
+    containerRef,
+    reduceMotion,
+    playing,
+    activeIndex,
+    mapOpen,
+    toggleAutoplay,
+    selectProject,
+    toggleMap,
+  } = useHeroCarousel();
+  const autoplayLabel = computeAutoplayLabel(reduceMotion, playing);
+
+  return (
+    <div className={heroCarouselClass(fullscreen)}>
+      <HeroSwiper
+        containerRef={containerRef}
+        slides={slides}
+        releasedLabel={releasedLabel}
+        inDevelopmentLabel={inDevelopmentLabel}
+      />
+      <HeroControls
+        slides={slides}
+        activeIndex={activeIndex}
+        mapOpen={mapOpen}
+        playing={playing}
+        reduceMotion={reduceMotion}
+        autoplayLabel={autoplayLabel}
+        onToggleAutoplay={toggleAutoplay}
+        onSelect={selectProject}
+        onToggleMap={toggleMap}
+        fullscreen={fullscreen}
+      />
     </div>
   );
 }
