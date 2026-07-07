@@ -1,0 +1,17 @@
+---
+interface Props {
+  colgroup?: string[];
+}
+
+const { colgroup } = Astro.props;
+---
+
+{
+  colgroup && (
+    <colgroup>
+      {colgroup.map((width) => (
+        <col style={width ? `width: ${width}` : undefined} />
+      ))}
+    </colgroup>
+  )
+}

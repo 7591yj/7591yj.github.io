@@ -1,0 +1,25 @@
+---
+import { SITE_NAME } from "../../consts";
+
+interface Props {
+  type: string;
+  canonicalUrl: string;
+  title: string;
+  metaDescription: string;
+  ogImage: string;
+}
+
+const { type, canonicalUrl, title, metaDescription, ogImage } = Astro.props;
+---
+
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={metaDescription} />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:image" content={ogImage} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={metaDescription} />
+<meta name="twitter:image" content={ogImage} />

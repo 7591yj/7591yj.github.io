@@ -1,0 +1,64 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import ThemeToggle from "../ThemeToggle.astro";
+import LanguageSelect from "../LanguageSelect/LanguageSelect.astro";
+import MobileMenu from "../MobileMenu/MobileMenu.astro";
+import { SITE_NAME } from "../../../consts";
+import { useTranslations } from "../../../i18n/ui";
+import "./Header.css";
+
+interface Props {
+  transparentHeader?: boolean;
+}
+
+const { transparentHeader = false } = Astro.props;
+const locale = Astro.currentLocale ?? "en";
+const t = useTranslations(locale);
+const navItems = [
+  { label: t("nav.home"), href: getRelativeLocaleUrl(locale, "/") },
+  { label: t("nav.projects"), href: getRelativeLocaleUrl(locale, "/projects") },
+  { label: t("nav.blog"), href: getRelativeLocaleUrl(locale, "/blog") },
+  { label: t("nav.about"), href: getRelativeLocaleUrl(locale, "/about") },
+];
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  class:list={["header", { "header--transparent": transparentHeader }]}
+  {...transparentHeader ? { "data-transparent-header": "" } : {}}
+>
+  <div class="header-inner container-header">
+    <button class="hamburger" aria-label="Menu" aria-expanded="false">
+      <span class="hamburger__line"></span>
+      <span class="hamburger__line"></span>
+      <span class="hamburger__line"></span>
+    </button>
+    <nav>
+      <div class="nav-main">
+        {
+          navItems.map(({ label, href }) => (
+            <a
+              href={href}
+              class:list={["nav-link", { active: currentPath === href }]}
+              data-scramble={label}
+            >
+              {label}
+            </a>
+          ))
+        }
+      </div>
+    </nav>
+    <a href={getRelativeLocaleUrl(locale, "/")} class="logo">{SITE_NAME}</a>
+    <nav class="nav-sub justify-end">
+      <LanguageSelect />
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+
+<!-- Mobile overlay menu -->
+<MobileMenu navItems={navItems} currentPath={currentPath} />
+
+<script>
+  import "./Header.client.ts";
+</script>

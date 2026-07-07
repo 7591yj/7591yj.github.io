@@ -1,9 +1,11 @@
 ---
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import "../styles/global.css";
 import { Font } from "astro:assets";
+import Header from "../components/layout/Header/Header.astro";
+import Footer from "../components/layout/Footer/Footer.astro";
+import Head from "../components/layout/Head.astro";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_OG_IMAGE, AUTHOR } from "../consts";
+import "../styles/global.css";
+import "../styles/layout.css";
 
 interface Props {
   title?: string;
@@ -52,92 +54,22 @@ const jsonLd =
 ---
 
 <Font cssVariable="--font-shippori" preload />
-
 <html lang={Astro.currentLocale ?? "en"}>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-
-    <meta name="description" content={metaDescription} />
-    <meta name="author" content={AUTHOR} />
-    <link rel="canonical" href={canonicalUrl} />
-
-    <meta property="og:type" content={type} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={metaDescription} />
-    <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:image" content={ogImage} />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={metaDescription} />
-    <meta name="twitter:image" content={ogImage} />
-
-    <script
-      is:inline
-      type="application/ld+json"
-      set:html={JSON.stringify(jsonLd)}
-    />
-
-    {robotsMetaContent && <meta name="robots" content={robotsMetaContent} />}
-
-    <script is:inline>
-      (function () {
-        function resolveTheme() {
-          const stored = localStorage.getItem("theme");
-          const systemDark = window.matchMedia(
-            "(prefers-color-scheme: dark)",
-          ).matches;
-          return stored === "system" || !stored
-            ? systemDark
-              ? "dark"
-              : "light"
-            : stored;
-        }
-        document.documentElement.setAttribute("data-theme", resolveTheme());
-        document.addEventListener("astro:after-swap", function () {
-          document.documentElement.setAttribute("data-theme", resolveTheme());
-        });
-      })();
-    </script>
-  </head>
+  <Head
+    title={title}
+    metaDescription={metaDescription}
+    canonicalUrl={canonicalUrl}
+    type={type}
+    ogImage={ogImage}
+    jsonLd={jsonLd}
+    robotsContent={robotsMetaContent}
+  />
   <body>
     <Header transparentHeader={transparentHeader} />
     <slot />
     <Footer />
     <script>
-      let scrollAnimateModule: Promise<unknown> | null = null;
-      let headerScrollModule: Promise<unknown> | null = null;
-
-      function loadPageScripts() {
-        if (document.querySelector("[data-animate]")) {
-          scrollAnimateModule ??= import("../scripts/scroll-animate.ts");
-        }
-
-        if (document.querySelector("[data-transparent-header]")) {
-          headerScrollModule ??= import("../scripts/header-scroll.ts");
-        }
-      }
-
-      loadPageScripts();
-      document.addEventListener("astro:page-load", loadPageScripts);
-    </script>
-    <script src="../scripts/scramble-text.ts"></script>
-    <script>
-      import { initTheme, watchSystemPreference } from "../scripts/theme";
-      watchSystemPreference();
-      document.addEventListener("astro:page-load", () => {
-        initTheme();
-      });
+      import "../scripts/layout-init.client.ts";
     </script>
   </body>
 </html>
-<style>
-  body {
-    font-family: "PlemolJP", system-ui, sans-serif;
-  }
-</style>

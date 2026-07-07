@@ -1,0 +1,45 @@
+---
+import BlogEntryMeta from "./BlogEntryMeta.astro";
+import "./BlogPostCard.css";
+
+interface Props {
+  url: string;
+  title: string;
+  date: string;
+  description?: string;
+  tags?: string[];
+  isNew?: boolean;
+  index: number;
+  delay?: number;
+}
+
+const { url, title, date, description, tags, isNew, index, delay } =
+  Astro.props;
+const padded = String(index).padStart(3, "0");
+---
+
+<article
+  class="blog-entry"
+  data-animate
+  {...delay ? { "data-animate-delay": String(delay) } : {}}
+>
+  <!-- left gutter: index + wire -->
+  <div class="blog-entry__gutter">
+    <span class="blog-entry__index">{padded}</span>
+    <span class="blog-entry__wire"></span>
+  </div>
+
+  <!-- card body -->
+  <a class="blog-entry__card" href={url}>
+    <div class="blog-entry__card-inner">
+      <BlogEntryMeta isNew={isNew} date={date} tags={tags} />
+
+      <h3 class="blog-entry__title font-shippori">
+        <span>{title}</span>
+        <span class="blog-entry__arrow" aria-hidden="true">&#8599;</span>
+      </h3>
+
+      {description && <p class="blog-entry__desc">{description}</p>}
+    </div>
+  </a>
+</article>

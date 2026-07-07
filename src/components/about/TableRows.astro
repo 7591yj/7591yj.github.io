@@ -1,0 +1,17 @@
+---
+import type { AboutTableRow } from "../../types/aboutTable";
+import TableRow from "./TableRow.astro";
+
+interface Props {
+  rows: AboutTableRow[];
+  firstRowClass?: string;
+}
+
+const { rows, firstRowClass } = Astro.props;
+---
+
+{
+  rows.map((row, index) => (
+    <TableRow row={row} rowClass={index === 0 ? firstRowClass : undefined} />
+  ))
+}

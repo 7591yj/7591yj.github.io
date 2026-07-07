@@ -1,0 +1,37 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<span class="slogan-seg" aria-hidden="true">
+  {
+    [0, 1, 2, 3].map(() => (
+      <>
+        <span>{text}</span>
+        <span class="slogan-dot">·</span>
+      </>
+    ))
+  }
+</span>
+
+<style>
+  .slogan-seg {
+    display: flex;
+    align-items: center;
+    font-family: "PlemolJP", system-ui, sans-serif;
+    font-size: var(--font-size-xl);
+    font-style: italic;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  .slogan-dot {
+    margin: 0 1rem;
+    color: var(--color-text-muted);
+    font-style: normal;
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import { Icon } from "astro-icon/components";
+import { EMAIL, SITE_NAME, SOCIAL } from "../../../consts";
+
+const socialLinks = [
+  {
+    icon: "carbon:logo-github",
+    href: SOCIAL.github,
+    label: "GitHub",
+  },
+  {
+    icon: "carbon:logo-linkedin",
+    href: SOCIAL.linkedin,
+    label: "LinkedIn",
+  },
+  {
+    icon: "carbon:email",
+    href: `mailto:${EMAIL}`,
+    label: "Email",
+  },
+];
+
+const projectLinks = [
+  {
+    name: "modulino",
+    href: "https://github.com/modulino-lab",
+  },
+  {
+    name: "fpga-server",
+    href: "https://github.com/7591yj/fpga-server",
+  },
+  {
+    name: "BizLenz",
+    href: "https://github.com/BizLenz",
+  },
+];
+import "./Footer.css";
+---
+
+<footer class="footer" data-footer-bg="https://7591yj.x02.me/i/TFZA.webp">
+  <div class="footer-main">
+    <div class="footer-left-inner container-main">
+      <div class="footer-socials">
+        {
+          socialLinks.map(({ icon, href, label }) => (
+            <a href={href} class="footer-icon-link" aria-label={label}>
+              <Icon name={icon} />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+    <div class="footer-right-inner container-main">
+      {
+        projectLinks.map(({ name, href }) => (
+          <a href={href} class="hover-sweep-text text-2xl font-bold">
+            {name.toUpperCase()}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <p class="footer-copy text-center">
+    &copy; {new Date().getFullYear()}
+    {SITE_NAME} &middot; Built with Astro
+  </p>
+</footer>
+
+<script>
+  import "./Footer.client.ts";
+</script>

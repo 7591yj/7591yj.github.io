@@ -1,4 +1,6 @@
 ---
+import MetaTags from "./MetaTags.astro";
+
 interface Props {
   isNew?: boolean;
   date: string;
@@ -12,16 +14,7 @@ const hasTags = !!(tags && tags.length > 0);
 <div class="blog-entry__meta">
   {isNew && <span class="blog-entry__led" />}
   <span class="blog-entry__date">{date}</span>
-  {
-    hasTags && (
-      <>
-        <span class="blog-entry__sep">//</span>
-        {tags!.map((t) => (
-          <span class="blog-entry__tag">{t}</span>
-        ))}
-      </>
-    )
-  }
+  {hasTags && <MetaTags tags={tags!} />}
 </div>
 
 <style>
@@ -46,20 +39,5 @@ const hasTags = !!(tags && tags.length > 0);
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     letter-spacing: 0.04em;
-  }
-
-  .blog-entry__sep {
-    font-family: monospace;
-    font-size: var(--font-size-2xs);
-    color: var(--color-border-hover);
-  }
-
-  .blog-entry__tag {
-    font-family: monospace;
-    font-size: var(--font-size-2xs);
-    padding: 0.15em 0.5em;
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
   }
 </style>

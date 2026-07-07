@@ -1,0 +1,72 @@
+---
+import { AUTHOR } from "../../consts";
+import SocialMeta from "./SocialMeta.astro";
+
+interface Props {
+  title: string;
+  metaDescription: string;
+  canonicalUrl: string;
+  type: string;
+  ogImage: string;
+  jsonLd: object;
+  robotsContent?: string;
+}
+
+const {
+  title,
+  metaDescription,
+  canonicalUrl,
+  type,
+  ogImage,
+  jsonLd,
+  robotsContent,
+} = Astro.props;
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{title}</title>
+
+  <meta name="description" content={metaDescription} />
+  <meta name="author" content={AUTHOR} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  <SocialMeta
+    type={type}
+    canonicalUrl={canonicalUrl}
+    title={title}
+    metaDescription={metaDescription}
+    ogImage={ogImage}
+  />
+
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(jsonLd)}
+  />
+
+  {robotsContent && <meta name="robots" content={robotsContent} />}
+
+  <script is:inline>
+    (function () {
+      function resolveTheme() {
+        const stored = localStorage.getItem("theme");
+        const systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        return stored === "system" || !stored
+          ? systemDark
+            ? "dark"
+            : "light"
+          : stored;
+      }
+      document.documentElement.setAttribute("data-theme", resolveTheme());
+      document.addEventListener("astro:after-swap", function () {
+        document.documentElement.setAttribute("data-theme", resolveTheme());
+      });
+    })();
+  </script>
+</head>
