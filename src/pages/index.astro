@@ -3,8 +3,8 @@ import { getCollection } from "astro:content";
 import "../styles/pages/home.css";
 import Layout from "../layouts/Layout.astro";
 import HeroCarousel from "../components/carousel/HeroCarousel.tsx";
-import SectionBlock from "../components/SectionBlock.astro";
-import BlogPostCard from "../components/BlogPostCard.astro";
+import HomeBlogSection from "../components/home/HomeBlogSection.astro";
+import HomeAboutDossier from "../components/home/HomeAboutDossier.astro";
 import { useTranslations } from "../i18n/ui";
 
 const posts = (await getCollection("blog")).map((entry) => ({
@@ -65,6 +65,10 @@ const latestDate =
 
 const featuredPost = latestPosts[0];
 const archivePosts = latestPosts.slice(1);
+
+const focus = ["Homelab operations", "Tactile UI", "Reproducible setups"];
+const stack = ["TypeScript", "Python", "Nix", "React", "Svelte", "Containers"];
+
 const locale = Astro.currentLocale ?? "en";
 const t = useTranslations(locale);
 ---
@@ -84,134 +88,29 @@ const t = useTranslations(locale);
       />
     </section>
 
-    <!-- ============ BLOG ============ -->
-    <section class="preview-section">
-      <SectionBlock title="ARTICLES///">
-        <div class="section-bar" aria-hidden="true">
-          <div class="section-bar__info">
-            <span class="section-bar__accent">WRITING.FEED</span>
-            <span class="section-bar__sep">//</span>
-            <span>LATEST {latestDate}</span>
-            <span class="section-bar__sep">//</span>
-            <span>{latestPosts.length} ARTICLES</span>
-          </div>
-        </div>
+    <HomeBlogSection
+      title="ARTICLES///"
+      latestDate={latestDate}
+      count={latestPosts.length}
+      featuredPost={featuredPost}
+      archivePosts={archivePosts}
+      now={now}
+      thirtyDays={thirtyDays}
+      allHref="/blog"
+      allLabel="View all dispatches →"
+    />
 
-        <div class="blog-feed">
-          <div class="scanline-bg"></div>
-
-          <!-- Featured post -->
-          {
-            featuredPost && (
-              <div class="blog-featured">
-                <div class="blog-featured__badge">
-                  <span>LATEST</span>
-                </div>
-                <div class="blog-featured__card">
-                  <BlogPostCard
-                    url={featuredPost.url!}
-                    title={featuredPost.frontmatter.title}
-                    date={featuredPost.frontmatter.date}
-                    description={featuredPost.frontmatter.description}
-                    tags={featuredPost.frontmatter.tags}
-                    isNew={
-                      now - new Date(featuredPost.frontmatter.date).getTime() <
-                      thirtyDays
-                    }
-                    index={1}
-                    delay={0}
-                  />
-                </div>
-              </div>
-            )
-          }
-
-          <!-- Archive divider -->
-          {
-            archivePosts.length > 0 && (
-              <div class="blog-divider">
-                <span class="blog-divider__label">ARCHIVE</span>
-                <span class="blog-divider__rule" />
-              </div>
-            )
-          }
-
-          <!-- Archive list -->
-          <div class="blog-archive">
-            {
-              archivePosts.map((post, i) => (
-                <BlogPostCard
-                  url={post.url!}
-                  title={post.frontmatter.title}
-                  date={post.frontmatter.date}
-                  description={post.frontmatter.description}
-                  tags={post.frontmatter.tags}
-                  isNew={
-                    now - new Date(post.frontmatter.date).getTime() < thirtyDays
-                  }
-                  index={i + 2}
-                  delay={i + 1}
-                />
-              ))
-            }
-          </div>
-        </div>
-
-        <div class="section-link-row" data-animate>
-          <a class="section-text-link" href="/blog">View all dispatches →</a>
-        </div>
-      </SectionBlock>
-    </section>
-    <!-- ============ ABOUT ============ -->
-    <section class="preview-section">
-      <SectionBlock title="ABOUT///">
-        <div class="section-bar" aria-hidden="true">
-          <div class="section-bar__info">
-            <span class="section-bar__accent">DOSSIER</span>
-            <span class="section-bar__sep">//</span>
-            <span>CURRENT</span>
-          </div>
-        </div>
-
-        <div class="about-dossier" data-animate>
-          <div class="about-dossier__statement">
-            <p>
-              I build calm, working systems that make infrastructure <span
-                class="statement-keyword">visible</span
-              >, interfaces <span class="statement-keyword">tactile</span>, and
-              state <span class="statement-keyword">predictable</span>.
-            </p>
-          </div>
-
-          <dl class="about-dossier__facts">
-            <div>
-              <dt>Focus</dt>
-              <dd>
-                <ul>
-                  <li>Homelab operations</li>
-                  <li>Tactile UI</li>
-                  <li>Reproducible setups</li>
-                </ul>
-              </dd>
-            </div>
-            <div>
-              <dt>Stack</dt>
-              <dd>
-                <ul>
-                  <li>TypeScript</li>
-                  <li>Python</li>
-                  <li>Nix</li>
-                  <li>React</li>
-                  <li>Svelte</li>
-                  <li>Containers</li>
-                </ul>
-              </dd>
-            </div>
-          </dl>
-
-          <a class="about-dossier__link" href="/about">View full dossier →</a>
-        </div>
-      </SectionBlock>
-    </section>
+    <HomeAboutDossier
+      title="ABOUT///"
+      focus={focus}
+      stack={stack}
+      aboutHref="/about"
+      aboutLabel="View full dossier →"
+    >
+      I build calm, working systems that make infrastructure
+      <span class="statement-keyword">visible</span>, interfaces
+      <span class="statement-keyword">tactile</span>, and state
+      <span class="statement-keyword">predictable</span>.
+    </HomeAboutDossier>
   </main>
 </Layout>

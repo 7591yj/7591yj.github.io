@@ -1,204 +1,172 @@
 ---
 import "../styles/pages/about.css";
-import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Layout.astro";
-import PageHeading from "../components/PageHeading.astro";
-import SectionBlock from "../components/SectionBlock.astro";
-import EducationCard from "../components/EducationCard.astro";
-import PaperCard from "../components/PaperCard.astro";
+import PageHeading from "../components/ui/PageHeading.astro";
+import AboutMeta from "../components/about/AboutMeta.astro";
+import AboutEducation from "../components/about/AboutEducation.astro";
+import AboutTableSection from "../components/about/AboutTableSection.astro";
+import AboutPapers from "../components/about/AboutPapers.astro";
 import { SITE_NAME, EMAIL } from "../consts";
+import type { AboutTableCell, AboutTableRow } from "../types/aboutTable";
+
+const metaFields = [
+  { icon: "me", label: "NAME", value: "Yeongjin Kim" },
+  { icon: "cake", label: "BORN", value: "2002. 07. 20" },
+  { icon: "at", label: "EMAIL", value: EMAIL, href: `mailto:${EMAIL}` },
+  {
+    icon: "map-pin-house",
+    label: "HOME",
+    value: "Jeonju, South Korea",
+    href: "https://www.google.com/maps/search/?api=1&query=Jeonju,%20South%20Korea",
+  },
+  {
+    icon: "map-pin",
+    label: "LOCATION",
+    value: "Tokyo, Japan",
+    href: "https://www.google.com/maps/search/?api=1&query=Tokyo,%20Japan",
+  },
+];
+
+const educationCards = [
+  {
+    href: "https://www.inha.ac.kr/sites/kr/index..do",
+    src: "https://raw.githubusercontent.com/incalc/inha-logo/refs/heads/master/svg/static/inha_symbol_mark.svg",
+    institution: "Inha University",
+    location: "Incheon, South Korea",
+    position: "Student",
+    period: "2021. 03 - 2027. 02 (expected)",
+    major: "Computer Science and Engineering",
+    class: "p-5",
+    size: "20%",
+  },
+  {
+    href: "https://www.chuo-u.ac.jp/",
+    src: "https://www.chuo-u.ac.jp/media/images/en/common/header_logo.svg",
+    institution: "Chuo University",
+    location: "Tokyo, Japan",
+    position: "Exchange Student",
+    period: "2025. 09 - 2026. 08 (expected)",
+    major: "Information and System Engineering",
+    class: "p-5",
+    size: "70%",
+  },
+];
+
+const certHeaders = ["Date", "Name", "Issuer"];
+const certRows = [
+  [
+    "2021. 07. 13",
+    "Driver's License, Type 1, Normal",
+    "Jeonbuk Provincial Police Agency",
+  ],
+  ["2024. 08. 13", "JLPT N2", "The Japan Foundation"],
+  ["2025. 01. 26", "TOEIC, 925", "Korea TOEIC Committee"],
+  ["2025. 05. 24", "TOPCIT, 677", "Ministry of Science and ICT, Korea"],
+];
+
+const papers = [
+  {
+    href: "https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation",
+    body: `The 25th International Conference on Electronics, Information, and Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026) (Published) “Automated Korean-English Bilingual Highlighted Text Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim et.al 8`,
+  },
+  {
+    href: "#",
+    disabled: true,
+    body: `The 13th IEEE International Conference on Consumer Electronics – Taoyuan, Taiwan 2026 (IEEE ICCE-TW 2026) (Accepted) “Illumination-Adaptive Part Detection for Automated FDM 3D Printing Dataset Collection” Seungyun Choi, Seungjun Lee, Yeongjin Kim, Namjoon Kim, Hyukjae Lee`,
+  },
+];
+
+const clubHeaders = ["Period", "Name", "Topic", "Role"];
+const igrusLink = {
+  type: "link",
+  label: "IGRUS",
+  href: "https://www.instagram.com/igrus_inha/",
+} satisfies AboutTableCell;
+const seedsLink = {
+  type: "link",
+  label: "Seeds",
+  href: "https://jelly-locust-cea.notion.site/Seeds-1beac07ca4e98043bbe9e81ccf29e806",
+} satisfies AboutTableCell;
+const clubRows = [
+  ["2021. 03 - 2021. 08", igrusLink, "SW Dev", "Member"],
+  ["2024. 03 - 2024. 08", igrusLink, "SW Dev", "Member"],
+  ["2024. 03 - 2025. 08", seedsLink, "Web Dev", "Staff"],
+] satisfies AboutTableRow[];
+
+const awardHeaders = ["Date", "Name", "Award"];
+const awardRows = [
+  [
+    "2023. 11. 12",
+    {
+      type: "lines",
+      lines: ["Chung-Ang University x SEOULLAB PARTNERS '2023", "START-LAB"],
+    },
+    "Grand Prize",
+  ],
+  ["2025. 01. 18", " 2025 GreenTech Globalthon ", "Best Startup Pitch Award"],
+  [
+    "2025. 11. 19",
+    {
+      type: "lines",
+      lines: ["2025 Hanium Dream-Up Contest", "(Creative Challenge Track)"],
+    },
+    {
+      type: "lines",
+      lines: [
+        "Encouragement Award, Final Evaluation",
+        "(Selected as Outstanding Project in",
+        " Preliminary Round)",
+      ],
+    },
+  ],
+  [
+    "2025. 11. 12",
+    {
+      type: "link",
+      label: "Software Project on CG, VR and Image Processing Presentation",
+      href: "https://www.chuo-u.ac.jp/academics/faculties/advanced/departments/infotech/news/2026/01/83597/",
+    },
+    "Grand Prize",
+  ],
+] satisfies AboutTableRow[];
 ---
 
 <Layout title={`${SITE_NAME} | About`} description="About 7591yj">
   <main>
     <section>
       <PageHeading module="MODULE.003///" title="About Me">
-        <div class="meta">
-          <span class="meta__label"><Icon name="me" /> NAME</span>
-          <span class="meta__value">Yeongjin Kim</span>
-          <span class="meta__label"><Icon name="cake" /> BORN</span>
-          <span class="meta__value">2002. 07. 20</span>
-          <span class="meta__label"><Icon name="at" /> EMAIL</span>
-          <a class="meta__link" href={`mailto:${EMAIL}`}>{EMAIL} &#8599;</a>
-          <span class="meta__label"><Icon name="map-pin-house" /> HOME</span>
-          <a
-            class="meta__link"
-            href="https://www.google.com/maps/search/?api=1&query=Jeonju,%20South%20Korea"
-            >Jeonju, South Korea &#8599;</a
-          >
-          <span class="meta__label"><Icon name="map-pin" /> LOCATION</span>
-          <a
-            class="meta__link"
-            href="https://www.google.com/maps/search/?api=1&query=Tokyo,%20Japan"
-            >Tokyo, Japan &#8599;</a
-          >
-        </div>
+        <AboutMeta fields={metaFields} />
       </PageHeading>
-      <SectionBlock title="EDUCATION///">
-        <div class="gallery">
-          <EducationCard
-            href="https://www.inha.ac.kr/sites/kr/index..do"
-            src="https://raw.githubusercontent.com/incalc/inha-logo/refs/heads/master/svg/static/inha_symbol_mark.svg"
-            institution="Inha University"
-            location="Incheon, South Korea"
-            position="Student"
-            period="2021. 03 - 2027. 02 (expected)"
-            major="Computer Science and Engineering"
-            class="p-5"
-            size="20%"
-          />
-          <EducationCard
-            href="https://www.chuo-u.ac.jp/"
-            src="https://www.chuo-u.ac.jp/media/images/en/common/header_logo.svg"
-            institution="Chuo University"
-            location="Tokyo, Japan"
-            position="Exchange Student"
-            period="2025. 09 - 2026. 08 (expected)"
-            major="Information and System Engineering"
-            class="p-5"
-            size="70%"
-          />
-        </div>
-      </SectionBlock>
-      <SectionBlock title="CERTIFICATES///">
-        <div class="container-main pt-6 pb-6 overflow-x-auto">
-          <table class="info-table w-full">
-            <tr class="font-shippori text-xl">
-              <th>Date</th>
-              <th>Name</th>
-              <th>Issuer</th>
-            </tr>
-            <tr>
-              <td>2021. 07. 13</td>
-              <td>Driver's License, Type 1, Normal</td>
-              <td>Jeonbuk Provincial Police Agency</td>
-            </tr>
-            <tr>
-              <td>2024. 08. 13</td>
-              <td>JLPT N2</td>
-              <td>The Japan Foundation</td>
-            </tr>
-            <tr>
-              <td>2025. 01. 26</td>
-              <td>TOEIC, 925</td>
-              <td>Korea TOEIC Committee</td>
-            </tr>
-            <tr>
-              <td>2025. 05. 24</td>
-              <td>TOPCIT, 677</td>
-              <td>Ministry of Science and ICT, Korea</td>
-            </tr>
-          </table>
-        </div>
-      </SectionBlock>
-      <SectionBlock title="PAPERS///">
-        <div class="container-main pt-6 pb-6">
-          <PaperCard
-            href="https://www.researchgate.net/publication/400239914_Automated_Korean-English_Bilingual_Highlighted_Text_Extraction_Using_HSV_Segmentation"
-          >
-            The 25th International Conference on Electronics, Information, and
-            Communication (ICEIC 2026) - Macau, China 2026 (ICEIC 2026)
-            (Published) “Automated Korean-English Bilingual Highlighted Text
-            Extraction Using HSV Segmentation” SeungJun Lee, Yeongjin Kim et.al
-            8
-          </PaperCard>
-          <PaperCard disabled>
-            The 13th IEEE International Conference on Consumer Electronics –
-            Taoyuan, Taiwan 2026 (IEEE ICCE-TW 2026) (Accepted)
-            “Illumination-Adaptive Part Detection for Automated FDM 3D Printing
-            Dataset Collection” Seungyun Choi, Seungjun Lee, Yeongjin Kim,
-            Namjoon Kim, Hyukjae Lee
-          </PaperCard>
-        </div>
-      </SectionBlock>
-      <SectionBlock title="CLUBS///">
-        <div class="container-main pt-6 pb-6 overflow-x-auto">
-          <table class="info-table w-full">
-            <tr class="font-shippori text-xl flex-1">
-              <th>Period</th>
-              <th>Name</th>
-              <th>Topic</th>
-              <th>Role</th>
-            </tr>
-            <tr class="flex-1">
-              <td>2021. 03 - 2021. 08</td>
-              <td>
-                <a href="https://www.instagram.com/igrus_inha/">IGRUS</a>
-              </td>
-              <td>SW Dev</td>
-              <td>Member</td>
-            </tr>
-            <tr>
-              <td>2024. 03 - 2024. 08</td>
-              <td>
-                <a href="https://www.instagram.com/igrus_inha/">IGRUS</a>
-              </td>
-              <td>SW Dev</td>
-              <td>Member</td>
-            </tr>
-            <tr>
-              <td>2024. 03 - 2025. 08</td>
-              <td>
-                <a
-                  href="https://jelly-locust-cea.notion.site/Seeds-1beac07ca4e98043bbe9e81ccf29e806"
-                  >Seeds</a
-                >
-              </td>
-              <td>Web Dev</td>
-              <td>Staff</td>
-            </tr>
-          </table>
-        </div>
-      </SectionBlock>
-      <SectionBlock title="AWARDS///">
-        <div class="container-main pt-6 pb-6 overflow-x-auto">
-          <table class="info-table award-table w-full">
-            <colgroup>
-              <col />
-              <col style="width: 50%" />
-              <col style="width: 50%" />
-            </colgroup>
-            <tr class="font-shippori text-xl">
-              <th>Date</th>
-              <th>Name</th>
-              <th>Award</th>
-            </tr>
-            <tr>
-              <td>2023. 11. 12</td>
-              <td>
-                Chung-Ang University x SEOULLAB PARTNERS '2023<br />START-LAB
-              </td>
-              <td>Grand Prize</td>
-            </tr>
-            <tr>
-              <td>2025. 01. 18</td>
-              <td> 2025 GreenTech Globalthon </td>
-              <td>Best Startup Pitch Award</td>
-            </tr>
-            <tr>
-              <td>2025. 11. 19</td>
-              <td>
-                2025 Hanium Dream-Up Contest<br />(Creative Challenge Track)
-              </td>
-              <td>
-                Encouragement Award, Final Evaluation<br />(Selected as
-                Outstanding Project in<br /> Preliminary Round)
-              </td>
-            </tr>
-            <tr>
-              <td>2025. 11. 12</td>
-              <td>
-                <a
-                  href="https://www.chuo-u.ac.jp/academics/faculties/advanced/departments/infotech/news/2026/01/83597/"
-                >
-                  Software Project on CG, VR and Image Processing Presentation
-                </a>
-              </td>
-              <td>Grand Prize</td>
-            </tr>
-          </table>
-        </div>
-      </SectionBlock>
+
+      <AboutEducation title="EDUCATION///" cards={educationCards} />
+
+      <AboutTableSection
+        title="CERTIFICATES///"
+        tableClass="info-table w-full"
+        headers={certHeaders}
+        rows={certRows}
+        headerClass="font-shippori text-xl"
+      />
+
+      <AboutPapers title="PAPERS///" papers={papers} />
+
+      <AboutTableSection
+        title="CLUBS///"
+        tableClass="info-table w-full"
+        headers={clubHeaders}
+        rows={clubRows}
+        headerClass="font-shippori text-xl flex-1"
+        firstRowClass="flex-1"
+      />
+
+      <AboutTableSection
+        title="AWARDS///"
+        tableClass="info-table award-table w-full"
+        headers={awardHeaders}
+        rows={awardRows}
+        colgroup={["", "50%", "50%"]}
+        headerClass="font-shippori text-xl"
+      />
     </section>
   </main>
 </Layout>

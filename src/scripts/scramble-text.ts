@@ -94,12 +94,12 @@ function initViewport(el: HTMLElement, original: string) {
 
 function init() {
   document.querySelectorAll<HTMLElement>("[data-scramble]").forEach((el) => {
-    const original = el.dataset.scramble || el.textContent || "";
+    const text = el.dataset.scramble || el.textContent || "";
 
     if (el.closest("header")) {
-      initHover(el, original);
+      initHover(el, text);
     } else {
-      initViewport(el, original);
+      initViewport(el, text);
     }
   });
 }

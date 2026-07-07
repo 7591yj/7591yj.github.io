@@ -1,8 +1,11 @@
+const HEADER_TRANSPARENT_CLASS = "header--transparent";
+const HEADER_SCROLLED_CLASS = "header--scrolled";
+
 let cleanupCurrent: (() => void) | null = null;
 
 function setHeaderTransparent(header: HTMLElement, transparent: boolean): void {
-  header.classList.toggle("header--transparent", transparent);
-  header.classList.toggle("header--scrolled", !transparent);
+  header.classList.toggle(HEADER_TRANSPARENT_CLASS, transparent);
+  header.classList.toggle(HEADER_SCROLLED_CLASS, !transparent);
 }
 
 function handleHeroIntersection(
