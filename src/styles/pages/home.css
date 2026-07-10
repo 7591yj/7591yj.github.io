@@ -157,6 +157,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1.5em;
   min-height: 1em;
   color: var(--color-text-primary);
   font-family: var(--font-shippori), serif;
@@ -171,12 +172,12 @@
 }
 
 .about-dossier__statement::before {
-  content: "“";
+  content: " “ ";
   transform: translateY(0.62em);
 }
 
 .about-dossier__statement::after {
-  content: "”";
+  content: " ” ";
   margin-top: 0.35em;
   transform: translateY(-0.22em);
 }
