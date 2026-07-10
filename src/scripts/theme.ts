@@ -2,7 +2,16 @@ const THEME_KEY = "theme";
 let isWatchingSystemPreference = false;
 
 export type Theme = "light" | "dark";
-export type ThemePreference = Theme | "system";
+type ThemePreference = Theme | "system";
+
+function shouldFollowSystemPreference(): boolean {
+  const stored = getStoredTheme();
+  return !stored || stored === "system";
+}
+
+function systemThemeFromEvent(event: MediaQueryListEvent): Theme {
+  return event.matches ? "dark" : "light";
+}
 
 function getSystemPreference(): Theme {
   if (typeof window === "undefined") return "light";
@@ -33,7 +42,7 @@ export function initTheme(): void {
   applyTheme(theme);
 }
 
-export function setTheme(preference: ThemePreference): void {
+function setTheme(preference: ThemePreference): void {
   if (preference === "system") {
     localStorage.removeItem(THEME_KEY);
     applyTheme(getSystemPreference());
@@ -41,10 +50,6 @@ export function setTheme(preference: ThemePreference): void {
     localStorage.setItem(THEME_KEY, preference);
     applyTheme(preference);
   }
-}
-
-export function getThemePreference(): ThemePreference {
-  return getStoredTheme() || "system";
 }
 
 export function getCurrentTheme(): Theme {
@@ -68,8 +73,8 @@ export function watchSystemPreference(callback?: (theme: Theme) => void): void {
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", (e: MediaQueryListEvent) => {
-      if (!getStoredTheme() || getStoredTheme() === "system") {
-        const theme = e.matches ? "dark" : "light";
+      if (shouldFollowSystemPreference()) {
+        const theme = systemThemeFromEvent(e);
         applyTheme(theme);
         callback?.(theme);
       }

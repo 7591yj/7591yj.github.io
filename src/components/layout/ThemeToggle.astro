@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">
+  <Icon class="icon-sun" name="carbon:light" />
+  <Icon class="icon-moon" name="carbon:moon" />
+</button>
+
+<style>
+  .theme-toggle {
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    color: var(--color-text-primary);
+  }
+
+  :global([data-theme="light"]) .icon-moon {
+    display: none;
+  }
+  :global([data-theme="dark"]) .icon-sun {
+    display: none;
+  }
+</style>
+
+<script>
+  import "./ThemeToggle.client.ts";
+</script>

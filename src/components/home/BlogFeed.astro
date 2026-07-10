@@ -1,0 +1,62 @@
+---
+import BlogFeedItem from "./BlogFeedItem.astro";
+import type { PostLike } from "./blogTypes";
+
+interface Props {
+  featuredPost: PostLike | undefined;
+  archivePosts: PostLike[];
+  now: number;
+  thirtyDays: number;
+}
+
+const { featuredPost, archivePosts, now, thirtyDays } = Astro.props;
+---
+
+<div class="blog-feed">
+  <div class="scanline-bg"></div>
+
+  <!-- Featured post -->
+  {
+    featuredPost && (
+      <div class="blog-featured">
+        <div class="blog-featured__badge">
+          <span>LATEST</span>
+        </div>
+        <div class="blog-featured__card">
+          <BlogFeedItem
+            post={featuredPost}
+            now={now}
+            thirtyDays={thirtyDays}
+            index={1}
+            delay={0}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  <!-- Archive divider -->
+  {
+    archivePosts.length > 0 && (
+      <div class="blog-divider">
+        <span class="blog-divider__label">ARCHIVE</span>
+        <span class="blog-divider__rule" />
+      </div>
+    )
+  }
+
+  <!-- Archive list -->
+  <div class="blog-archive">
+    {
+      archivePosts.map((post, i) => (
+        <BlogFeedItem
+          post={post}
+          now={now}
+          thirtyDays={thirtyDays}
+          index={i + 2}
+          delay={i + 1}
+        />
+      ))
+    }
+  </div>
+</div>

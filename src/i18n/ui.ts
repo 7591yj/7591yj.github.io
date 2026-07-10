@@ -1,7 +1,7 @@
-export const locales = ["en", "ja"] as const;
+const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
 
-export const ui = {
+const ui = {
   en: {
     "nav.home": "Home",
     "nav.projects": "Projects",

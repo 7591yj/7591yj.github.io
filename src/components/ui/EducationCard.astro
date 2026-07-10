@@ -1,0 +1,48 @@
+---
+import Backdrop from "./Backdrop.astro";
+import Content from "./Content.astro";
+import "./EducationCard.css";
+
+interface Props {
+  src: string;
+  institution: string;
+  location: string;
+  position: string;
+  period: string;
+  major: string;
+  majorLabel?: string;
+  majorLabelAfter?: boolean;
+  href?: string;
+  size?: string;
+  class?: string;
+}
+
+const {
+  src,
+  institution,
+  location,
+  position,
+  period,
+  major,
+  majorLabel = "Major in",
+  majorLabelAfter = false,
+  href,
+  size,
+  class: className,
+} = Astro.props;
+
+const Tag = href ? "a" : "div";
+---
+
+<Tag class:list={["edu-card", className]} href={href}>
+  <Backdrop src={src} size={size} />
+  <Content
+    institution={institution}
+    location={location}
+    position={position}
+    period={period}
+    major={major}
+    majorLabel={majorLabel}
+    majorLabelAfter={majorLabelAfter}
+  />
+</Tag>

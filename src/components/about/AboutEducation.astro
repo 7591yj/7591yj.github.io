@@ -1,0 +1,47 @@
+---
+import SectionBlock from "../ui/SectionBlock.astro";
+import EducationCard from "../ui/EducationCard.astro";
+
+interface Card {
+  href: string;
+  src: string;
+  institution: string;
+  location: string;
+  position: string;
+  period: string;
+  major: string;
+  majorLabel?: string;
+  majorLabelAfter?: boolean;
+  class?: string;
+  size?: string;
+}
+
+interface Props {
+  title: string;
+  cards: Card[];
+}
+
+const { title, cards } = Astro.props;
+---
+
+<SectionBlock title={title}>
+  <div class="gallery">
+    {
+      cards.map((c) => (
+        <EducationCard
+          href={c.href}
+          src={c.src}
+          institution={c.institution}
+          location={c.location}
+          position={c.position}
+          period={c.period}
+          major={c.major}
+          majorLabel={c.majorLabel}
+          majorLabelAfter={c.majorLabelAfter}
+          class={c.class}
+          size={c.size}
+        />
+      ))
+    }
+  </div>
+</SectionBlock>

@@ -1,0 +1,27 @@
+---
+import type { AboutTableCell } from "../../types/aboutTable";
+
+interface Props {
+  cell: AboutTableCell;
+}
+
+const { cell } = Astro.props;
+const isStructured = typeof cell !== "string";
+---
+
+<td>
+  {
+    !isStructured ? (
+      cell
+    ) : cell.type === "link" ? (
+      <a href={cell.href}>{cell.label}</a>
+    ) : (
+      cell.lines.map((line, index) => (
+        <>
+          {index > 0 && <br />}
+          {line}
+        </>
+      ))
+    )
+  }
+</td>

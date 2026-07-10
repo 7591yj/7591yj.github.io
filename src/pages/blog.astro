@@ -1,8 +1,9 @@
 ---
 import "../styles/pages/blog.css";
 import Layout from "../layouts/Layout.astro";
-import PageHeading from "../components/PageHeading.astro";
-import BlogPostCard from "../components/BlogPostCard.astro";
+import PageHeading from "../components/ui/PageHeading.astro";
+import BlogPostCard from "../components/blog/BlogPostCard.astro";
+import BlogTicker from "../components/blog/BlogTicker.astro";
 import { SITE_NAME } from "../consts";
 import { getCollection } from "astro:content";
 
@@ -43,30 +44,7 @@ const latestDate =
 
     <section class="feed-section">
       <!-- ticker strip -->
-      <div class="ticker" aria-hidden="true">
-        <div class="ticker__track">
-          {
-            [0, 1].map(() => (
-              <span class="ticker__segment">
-                {[0, 1, 2].map(() => (
-                  <>
-                    <span>SIGNAL CLEAR</span>
-                    <span class="ticker__dot" />
-                    <span>{sorted.length} ENTRIES LOADED</span>
-                    <span class="ticker__dot" />
-                    <span>LATEST {latestDate}</span>
-                    <span class="ticker__dot" />
-                    <span>SYS.BLOG ACTIVE</span>
-                    <span class="ticker__dot" />
-                    <span>TRANSMISSION OK</span>
-                    <span class="ticker__dot" />
-                  </>
-                ))}
-              </span>
-            ))
-          }
-        </div>
-      </div>
+      <BlogTicker entryCount={sorted.length} latestDate={latestDate} />
 
       <!-- article feed -->
       <div class="feed">

@@ -1,0 +1,37 @@
+---
+import "./TableOfContents.css";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const minDepth = Math.min(...headings.map((h) => h.depth));
+---
+
+<nav class="toc" aria-label="Table of contents">
+  <span class="toc__label">CONTENTS</span>
+  <ul class="toc__list">
+    {
+      headings.map((h) => (
+        <li class="toc__item" style={`--indent: ${h.depth - minDepth}`}>
+          <a class="toc__link" href={`#${h.slug}`} data-slug={h.slug}>
+            {h.text}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  import { initToc } from "./tableOfContentsScript";
+  initToc();
+  document.addEventListener("astro:page-load", initToc);
+</script>

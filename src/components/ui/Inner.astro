@@ -1,0 +1,39 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  [key: string]: unknown;
+}
+
+const { src, alt = "", ...rest } = Astro.props;
+---
+
+<div class="cut-img__inner">
+  <img src={src} alt={alt} {...rest} />
+</div>
+
+<style>
+  .cut-img__inner {
+    position: relative;
+    margin: var(--border-w);
+    clip-path: var(--clip);
+    background: var(--color-bg-secondary);
+    overflow: hidden;
+    height: calc(100% - 2 * var(--border-w));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cut-img__inner img {
+    display: block;
+    width: var(--img-size);
+    height: var(--img-size);
+    object-fit: scale-down;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  :global(.cut-img:hover) .cut-img__inner img {
+    transform: scale(1.1);
+  }
+</style>

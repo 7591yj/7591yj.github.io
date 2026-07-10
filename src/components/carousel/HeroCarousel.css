@@ -407,7 +407,11 @@
 }
 
 .hero-carousel__motion-control--paused::before {
-  background: color-mix(in srgb, var(--color-border) 75%, var(--color-bg-tertiary));
+  background: color-mix(
+    in srgb,
+    var(--color-border) 75%,
+    var(--color-bg-tertiary)
+  );
 }
 
 .hero-carousel__motion-control--paused::after {
@@ -444,7 +448,8 @@
 }
 
 .hero-carousel__motion-control--paused:hover .hero-carousel__motion-tooltip,
-.hero-carousel__motion-control--paused:focus-visible .hero-carousel__motion-tooltip {
+.hero-carousel__motion-control--paused:focus-visible
+  .hero-carousel__motion-tooltip {
   opacity: 1;
   transform: translateY(0);
 }

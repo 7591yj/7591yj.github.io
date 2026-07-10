@@ -1,0 +1,16 @@
+---
+interface Props {
+  src: string;
+  size?: string;
+}
+
+const { src, size } = Astro.props;
+---
+
+<div class="edu-card__backdrop">
+  <div
+    class="edu-card__bg"
+    style={`background-image: url('${src}');${size ? ` background-size: ${size}` : ""}`}
+  >
+  </div>
+</div>

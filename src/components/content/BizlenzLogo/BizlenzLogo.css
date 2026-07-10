@@ -1,0 +1,24 @@
+.bizlenz-logo-wrap {
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+.bizlenz-logo-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bizlenz-bar {
+  fill-opacity: 0;
+  stroke-opacity: 1;
+  stroke: currentColor;
+  stroke-width: 10;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.bizlenz-swoosh {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
