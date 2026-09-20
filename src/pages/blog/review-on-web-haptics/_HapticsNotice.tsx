@@ -66,6 +66,6 @@ export default function HapticsNotice() {
     if (shouldPlaySound) haptics.current?.trigger("nudge");
   };
 
-  if (supported !== false) return null;
+  if (supported !== false) return <></>;
   return <HapticsNoticeView soundOn={soundOn} onToggle={toggle} />;
 }
