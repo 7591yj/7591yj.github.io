@@ -41,6 +41,12 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      watch: {
+        // direnv links into /nix/store, which creates unnecessary listeners.
+        ignored: ["**/.direnv", "**/.direnv/**"],
+      },
+    },
   },
   fonts: [
     {

@@ -56,14 +56,13 @@ src/
 | `pnpm lint`      | Run ESLint                                          |
 | `pnpm typecheck` | Run Astro type checks                               |
 | `pnpm check`     | Run formatting, lint, and type checks               |
-| `./dev.sh`       | Launch tmux session (dev server + nvim + shell)     |
 
 ### Recommended Workflow
 
 1. Ensure Nix flakes and direnv are available on your system.
 2. Run `direnv allow` in the repo root.
 3. Run `pnpm install`.
-4. Use `./dev.sh` to attach or create the tmux workspace.
+4. Run `pnpm dev` to start the development server.
 
 ## Fonts
 
