@@ -41,6 +41,18 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      watch: {
+        // These local Nix directories link into /nix/store; watching them
+        // creates hundreds of thousands of unnecessary file listeners.
+        ignored: [
+          "**/.direnv",
+          "**/.direnv/**",
+          "**/.devenv",
+          "**/.devenv/**",
+        ],
+      },
+    },
   },
   fonts: [
     {
