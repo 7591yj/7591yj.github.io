@@ -59,6 +59,10 @@
   transition: opacity 0.15s ease;
 }
 
+.prose .heading-anchor::after {
+  content: "#";
+}
+
 .prose h3:hover .heading-anchor,
 .prose h4:hover .heading-anchor,
 .prose h5:hover .heading-anchor {

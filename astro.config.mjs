@@ -1,13 +1,11 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
-import { unified } from "@astrojs/markdown-remark";
+import { satteri } from "@astrojs/markdown-satteri";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import react from "@astrojs/react";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { headingAnchors } from "./src/lib/headingAnchors.ts";
 
 import icon from "astro-icon";
 
@@ -20,24 +18,7 @@ export default defineConfig({
     defaultLocale: "en",
   },
   markdown: {
-    processor: unified({
-      remarkPlugins: [remarkGfm],
-      rehypePlugins: [
-        rehypeSlug,
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: "append",
-            content: { type: "text", value: " #" },
-            properties: {
-              class: "heading-anchor",
-              ariaHidden: true,
-              tabIndex: -1,
-            },
-          },
-        ],
-      ],
-    }),
+    processor: satteri({ hastPlugins: [headingAnchors] }),
     shikiConfig: {
       themes: {
         light: "github-light",
