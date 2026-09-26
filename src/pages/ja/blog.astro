@@ -5,18 +5,12 @@ import PageHeading from "../../components/ui/PageHeading.astro";
 import BlogPostCard from "../../components/blog/BlogPostCard.astro";
 import BlogTicker from "../../components/blog/BlogTicker.astro";
 import { SITE_NAME } from "../../consts";
-import { getCollection } from "astro:content";
+import { getBlogPosts } from "../../lib/content";
 
-const posts = (await getCollection("blogJa")).map((entry) => ({
-  frontmatter: entry.data,
-  url: `/ja/blog/${entry.id}`,
+const sorted = (await getBlogPosts("ja")).map((post) => ({
+  frontmatter: post.data,
+  url: post.url,
 }));
-
-const sorted = posts.sort(
-  (a, b) =>
-    new Date(b.frontmatter.date).getTime() -
-    new Date(a.frontmatter.date).getTime(),
-);
 
 const now = Date.now();
 const thirtyDays = 30 * 24 * 60 * 60 * 1000;
@@ -43,10 +37,8 @@ const latestDate =
     </section>
 
     <section class="feed-section">
-      <!-- ticker strip -->
       <BlogTicker entryCount={sorted.length} latestDate={latestDate} />
 
-      <!-- article feed -->
       <div class="feed">
         <div class="dot-grid"></div>
         <div class="feed__list">

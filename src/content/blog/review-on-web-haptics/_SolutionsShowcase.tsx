@@ -5,8 +5,6 @@ import { KEYPRESS, SWITCH, PING, CONFIRM, TICK } from "../../../haptics";
 
 type ShowcaseKind = "responsive" | "frameworks" | "spa" | "pwa";
 
-// --- Responsive ---
-
 function ResponsiveToggle({
   desktop,
   onChange,
@@ -92,8 +90,6 @@ function ResponsiveShowcase() {
   );
 }
 
-// --- Frameworks ---
-
 const DENSITY_LABELS = ["Compact", "Balanced", "Spacious"] as const;
 
 function FrameworksShowcase() {
@@ -145,8 +141,6 @@ function FrameworksShowcase() {
     </section>
   );
 }
-
-// --- SPA ---
 
 const routes = ["Feed", "Profile", "Settings"] as const;
 type Route = (typeof routes)[number];
@@ -272,8 +266,6 @@ function SpaShowcase() {
     </section>
   );
 }
-
-// --- PWA ---
 
 const fmtTime = (d: Date) =>
   d.toLocaleTimeString([], {
@@ -432,8 +424,6 @@ function PwaShowcase() {
     </section>
   );
 }
-
-// --- Dispatcher ---
 
 export default function SolutionsShowcase({ kind }: { kind: ShowcaseKind }) {
   if (kind === "responsive") return <ResponsiveShowcase />;

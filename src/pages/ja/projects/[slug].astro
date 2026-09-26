@@ -1,0 +1,10 @@
+---
+import ProjectDetail from "@/layouts/ProjectDetail.astro";
+import { getProjectPaths } from "@/lib/content";
+
+export function getStaticPaths() {
+  return getProjectPaths("ja");
+}
+---
+
+<ProjectDetail {...Astro.props} />

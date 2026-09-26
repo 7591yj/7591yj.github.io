@@ -3,18 +3,18 @@ import DetailLayout from "./DetailLayout.astro";
 import { SITE_NAME } from "../consts";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../i18n/ui";
+import { render } from "astro:content";
+import type { BlogPostEntry } from "../lib/content";
+import { mdxComponents } from "../components/content/mdxComponents";
 
-interface Frontmatter {
-  title: string;
-  date: string;
-  description?: string;
-  tags?: string[];
+interface Props {
+  entry: BlogPostEntry;
 }
 
-const { title, date, description, tags } = Astro.props
-  .frontmatter as Frontmatter;
-const headings = Astro.props.headings ?? [];
-const locale = Astro.currentLocale ?? "en";
+const { entry } = Astro.props;
+const { title, date, description, tags } = entry.data;
+const { locale } = entry;
+const { Content, headings } = await render(entry.source);
 const t = useTranslations(locale);
 
 function formatDate(dateStr: string) {
@@ -54,7 +54,7 @@ function formatDate(dateStr: string) {
     }
   </div>
 
-  <slot />
+  <Content components={mdxComponents} />
 </DetailLayout>
 
 <style>

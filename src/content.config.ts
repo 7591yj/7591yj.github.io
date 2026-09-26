@@ -1,6 +1,9 @@
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";
+import { defaultLocale } from "./i18n/ui";
+
+// Default-locale entries own shared metadata; translations contain only localized fields.
 
 const postSchema = z.object({
   title: z.string(),
@@ -12,6 +15,7 @@ const postSchema = z.object({
 const projectSchema = z.object({
   title: z.string(),
   subtitle: z.string(),
+  year: z.number(),
   status: z.enum([
     "released",
     "in development",
@@ -29,40 +33,49 @@ const projectSchema = z.object({
   link: z.string().optional(),
 });
 
-const blog = defineCollection({
-  loader: glob({
-    pattern: "**/*.mdx",
-    base: "./src/pages/blog",
-    retainBody: false,
-  }),
-  schema: postSchema,
+const postTranslationSchema = z.strictObject({
+  title: z.string(),
+  description: z.string().optional(),
 });
 
-const blogJa = defineCollection({
-  loader: glob({
-    pattern: "**/*.mdx",
-    base: "./src/pages/ja/blog",
-    retainBody: false,
-  }),
-  schema: postSchema,
+const projectTranslationSchema = z.strictObject({
+  title: z.string(),
+  subtitle: z.string(),
+  desc: z.array(z.string()).optional(),
 });
 
-const projects = defineCollection({
-  loader: glob({
-    pattern: "**/*.mdx",
-    base: "./src/pages/projects",
+function source(section: string) {
+  return glob({
+    pattern: `*/${defaultLocale}.mdx`,
+    base: `./src/content/${section}`,
+    generateId: ({ entry }) => entry.split("/")[0],
     retainBody: false,
-  }),
-  schema: projectSchema,
-});
+    deferRender: true,
+  });
+}
 
-const projectsJa = defineCollection({
-  loader: glob({
-    pattern: "**/*.mdx",
-    base: "./src/pages/ja/projects",
+function translations(section: string) {
+  return glob({
+    pattern: ["*/*.mdx", `!*/${defaultLocale}.mdx`],
+    base: `./src/content/${section}`,
+    generateId: ({ entry }) => entry.replace(/\.mdx$/, ""),
     retainBody: false,
-  }),
-  schema: projectSchema,
-});
+    deferRender: true,
+  });
+}
 
-export const collections = { blog, blogJa, projects, projectsJa };
+export const collections = {
+  blog: defineCollection({ loader: source("blog"), schema: postSchema }),
+  blogTranslations: defineCollection({
+    loader: translations("blog"),
+    schema: postTranslationSchema,
+  }),
+  projects: defineCollection({
+    loader: source("projects"),
+    schema: projectSchema,
+  }),
+  projectTranslations: defineCollection({
+    loader: translations("projects"),
+    schema: projectTranslationSchema,
+  }),
+};

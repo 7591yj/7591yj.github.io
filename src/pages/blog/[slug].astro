@@ -1,0 +1,10 @@
+---
+import BlogDetail from "@/layouts/BlogDetail.astro";
+import { getBlogPaths } from "@/lib/content";
+
+export function getStaticPaths() {
+  return getBlogPaths("en");
+}
+---
+
+<BlogDetail {...Astro.props} />

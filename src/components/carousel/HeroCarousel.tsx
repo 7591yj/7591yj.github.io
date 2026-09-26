@@ -39,7 +39,10 @@ function heroMotionOptions(reduceMotion: boolean) {
     : {
         effect: "fade" as const,
         speed: 300,
-        autoplay: { delay: HERO_AUTOPLAY_DELAY_MS, disableOnInteraction: false },
+        autoplay: {
+          delay: HERO_AUTOPLAY_DELAY_MS,
+          disableOnInteraction: false,
+        },
       };
 }
 
@@ -553,7 +556,9 @@ function initHeroSwiperEffect(
       },
       loop: true,
     });
-    instance.on(SLIDE_CHANGE_EVENT, () => setActiveIndex(instance?.realIndex ?? 0));
+    instance.on(SLIDE_CHANGE_EVENT, () =>
+      setActiveIndex(instance?.realIndex ?? 0),
+    );
     swiperRef.current = instance;
   })();
 
