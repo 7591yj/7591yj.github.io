@@ -13,6 +13,11 @@ import icon from "astro-icon";
 export default defineConfig({
   site: "https://7591yj.com",
   prefetch: false,
+  experimental: {
+    // Content routes return a `cacheKey`; unchanged pages are skipped as long
+    // as node_modules/.astro survives between builds.
+    incrementalBuild: true,
+  },
   i18n: {
     locales: ["en", "ja", "ko"],
     defaultLocale: "en",

@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getBlogPosts, getProjects } from "../../lib/content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import "../../styles/pages/home.css";
 import Layout from "../../layouts/Layout.astro";
@@ -8,22 +8,14 @@ import HomeBlogSection from "../../components/home/HomeBlogSection.astro";
 import HomeAboutDossier from "../../components/home/HomeAboutDossier.astro";
 import { useTranslations } from "../../i18n/ui";
 
-const posts = (await getCollection("blogJa")).map((entry) => ({
-  frontmatter: entry.data,
-  url: `/ja/blog/${entry.id}`,
-}));
-const latestPosts = posts
-  .sort(
-    (a, b) =>
-      new Date(b.frontmatter.date ?? 0).getTime() -
-      new Date(a.frontmatter.date ?? 0).getTime(),
-  )
-  .slice(0, 3);
+const latestPosts = (await getBlogPosts("ja"))
+  .slice(0, 3)
+  .map((post) => ({ frontmatter: post.data, url: post.url }));
 
-const softwareProjects = (await getCollection("projectsJa"))
+const softwareProjects = (await getProjects("ja"))
   .map((entry) => ({
     frontmatter: entry.data,
-    slug: entry.id,
+    url: entry.url,
   }))
   .filter((p) => p.frontmatter.category === "software");
 
@@ -45,7 +37,7 @@ const slides = sortedProjects.map((p) => ({
     tech: p.frontmatter.tech,
     status: p.frontmatter.status,
     current: p.frontmatter.current,
-    href: getRelativeLocaleUrl("ja", `/projects/${p.slug}`),
+    href: p.url,
   },
 }));
 

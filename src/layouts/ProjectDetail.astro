@@ -3,20 +3,19 @@ import DetailLayout from "./DetailLayout.astro";
 import { SITE_NAME } from "../consts";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../i18n/ui";
+import { render } from "astro:content";
 import type { ProjectStatus } from "../types";
+import type { ProjectEntry } from "../lib/content";
+import { mdxComponents } from "../components/content/mdxComponents";
 
-interface Frontmatter {
-  title: string;
-  subtitle?: string;
-  year?: number;
-  status?: ProjectStatus;
-  link?: string;
+interface Props {
+  entry: ProjectEntry;
 }
 
-const { title, subtitle, year, status, link } = Astro.props
-  .frontmatter as Frontmatter;
-const headings = Astro.props.headings ?? [];
-const locale = Astro.currentLocale ?? "en";
+const { entry } = Astro.props;
+const { title, subtitle, year, status, link } = entry.data;
+const { locale } = entry;
+const { Content, headings } = await render(entry.source);
 const t = useTranslations(locale);
 
 const statusLabels: Record<ProjectStatus, string> = {
@@ -73,5 +72,5 @@ const statusLabels: Record<ProjectStatus, string> = {
     }
   </div>
 
-  <slot />
+  <Content components={mdxComponents} />
 </DetailLayout>

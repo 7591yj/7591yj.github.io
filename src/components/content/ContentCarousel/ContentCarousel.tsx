@@ -26,7 +26,10 @@ function contentMotionOptions(reduceMotion: boolean) {
     ? { speed: 0, autoplay: false as const }
     : {
         speed: 300,
-        autoplay: { delay: CONTENT_AUTOPLAY_DELAY_MS, disableOnInteraction: false },
+        autoplay: {
+          delay: CONTENT_AUTOPLAY_DELAY_MS,
+          disableOnInteraction: false,
+        },
       };
 }
 

@@ -6,23 +6,23 @@ import ProjectGraph from "../components/graph/ProjectGraph";
 import { SITE_NAME } from "../consts";
 import type { Project } from "../types";
 import { useTranslations } from "../i18n/ui";
-import { getCollection } from "astro:content";
+import { getProjects } from "../lib/content";
 
 const t = useTranslations(Astro.currentLocale);
 
-const allProjects: Project[] = (await getCollection("projects")).map(
-  (entry) => ({
-    title: entry.data.title,
-    subtitle: entry.data.subtitle,
-    status: entry.data.status,
-    desc: entry.data.desc,
-    tech: entry.data.tech,
-    tags: entry.data.tags,
-    images: entry.data.images,
-    current: entry.data.current,
-    category: entry.data.category,
-    slug: entry.id,
-    href: entry.data.link,
+const allProjects: Project[] = (await getProjects("en")).map(
+  ({ slug, data }) => ({
+    title: data.title,
+    subtitle: data.subtitle,
+    status: data.status,
+    desc: data.desc,
+    tech: data.tech,
+    tags: data.tags,
+    images: data.images,
+    current: data.current,
+    category: data.category,
+    slug,
+    href: data.link,
   }),
 );
 ---

@@ -10,7 +10,7 @@ export const headingAnchors = () => {
   return defineHastPlugin({
     name: "heading-anchors",
     element: {
-      filter: ["h1", "h2","h3", "h4", "h5", "h6"],
+      filter: ["h1", "h2", "h3", "h4", "h5", "h6"],
       visit(node, ctx) {
         const existingId = node.properties?.id;
         const id =
