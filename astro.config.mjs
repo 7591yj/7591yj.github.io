@@ -43,14 +43,8 @@ export default defineConfig({
     plugins: [tailwindcss()],
     server: {
       watch: {
-        // These local Nix directories link into /nix/store; watching them
-        // creates hundreds of thousands of unnecessary file listeners.
-        ignored: [
-          "**/.direnv",
-          "**/.direnv/**",
-          "**/.devenv",
-          "**/.devenv/**",
-        ],
+        // direnv links into /nix/store, which creates unnecessary listeners.
+        ignored: ["**/.direnv", "**/.direnv/**"],
       },
     },
   },
