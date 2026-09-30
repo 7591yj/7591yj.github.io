@@ -51,11 +51,6 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Shippori Mincho",
-      cssVariable: "--font-shippori",
-    },
-    {
-      provider: fontProviders.google(),
       name: "Archivo",
       cssVariable: "--font-archivo",
       weights: ["400", "500", "600", "700", "800"],

@@ -3,17 +3,6 @@ export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
 const en = {
-  "nav.home": "Home",
-  "nav.projects": "Projects",
-  "nav.blog": "Blog",
-  "nav.about": "About",
-  "404.back": "Back to Home",
-  "500.back": "Back to Home",
-  "projects.selectTech": "Select tech…",
-  "projects.techSelected": "{count} selected",
-  "projects.clear": "Clear",
-  "detail.backBlog": "Back to blog",
-  "detail.backProjects": "Back to projects",
   "site.description":
     "Portfolio and blog of 7591yj - software development, design, and research.",
   "shell.tokyo": "Tokyo",
@@ -56,17 +45,6 @@ const en = {
 export type UiKey = keyof typeof en;
 
 const ja: Partial<Record<UiKey, string>> = {
-  "nav.home": "ホーム",
-  "nav.projects": "プロジェクト",
-  "nav.blog": "ブログ",
-  "nav.about": "プロフィール",
-  "404.back": "ホームへ戻る",
-  "500.back": "ホームへ戻る",
-  "projects.selectTech": "技術を選択…",
-  "projects.techSelected": "{count}件選択",
-  "projects.clear": "クリア",
-  "detail.backBlog": "ブログへ戻る",
-  "detail.backProjects": "プロジェクトへ戻る",
   "site.description":
     "7591yjのポートフォリオとブログ - ソフトウェア開発、デザイン、リサーチ",
   "work.project": "プロジェクト",
