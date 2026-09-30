@@ -308,9 +308,7 @@ function PwaControls({
       <button onClick={onFetch} disabled={offline}>
         Fetch update
       </button>
-      <button className={offline ? "is-active" : ""} onClick={onToggle}>
-        {toggleLabel(offline)}
-      </button>
+      <button onClick={onToggle}>{toggleLabel(offline)}</button>
     </div>
   );
 }
