@@ -167,7 +167,8 @@ function ContentBar({
   return (
     <div className="content-carousel__bar">
       <span className="content-carousel__counter">
-        {activeIndex} / {total}
+        <b>{String(activeIndex).padStart(2, "0")}</b> /{" "}
+        {String(total).padStart(2, "0")}
       </span>
       <div className="content-carousel__controls">
         <ContentPlayButton

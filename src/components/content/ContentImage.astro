@@ -20,20 +20,26 @@ const sizeMap: Record<string, string> = {
   class={`content-image content-image--${size}`}
   style={`max-width: ${sizeMap[size]}`}
 >
-  <img src={src} alt={alt} class="content-image__img" />
+  <img
+    src={src}
+    alt={alt}
+    class="content-image__img"
+    loading="lazy"
+    decoding="async"
+  />
 </div>
 
 <style>
   .content-image {
-    border: 1px solid var(--color-border);
-    margin: 1.5rem auto;
+    margin: 2rem auto;
     overflow: hidden;
+    border-radius: 0.375rem;
     background: var(--color-bg-secondary);
   }
 
   .content-image__img {
-    width: 100%;
     display: block;
+    width: 100%;
     object-fit: contain;
   }
 </style>
