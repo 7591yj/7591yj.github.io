@@ -11,6 +11,15 @@ import icon from "astro-icon";
 
 export default defineConfig({
   site: "https://7591yj.com",
+  image: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "7591yj.x02.me",
+        pathname: "/i/**",
+      },
+    ],
+  },
   prefetch: false,
   redirects: {
     "/projects": "/",
