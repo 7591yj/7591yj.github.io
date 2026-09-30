@@ -1,0 +1,105 @@
+---
+import Shell from "../../layouts/Shell.astro";
+import { getProfile, profileLinks } from "../../lib/profile";
+import { useTranslations, type Locale } from "../../i18n/ui";
+import { SITE_NAME } from "../../consts";
+import "../ui/interactive-list.css";
+import "./profile.css";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const profile = getProfile(locale);
+---
+
+<Shell active="about" title={`${SITE_NAME} | ${t("about.title")}`}>
+  <main class="profile">
+    <header class="page-head">
+      <p class="kicker" data-reveal>
+        <span>{profile.kicker}</span>
+      </p>
+      <h1 class="display profile-statement" data-split>
+        {
+          profile.statement.map((run) =>
+            run.em ? <em>{run.text}</em> : run.text,
+          )
+        }
+      </h1>
+    </header>
+
+    <section class="profile-facts" data-reveal aria-label={t("about.title")}>
+      <dl>
+        {
+          profile.facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>
+                {fact.href ? <a href={fact.href}>{fact.value}</a> : fact.value}
+              </dd>
+            </div>
+          ))
+        }
+        <div>
+          <dt>{profile.linksLabel}</dt>
+          <dd class="profile-links">
+            {
+              profileLinks.map((link) => (
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                  {link.label} ↗
+                </a>
+              ))
+            }
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    {
+      profile.sections.map((section) => (
+        <section class="ledger" data-reveal>
+          <h2 class="kicker">
+            <span>{section.title}</span>
+            <span>{String(section.entries.length).padStart(2, "0")}</span>
+          </h2>
+          <ol class="interactive-list">
+            {section.entries.map((entry) => {
+              const Tag = entry.href ? "a" : "div";
+              return (
+                <li>
+                  <Tag
+                    class="ledger-row interactive-row"
+                    href={entry.href}
+                    target={entry.href ? "_blank" : undefined}
+                    rel={entry.href ? "noopener noreferrer" : undefined}
+                  >
+                    <span class="ledger-when">{entry.when}</span>
+                    <span class="ledger-what">
+                      <span class="ledger-title interactive-title">
+                        {entry.title}
+                        {entry.href && (
+                          <span class="interactive-arrow" aria-hidden="true">
+                            {" "}
+                            ↗
+                          </span>
+                        )}
+                      </span>
+                      {entry.detail && (
+                        <span class="ledger-detail">{entry.detail}</span>
+                      )}
+                    </span>
+                    {entry.aside && (
+                      <span class="ledger-aside">{entry.aside}</span>
+                    )}
+                  </Tag>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))
+    }
+  </main>
+</Shell>

@@ -1,0 +1,95 @@
+---
+import Shell from "../../layouts/Shell.astro";
+import { render } from "astro:content";
+import { getBlogPosts } from "../../lib/content";
+import { formatDate } from "../../lib/date";
+import { readingMinutes, outline } from "../../lib/reading";
+import { useTranslations, type Locale } from "../../i18n/ui";
+import { SITE_NAME } from "../../consts";
+import "../ui/interactive-list.css";
+import "./writing.css";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const posts = await getBlogPosts(locale);
+const pad = (n: number) => String(n).padStart(2, "0");
+const previews = await Promise.all(
+  posts.map(async (post) => ({
+    id: `post-${post.slug}`,
+    minutes: t("writing.minutes", { count: String(readingMinutes(post)) }),
+    sections: outline((await render(post.source)).headings),
+  })),
+);
+---
+
+<Shell active="writing" title={`${SITE_NAME} | ${t("writing.title")}`}>
+  <main class="writing">
+    <header class="writing-head page-head">
+      <h1 class="kicker" data-reveal>
+        <span>{t("writing.title")}</span>
+      </h1>
+    </header>
+
+    <ol class="writing-list interactive-list" data-writing-list>
+      {
+        posts.map((post, i) => (
+          <li data-reveal>
+            <a
+              class="interactive-row"
+              href={post.url}
+              data-plate={`post-${post.slug}`}
+            >
+              <span class="w-no">{pad(posts.length - i)}</span>
+              <span class="w-date">
+                <span>{formatDate(post.data.date)}</span>
+                <span>{previews[i].minutes}</span>
+              </span>
+              <span class="w-main">
+                <span class="w-title interactive-title">{post.data.title}</span>
+                {post.data.description && (
+                  <span class="w-desc">{post.data.description}</span>
+                )}
+              </span>
+              <span class="w-tags">
+                {(post.data.tags ?? []).map((tag) => (
+                  <span class="chip">{tag}</span>
+                ))}
+              </span>
+              <span class="w-arrow interactive-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+
+    {
+      previews.map((preview) => (
+        <template data-plate-tpl={preview.id}>
+          <p class="w-outline__head">
+            <span>{t("writing.contents")}</span>
+            <span>{preview.minutes}</span>
+          </p>
+          <ol class="w-outline">
+            {preview.sections.map((section, i) => (
+              <li>
+                <span>{pad(i + 1)}</span>
+                <span>{section}</span>
+              </li>
+            ))}
+          </ol>
+        </template>
+      ))
+    }
+    <div class="writing-preview" data-writing-preview aria-hidden="true"></div>
+  </main>
+</Shell>
+
+<script>
+  import "../../scripts/writing.ts";
+</script>

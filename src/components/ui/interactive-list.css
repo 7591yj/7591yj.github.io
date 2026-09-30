@@ -1,0 +1,40 @@
+.interactive-row {
+  transition: opacity var(--duration-slow) var(--ease-out-quart);
+}
+
+@media (hover: hover) {
+  .interactive-list:has(a.interactive-row:hover) .interactive-row:not(:hover) {
+    opacity: 0.35;
+  }
+}
+
+.interactive-title {
+  transition: translate 700ms var(--ease-out-expo);
+}
+
+.interactive-arrow {
+  display: inline-block;
+  color: var(--color-text-muted);
+  transition:
+    translate 700ms var(--ease-out-expo),
+    color var(--duration-normal);
+}
+
+.interactive-list a.interactive-row:hover .interactive-title,
+.interactive-list a.interactive-row:focus-visible .interactive-title {
+  translate: var(--interactive-title-shift, 1rem) 0;
+}
+
+.interactive-list a.interactive-row:hover .interactive-arrow,
+.interactive-list a.interactive-row:focus-visible .interactive-arrow {
+  translate: var(--interactive-arrow-shift, 0.4rem) 0;
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-row,
+  .interactive-title,
+  .interactive-arrow {
+    transition: none;
+  }
+}
