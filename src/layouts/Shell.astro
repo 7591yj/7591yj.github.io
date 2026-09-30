@@ -1,0 +1,145 @@
+---
+import { Font } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Head from "../components/layout/Head.astro";
+import ThemeToggle from "../components/layout/ThemeToggle.astro";
+import { SITE_NAME, SITE_DESCRIPTION, SITE_OG_IMAGE, AUTHOR } from "../consts";
+import { detectLocale, useTranslations, type Locale } from "../i18n/ui";
+import "../styles/global.css";
+import "../components/shell/shell.css";
+
+export type ShellSection = "work" | "writing" | "about";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishDate?: string;
+  active?: ShellSection;
+  /** Null sends the language switch to the locale root. */
+  alternate?: string | null;
+  noindex?: boolean;
+  fixed?: boolean;
+}
+
+const {
+  title = SITE_NAME,
+  description,
+  image,
+  type = "website",
+  publishDate,
+  active,
+  alternate,
+  noindex = false,
+  fixed = false,
+} = Astro.props;
+
+const locale = (Astro.currentLocale ??
+  detectLocale(Astro.url.pathname)) as Locale;
+const t = useTranslations(locale);
+const url = (path: string) => getRelativeLocaleUrl(locale, path);
+const otherLocale: Locale = locale === "en" ? "ja" : "en";
+const barePath =
+  Astro.url.pathname.replace(new RegExp(`^/${locale}(?=/|$)`), "") || "/";
+const alternateHref =
+  alternate === null
+    ? getRelativeLocaleUrl(otherLocale, "/")
+    : (alternate ?? getRelativeLocaleUrl(otherLocale, barePath));
+const metaDescription = description ?? t("site.description");
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image ?? SITE_OG_IMAGE, Astro.site).href;
+const jsonLd =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description: metaDescription,
+        url: canonicalUrl,
+        datePublished: publishDate,
+        author: { "@type": "Person", name: AUTHOR },
+        image: ogImage,
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        url: Astro.site,
+        name: SITE_NAME,
+        description: SITE_DESCRIPTION,
+      };
+
+const nav: { id: ShellSection; label: string; href: string }[] = [
+  { id: "work", label: t("shell.work"), href: url("/") },
+  { id: "writing", label: t("shell.writing"), href: url("/blog") },
+  { id: "about", label: t("shell.about"), href: url("/about") },
+];
+---
+
+<Font cssVariable="--font-archivo" preload />
+<html lang={locale} data-shell class:list={{ "shell-fixed": fixed }}>
+  <Head
+    title={title}
+    metaDescription={metaDescription}
+    canonicalUrl={canonicalUrl}
+    type={type}
+    ogImage={ogImage}
+    jsonLd={jsonLd}
+    robotsContent={noindex ? "noindex" : undefined}
+  />
+  <body>
+    <header class="shell-top">
+      <a class="shell-logo" href={url("/")}>7591yj</a>
+      <p class="shell-clock">
+        <span>{t("shell.tokyo")}</span>{" "}
+        <time data-shell-clock>--:--</time>{" "}
+        <span>GMT+9</span>
+      </p>
+      <div class="shell-meta">
+        <a
+          class="shell-lang"
+          href={alternateHref}
+          hreflang={otherLocale}
+          lang={otherLocale}>{otherLocale.toUpperCase()}</a
+        >
+        <ThemeToggle />
+      </div>
+    </header>
+
+    <slot />
+
+    <div class="shell-dock">
+      <div class="shell-dock__start"><slot name="dock-start" /></div>
+      <nav class="shell-pill shell-nav" aria-label="Main">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              aria-current={item.id === active ? "page" : undefined}
+            >
+              {item.id === active && (
+                <span class="shell-nav__dot" aria-hidden="true" />
+              )}
+              <span
+                class:list={[
+                  "shell-nav__label",
+                  `shell-nav__label--${item.id}`,
+                ]}
+              >
+                {item.label}
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+      <div class="shell-dock__end"><slot name="dock-end" /></div>
+    </div>
+
+    <div class="shell-target" data-shell-target aria-hidden="true"></div>
+
+    <script>
+      import "../scripts/shell/shell.ts";
+    </script>
+  </body>
+</html>

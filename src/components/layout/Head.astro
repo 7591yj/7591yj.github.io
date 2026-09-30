@@ -52,6 +52,80 @@ const {
 
   <script is:inline>
     (function () {
+      const KEY = "nav-dot";
+      function pill() {
+        const dot = document.querySelector(".shell-nav__dot");
+        const nav = dot && dot.closest(".shell-nav");
+        return (
+          dot && {
+            dot: dot.getBoundingClientRect(),
+            nav: nav.getBoundingClientRect(),
+          }
+        );
+      }
+      addEventListener("pageswap", function (event) {
+        try {
+          const p = event.viewTransition && pill();
+          if (p) {
+            sessionStorage.setItem(
+              KEY,
+              JSON.stringify({ x: p.dot.left - p.nav.left, w: p.dot.width }),
+            );
+          } else {
+            sessionStorage.removeItem(KEY);
+          }
+        } catch {
+          return;
+        }
+      });
+      addEventListener("pagereveal", function (event) {
+        let from;
+        try {
+          from = JSON.parse(sessionStorage.getItem(KEY));
+          sessionStorage.removeItem(KEY);
+        } catch {
+          return;
+        }
+        const vt = event.viewTransition;
+        if (!vt || !from) return;
+        vt.ready.then(function () {
+          const p = pill();
+          const group = "::view-transition-group(shell-nav-dot)";
+          if (!p) {
+            // shell.css paints this group even without an active tab.
+            document.documentElement.animate(
+              { opacity: [0, 0] },
+              { duration: 1e5, pseudoElement: group },
+            );
+            return;
+          }
+          if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          const y = p.dot.top;
+          const ease = getComputedStyle(document.documentElement)
+            .getPropertyValue("--ease-out-expo")
+            .trim();
+          document.documentElement.animate(
+            {
+              transform: [
+                "translate(" + (p.nav.left + from.x) + "px, " + y + "px)",
+                "translate(" + p.dot.left + "px, " + y + "px)",
+              ],
+              width: [from.w + "px", p.dot.width + "px"],
+              height: [p.dot.height + "px", p.dot.height + "px"],
+            },
+            {
+              duration: 520,
+              easing: ease || "cubic-bezier(0.16, 1, 0.3, 1)",
+              fill: "both",
+              pseudoElement: group,
+            },
+          );
+        });
+      });
+    })();
+  </script>
+  <script is:inline>
+    (function () {
       function resolveTheme() {
         const stored = localStorage.getItem("theme");
         const systemDark = window.matchMedia(
@@ -64,9 +138,27 @@ const {
           : stored;
       }
       document.documentElement.setAttribute("data-theme", resolveTheme());
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("js-motion");
+      }
       document.addEventListener("astro:after-swap", function () {
         document.documentElement.setAttribute("data-theme", resolveTheme());
       });
+      try {
+        const arrive = sessionStorage.getItem("arrive");
+        if (arrive) {
+          sessionStorage.removeItem("arrive");
+          document.documentElement.classList.add("arrive-dive");
+          if (arrive === "exact") {
+            // field.ts has already placed the plate and text.
+            window.addEventListener("pagereveal", function (event) {
+              if (event.viewTransition) event.viewTransition.skipTransition();
+            });
+          }
+        }
+      } catch {
+        return;
+      }
     })();
   </script>
 </head>

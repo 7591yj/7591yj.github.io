@@ -26,14 +26,28 @@ function getStoredTheme(): ThemePreference | null {
   return stored;
 }
 
+type TypedTransitionStarter = (options: {
+  update: () => void;
+  types: string[];
+}) => ViewTransition;
+
 function applyTheme(theme: Theme): void {
+  const root = document.documentElement;
+  if (root.getAttribute("data-theme") === theme) return;
+
+  const update = () => root.setAttribute("data-theme", theme);
   if (!document.startViewTransition) {
-    document.documentElement.setAttribute("data-theme", theme);
+    update();
     return;
   }
-  document.startViewTransition(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  });
+  try {
+    (document.startViewTransition as unknown as TypedTransitionStarter).call(
+      document,
+      { update, types: ["theme"] },
+    );
+  } catch {
+    document.startViewTransition(update);
+  }
 }
 
 export function initTheme(): void {
@@ -65,7 +79,6 @@ export function toggleTheme(): void {
   setTheme(current === "dark" ? "light" : "dark");
 }
 
-// System preference change listener
 export function watchSystemPreference(callback?: (theme: Theme) => void): void {
   if (isWatchingSystemPreference) return;
   isWatchingSystemPreference = true;

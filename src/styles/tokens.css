@@ -1,74 +1,89 @@
-/* ========================================
- * Colors
- * ======================================== */
 :root {
-  /* Light Theme (Default) */
-  --color-bg-primary: #f8f8f8;
-  --color-bg-secondary: #f0f0f0;
-  --color-bg-tertiary: #e4e4e4;
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #4a4a4a;
-  --color-text-muted: #8a8a8a;
-  --color-accent: #f52320;
-  --color-accent-hover: #d91e1b;
-  --color-accent-subtle: rgba(245, 35, 32, 0.1);
-  --color-border: rgba(0, 0, 0, 0.12);
-  --color-border-hover: rgba(0, 0, 0, 0.22);
+  --color-bg-primary: #f4f4f4;
+  --color-bg-secondary: #ebebeb;
+  --color-bg-tertiary: #dedede;
+  --color-surface: #ffffff;
+  --color-text-primary: #222222;
+  --color-text-secondary: #505050;
+  --color-text-muted: #696969;
+  --color-accent: #509bea;
+  --color-accent-hover: #3584d8;
+  --color-accent-subtle: rgba(80, 155, 234, 0.12);
+  --color-border: rgba(0, 0, 0, 0.14);
+  --color-border-hover: rgba(0, 0, 0, 0.3);
+
+  --color-ink: #222222;
+  --color-on-ink: #f4f4f4;
 }
 
 [data-theme="dark"] {
-  /* Dark Theme */
-  --color-bg-primary: #0c0c0c;
-  --color-bg-secondary: #151515;
-  --color-bg-tertiary: #1e1e1e;
+  --color-bg-primary: #1b1b1b;
+  --color-bg-secondary: #232323;
+  --color-bg-tertiary: #2e2e2e;
+  --color-surface: #202020;
   --color-text-primary: #ececec;
-  --color-text-secondary: #b0b0b0;
-  --color-text-muted: #787878;
-  --color-accent: #00fccb;
-  --color-accent-hover: #33ffd6;
-  --color-accent-subtle: rgba(0, 252, 203, 0.12);
+  --color-text-secondary: #b4b4b4;
+  --color-text-muted: #919191;
+  --color-accent: #0032ff;
+  --color-accent-hover: #3358ff;
+  --color-accent-subtle: rgba(0, 50, 255, 0.18);
+  --color-border: rgba(255, 255, 255, 0.13);
+  --color-border-hover: rgba(255, 255, 255, 0.28);
+
+  --color-ink: #ececec;
+  --color-on-ink: #1b1b1b;
+}
+
+.surface-inverse {
+  --color-bg-primary: #222222;
+  --color-bg-secondary: #2a2a2a;
+  --color-bg-tertiary: #333333;
+  --color-surface: #262626;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #bdbdbd;
+  --color-text-muted: #959595;
+  --color-accent: #0032ff;
+  --color-accent-hover: #3358ff;
+  --color-accent-subtle: rgba(0, 50, 255, 0.18);
   --color-border: rgba(255, 255, 255, 0.14);
-  --color-border-hover: rgba(255, 255, 255, 0.24);
+  --color-border-hover: rgba(255, 255, 255, 0.3);
+  --color-ink: #f0f0f0;
+  --color-on-ink: #222222;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .surface-inverse {
+  --color-bg-primary: #242424;
+  --color-bg-secondary: #2b2b2b;
 }
 
 @theme {
-  /* ========================================
-   * Font Sizes
-   * ======================================== */
-  --font-size-2xs: 0.65rem;
-  --font-size-xs: 0.7rem;
-  --font-size-sm: 0.75rem;
-  --font-size-base: 0.8rem;
-  --font-size-md: 0.85rem;
-  --font-size-lg: 0.9rem;
-  --font-size-xl: 1rem;
-  --font-size-2xl: 1.15rem;
-  --font-size-3xl: 1.25rem;
-  --font-size-4xl: 1.33rem;
+  --font-size-2xs: 0.6875rem;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-base: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.75rem;
+  --font-size-4xl: 2rem;
 
-  /* ========================================
-   * Spacing
-   * ======================================== */
-  --spacing-xs: max(0.48vw, 2px);
-  --spacing-sm: max(0.84vw, 4px);
-  --spacing-md: max(1.25vw, 6px);
-  --spacing-lg: max(2.5vw, 10px);
-  --spacing-xl: 3.33vw;
-  --spacing-2xl: 4.25vw;
-  --spacing-3xl: 5vw;
-  --spacing-4xl: 6.8vw;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: clamp(1rem, 3.33vw, 3rem);
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+  --spacing-4xl: 5rem;
 
-  /* ========================================
-   * Border Radius
-   * ======================================== */
   --radius-sm: 0.3vw;
   --radius-md: 0.52vw;
   --radius-lg: 0.84vw;
   --radius-xl: 1.25vw;
 
-  /* ========================================
-   * Animation Tokens
-   * ======================================== */
   --duration-fast: 150ms;
   --duration-normal: 300ms;
   --duration-slow: 500ms;
@@ -78,12 +93,10 @@
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
-  /* ========================================
-   * Z-Index Scale
-   * ======================================== */
   --z-dropdown: 100;
   --z-sticky: 200;
   --z-overlay: 300;
   --z-modal: 400;
   --z-toast: 500;
+  --z-cursor: 600;
 }

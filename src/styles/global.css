@@ -1,13 +1,9 @@
 @import "tailwindcss";
 @import "./tokens.css";
-@import "./animations.css";
-@import "./grid.css";
 @import "./prose.css";
-@import "./shared.css";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* PlemolJP – self-hosted */
 @font-face {
   font-family: "PlemolJP";
   src: url("../../font-sources/PlemolJP-Regular.woff2") format("woff2");
@@ -41,18 +37,30 @@
 }
 
 @theme {
-  --font-shippori: var(--font-shippori);
-  --font-plemol: "PlemolJP", system-ui, sans-serif;
+  --font-display:
+    var(--font-archivo), -apple-system, BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
+    "Noto Sans CJK JP", "Noto Sans JP", Meiryo, "Apple SD Gothic Neo",
+    "Noto Sans KR", sans-serif;
+  --font-body: var(--font-display);
+  --font-plemol: "PlemolJP", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
-/* Theme transition */
-@media (prefers-reduced-motion: no-preference) {
-  ::view-transition-old(root) {
-    animation: none;
-  }
+/* shell.css handles page navigation; theme.ts starts typed theme swaps. */
+@view-transition {
+  navigation: auto;
+  types: page;
+}
 
-  ::view-transition-new(root) {
-    animation: theme-circle-reveal var(--duration-slow) var(--ease-out-expo);
+@media (prefers-reduced-motion: no-preference) {
+  html:active-view-transition-type(theme) {
+    &::view-transition-old(root) {
+      animation: none;
+    }
+
+    &::view-transition-new(root) {
+      animation: theme-circle-reveal var(--duration-slow) var(--ease-out-expo);
+    }
   }
 
   @keyframes theme-circle-reveal {
@@ -65,17 +73,14 @@
   }
 }
 
-/* Keep the header persistent across page transitions */
-::view-transition-old(site-header) {
-  animation: none;
-  opacity: 0;
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
 
-::view-transition-new(site-header) {
-  animation: none;
-}
-
-/* Base styles */
 html {
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
@@ -95,30 +100,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Container */
-.container-main {
-  width: 100%;
-  max-width: 80%;
-  margin-inline: auto;
-
-  @media (max-width: 768px) {
-    max-width: 92%;
-  }
-}
-
-.container-header {
-  width: 100%;
-  margin-inline: auto;
-  padding-inline: var(--spacing-md);
-}
-
-/* Selection color */
 ::selection {
   background: var(--color-accent-subtle);
   color: var(--color-text-primary);
 }
 
-/* Links */
 a {
   text-decoration: underline;
 }
@@ -127,49 +113,7 @@ a:hover {
   color: var(--color-accent);
 }
 
-/* Focus styles */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
-}
-
-/* Meta grid (shared by about & project-detail) */
-.meta {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.3rem 1.5rem;
-  align-items: baseline;
-}
-
-.meta__label {
-  font-family: monospace;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.meta__label [data-icon] {
-  width: 1em;
-  height: 1em;
-  color: var(--color-text-primary);
-}
-
-.meta__value {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-md);
-}
-
-.meta__link {
-  font-family: monospace;
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
-  text-decoration: none;
-}
-
-.meta__link:hover {
-  color: var(--color-accent);
 }
