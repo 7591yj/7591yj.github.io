@@ -1,9 +1,7 @@
 import { defineHastPlugin } from "satteri";
 import Slugger from "github-slugger";
 
-// Runs before Astro's heading-ids plugin, which keeps any id set here. The
-// anchor stays empty (the "#" is drawn in CSS) so the table of contents
-// doesn't pick it up as heading text.
+// Astro keeps these IDs; detail.client.ts uses headings as link targets.
 export const headingAnchors = () => {
   const slugger = new Slugger();
 
@@ -19,17 +17,6 @@ export const headingAnchors = () => {
             : slugger.slug(ctx.textContent(node));
 
         ctx.setProperty(node, "id", id);
-        ctx.appendChild(node, {
-          type: "element",
-          tagName: "a",
-          properties: {
-            className: ["heading-anchor"],
-            ariaHidden: "true",
-            tabIndex: -1,
-            href: `#${id}`,
-          },
-          children: [],
-        });
       },
     },
   });

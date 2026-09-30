@@ -1,18 +1,28 @@
 ---
-import Layout from "./Layout.astro";
-import PageHeading from "../components/ui/PageHeading.astro";
+import Shell, { type ShellSection } from "./Shell.astro";
 import TableOfContents from "../components/content/TableOfContents/TableOfContents.astro";
-import ProjectSlogan from "../components/content/ProjectSlogan.astro";
-import "../styles/detail.css";
+import "../components/entry/entry.css";
+
+export interface MetaItem {
+  label: string;
+  value: string;
+  href?: string;
+}
 
 interface Props {
   title: string;
-  module: string;
+  section: ShellSection;
+  kicker: string[];
   headingTitle: string;
+  subtitle?: string;
+  image?: string;
+  meta: MetaItem[];
+  tags?: string[];
+  tagsLabel: string;
+  alternate: string | null;
   backLinkHref: string;
   backLinkLabel: string;
   headings: { depth: number; slug: string; text: string }[];
-  subtitle?: string;
   description?: string;
   type?: "website" | "article";
   publishDate?: string;
@@ -20,50 +30,110 @@ interface Props {
 
 const {
   title,
-  module,
+  section,
+  kicker,
   headingTitle,
+  subtitle,
+  image,
+  meta,
+  tags = [],
+  tagsLabel,
+  alternate,
   backLinkHref,
   backLinkLabel,
   headings,
-  subtitle,
   description,
   type,
   publishDate,
 } = Astro.props;
 ---
 
-<Layout
+<Shell
+  active={section}
+  alternate={alternate}
   title={title}
   description={description}
   type={type}
   publishDate={publishDate}
 >
-  <main>
-    <section class="header">
-      <PageHeading module={module} title={headingTitle}>
-        <slot name="meta" />
-      </PageHeading>
-      {subtitle && <ProjectSlogan text={subtitle} />}
-    </section>
-    <section class="container-main detail">
-      <div class="detail__main">
-        <article class="prose">
-          <slot />
-        </article>
-
-        <a class="back-link" href={backLinkHref}>&larr; {backLinkLabel}</a>
+  <div class="read-progress" aria-hidden="true"></div>
+  <main class="entry">
+    <header class:list={["entry-hero", { "entry-hero--text": !image }]}>
+      <div class="entry-hero__text">
+        <p class="kicker" data-reveal>
+          <a class="entry-back" href={backLinkHref}>← {backLinkLabel}</a>
+          {kicker.map((part) => <span>{part}</span>)}
+        </p>
+        <h1 class="display entry-title">{headingTitle}</h1>
+        {
+          subtitle && (
+            <p class="entry-sub" data-reveal>
+              {subtitle}
+            </p>
+          )
+        }
+        <dl class="entry-meta" data-reveal>
+          {
+            meta.map((item) => (
+              <div>
+                <dt>{item.label}</dt>
+                <dd>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {item.value} ↗
+                    </a>
+                  ) : (
+                    item.value
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+          {
+            tags.length > 0 && (
+              <div class="entry-meta__tags">
+                <dt>{tagsLabel}</dt>
+                <dd>
+                  {tags.map((tag) => (
+                    <span class="chip">{tag}</span>
+                  ))}
+                </dd>
+              </div>
+            )
+          }
+        </dl>
       </div>
+      {
+        image && (
+          <div class="entry-plate">
+            <img src={image} alt="" />
+          </div>
+        )
+      }
+    </header>
 
+    <section class="entry-body" data-reveal>
       {
         headings.length > 0 && (
-          <aside class="detail__sidebar">
+          <aside class="entry-toc">
             <TableOfContents headings={headings} />
           </aside>
         )
       }
+      <article class="prose">
+        <slot />
+      </article>
     </section>
+
+    <footer class="entry-foot">
+      <a href={backLinkHref}>← {backLinkLabel}</a>
+    </footer>
   </main>
-</Layout>
+</Shell>
 
 <script>
   import "../scripts/detail.client.ts";

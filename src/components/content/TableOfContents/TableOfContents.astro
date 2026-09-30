@@ -1,5 +1,6 @@
 ---
 import "./TableOfContents.css";
+import { useTranslations } from "../../../i18n/ui";
 
 interface Heading {
   depth: number;
@@ -12,15 +13,23 @@ interface Props {
 }
 
 const { headings } = Astro.props;
+const t = useTranslations(Astro.currentLocale);
 const minDepth = Math.min(...headings.map((h) => h.depth));
+const sections = headings.filter((h) => h.depth === minDepth).length;
 ---
 
-<nav class="toc" aria-label="Table of contents">
-  <span class="toc__label">CONTENTS</span>
+<nav class="toc" aria-label={t("writing.contents")}>
+  <p class="toc__head">
+    <span>{t("writing.contents")}</span>
+    <span>{String(sections).padStart(2, "0")}</span>
+  </p>
   <ul class="toc__list">
     {
       headings.map((h) => (
-        <li class="toc__item" style={`--indent: ${h.depth - minDepth}`}>
+        <li
+          class:list={["toc__item", { "toc__item--sub": h.depth > minDepth }]}
+          style={`--indent: ${h.depth - minDepth}`}
+        >
           <a class="toc__link" href={`#${h.slug}`} data-slug={h.slug}>
             {h.text}
           </a>

@@ -1,10 +1,13 @@
 ---
-import DetailLayout from "./DetailLayout.astro";
+import { formatDate } from "../lib/date";
+import { readingMinutes } from "../lib/reading";
+import DetailLayout, { type MetaItem } from "./DetailLayout.astro";
 import { SITE_NAME } from "../consts";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../i18n/ui";
 import { render } from "astro:content";
-import type { BlogPostEntry } from "../lib/content";
+import { getBlogPosts, type BlogPostEntry } from "../lib/content";
+import { locales } from "../i18n/ui";
 import { mdxComponents } from "../components/content/mdxComponents";
 
 interface Props {
@@ -13,17 +16,23 @@ interface Props {
 
 const { entry } = Astro.props;
 const { title, date, description, tags } = entry.data;
-const { locale } = entry;
+const { locale, slug } = entry;
 const { Content, headings } = await render(entry.source);
 const t = useTranslations(locale);
+const otherLocale = locales.find((l) => l !== locale)!;
+const translation = (await getBlogPosts(otherLocale)).find(
+  (other) => other.slug === slug,
+);
+const alternate =
+  translation?.url ?? getRelativeLocaleUrl(otherLocale, "/blog");
 
-function formatDate(dateStr: string) {
-  const d = new Date(dateStr);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}.${m}.${day}`;
-}
+const meta: MetaItem[] = [
+  { label: t("meta.date"), value: formatDate(date) },
+  {
+    label: t("meta.readTime"),
+    value: t("writing.minutes", { count: String(readingMinutes(entry)) }),
+  },
+];
 ---
 
 <DetailLayout
@@ -31,45 +40,17 @@ function formatDate(dateStr: string) {
   description={description}
   type="article"
   publishDate={date}
-  module="MODULE.002///"
+  section="writing"
+  kicker={[t("shell.writing"), formatDate(date)]}
   headingTitle={title}
+  subtitle={description}
+  meta={meta}
+  tags={tags}
+  tagsLabel={t("meta.tags")}
+  alternate={alternate}
   backLinkHref={getRelativeLocaleUrl(locale, "/blog")}
-  backLinkLabel={t("detail.backBlog")}
+  backLinkLabel={t("shell.backWriting")}
   headings={headings}
 >
-  <div class="meta" slot="meta">
-    <span class="meta__label">{t("meta.date")}</span>
-    <span class="meta__value">{formatDate(date)}</span>
-    {
-      tags && tags.length > 0 && (
-        <>
-          <span class="meta__label">{t("meta.tags")}</span>
-          <div class="meta__tags">
-            {tags.map((t) => (
-              <span class="meta__tag">{t}</span>
-            ))}
-          </div>
-        </>
-      )
-    }
-  </div>
-
   <Content components={mdxComponents} />
 </DetailLayout>
-
-<style>
-  .meta__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-
-  .meta__tag {
-    font-family: monospace;
-    font-size: var(--font-size-xs);
-    padding: 0.2em 0.6em;
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-  }
-</style>

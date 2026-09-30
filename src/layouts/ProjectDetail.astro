@@ -1,11 +1,12 @@
 ---
-import DetailLayout from "./DetailLayout.astro";
+import DetailLayout, { type MetaItem } from "./DetailLayout.astro";
 import { SITE_NAME } from "../consts";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../i18n/ui";
 import { render } from "astro:content";
-import type { ProjectStatus } from "../types";
-import type { ProjectEntry } from "../lib/content";
+import { statusLabel } from "../lib/projects";
+import { getProjects, type ProjectEntry } from "../lib/content";
+import { locales } from "../i18n/ui";
 import { mdxComponents } from "../components/content/mdxComponents";
 
 interface Props {
@@ -13,64 +14,51 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, subtitle, year, status, link } = entry.data;
-const { locale } = entry;
+const {
+  title,
+  subtitle,
+  year,
+  status,
+  link,
+  current,
+  tech,
+  thumbnail,
+  images,
+} = entry.data;
+const { locale, slug } = entry;
 const { Content, headings } = await render(entry.source);
 const t = useTranslations(locale);
+const otherLocale = locales.find((l) => l !== locale)!;
+const translation = (await getProjects(otherLocale)).find(
+  (other) => other.slug === slug,
+);
+const alternate = translation?.url ?? getRelativeLocaleUrl(otherLocale, "/");
 
-const statusLabels: Record<ProjectStatus, string> = {
-  released: t("status.released"),
-  "in development": t("status.inDevelopment"),
-  planned: t("status.planned"),
-  prototype: t("status.prototype"),
-  paused: t("status.paused"),
-  archived: t("status.archived"),
-};
+const tools = tech.filter((name) => name[0] !== name[0].toLowerCase());
+const meta: MetaItem[] = [
+  { label: t("meta.year"), value: String(year) },
+  { label: t("meta.status"), value: statusLabel(t, status) },
+  ...(link
+    ? [{ label: t("meta.link"), value: new URL(link).host, href: link }]
+    : []),
+];
 ---
 
 <DetailLayout
   title={`${SITE_NAME} | ${title}`}
   description={subtitle}
-  module="MODULE.001///"
+  section="work"
+  kicker={[t(current ? "work.nowBuilding" : "work.project"), String(year)]}
   headingTitle={title}
   subtitle={subtitle}
-  backLinkHref={getRelativeLocaleUrl(locale, "/projects")}
-  backLinkLabel={t("detail.backProjects")}
+  image={thumbnail ?? images?.[0]}
+  meta={meta}
+  tags={tools}
+  tagsLabel={t("meta.stack")}
+  alternate={alternate}
+  backLinkHref={getRelativeLocaleUrl(locale, "/")}
+  backLinkLabel={t("shell.backWork")}
   headings={headings}
 >
-  <div class="meta" slot="meta">
-    {
-      year && (
-        <>
-          <span class="meta__label">{t("meta.year")}</span>
-          <span class="meta__value">{year}</span>
-        </>
-      )
-    }
-    {
-      status && (
-        <>
-          <span class="meta__label">{t("meta.status")}</span>
-          <span class="meta__value">{statusLabels[status]}</span>
-        </>
-      )
-    }
-    {
-      link && (
-        <>
-          <span class="meta__label">{t("meta.link")}</span>
-          <a
-            class="meta__link"
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {link} &#8599;
-          </a>
-        </>
-      )
-    }
-  </div>
-
   <Content components={mdxComponents} />
 </DetailLayout>

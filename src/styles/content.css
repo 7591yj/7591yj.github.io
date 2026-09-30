@@ -1,0 +1,56 @@
+.hover-sweep-text-inv {
+  --sweep-pos: 0 0;
+  background: linear-gradient(
+    to right,
+    currentColor 50%,
+    var(--color-accent) 50%
+  );
+  background-size: 200% 100%;
+  background-position: var(--sweep-pos);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position var(--duration-slower) var(--ease-out-expo);
+}
+
+.hover-sweep-text-inv p {
+  background: linear-gradient(
+    to right,
+    currentColor 50%,
+    var(--color-accent) 50%
+  );
+  background-size: 200% 100%;
+  background-position: var(--sweep-pos);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-position var(--duration-slower) var(--ease-out-expo);
+}
+
+.hover-sweep-text-inv.is-swept {
+  --sweep-pos: 100% 0;
+}
+
+.hover-sweep-text-inv:hover,
+.hover-sweep-text-inv.is-swept:hover {
+  --sweep-pos: 0 0;
+}
+
+.led {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.led--sm {
+  width: 0.4rem;
+  height: 0.4rem;
+}
+
+.led--active {
+  background-color: var(--color-accent);
+}
+
+.led--hollow {
+  border: 1.5px solid var(--color-text-muted);
+}

@@ -1,0 +1,36 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Shell from "../../layouts/Shell.astro";
+import { detectLocale, useTranslations } from "../../i18n/ui";
+import { SITE_NAME } from "../../consts";
+import "./error.css";
+
+interface Props {
+  code: 404 | 500;
+}
+
+const { code } = Astro.props;
+const locale = detectLocale(Astro.url.pathname);
+const t = useTranslations(locale);
+---
+
+<Shell title={`${SITE_NAME} | ${code}`} alternate={null} noindex>
+  <main class="error">
+    <header class="page-head error__head">
+      <p class="kicker" data-reveal>
+        <span>{t("error.kicker")}</span>
+      </p>
+      <h1 class="display error__code" data-error-code>{code}</h1>
+    </header>
+    <div class="error__details" data-reveal>
+      <p class="error__message">{t(`${code}.message` as const)}</p>
+    </div>
+    <footer class="error__foot" data-reveal>
+      <a href={getRelativeLocaleUrl(locale, "/")}>← {t("shell.backWork")}</a>
+    </footer>
+  </main>
+</Shell>
+
+<script>
+  import "./error.client";
+</script>
