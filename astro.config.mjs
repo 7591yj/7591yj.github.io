@@ -12,6 +12,10 @@ import icon from "astro-icon";
 export default defineConfig({
   site: "https://7591yj.com",
   prefetch: false,
+  redirects: {
+    "/projects": "/",
+    "/ja/projects": "/ja/",
+  },
   experimental: {
     incrementalBuild: true,
   },

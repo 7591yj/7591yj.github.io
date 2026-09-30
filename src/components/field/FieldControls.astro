@@ -1,0 +1,57 @@
+---
+interface Props {
+  part: "view" | "readout";
+  labels: {
+    view: string;
+    field: string;
+    index: string;
+    count: string;
+    initialReadout: string;
+  };
+}
+
+const { part, labels } = Astro.props;
+---
+
+{
+  part === "view" ? (
+    <div class="shell-pill" role="group" aria-label={labels.view}>
+      <button
+        type="button"
+        data-view-btn="field"
+        aria-pressed="true"
+        aria-label={labels.field}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="2" y="2" width="5" height="5" rx="1" />
+          <rect x="9" y="2" width="5" height="5" rx="1" />
+          <rect x="2" y="9" width="5" height="5" rx="1" />
+          <rect x="9" y="9" width="5" height="5" rx="1" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        data-view-btn="list"
+        aria-pressed="false"
+        aria-label={labels.index}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="2" y="3" width="12" height="1.5" rx="0.75" />
+          <rect x="2" y="7.25" width="12" height="1.5" rx="0.75" />
+          <rect x="2" y="11.5" width="12" height="1.5" rx="0.75" />
+        </svg>
+      </button>
+    </div>
+  ) : (
+    <p
+      class="shell-readout field-readout"
+      data-field-readout
+      aria-hidden="true"
+    >
+      <span class="field-readout__coords">
+        <span>{labels.count}</span>
+        <span data-field-coords>{labels.initialReadout}</span>
+      </span>
+    </p>
+  )
+}

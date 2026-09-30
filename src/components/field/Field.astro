@@ -1,0 +1,176 @@
+---
+import "./field.css";
+
+export interface FieldItem {
+  id: string;
+  title: string;
+  summary: string;
+  year: string;
+  status: string;
+  current?: boolean;
+  tags: string[];
+  href: string;
+  image?: string;
+}
+
+interface Props {
+  items: FieldItem[];
+  labels: {
+    index: string;
+    nowBuilding: string;
+    open: string;
+    drag: string;
+  };
+}
+
+const { items, labels } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, "0");
+const years = [...new Set(items.map((item) => item.year))].sort(
+  (a, b) => Number(b) - Number(a),
+);
+---
+
+<div
+  class="field"
+  data-field
+  data-view="field"
+  style={`--count: ${items.length}`}
+>
+  <div class="field-stage" data-field-stage aria-hidden="true">
+    <div class="stack-guides">
+      <span class="stack-guide stack-guide--x"></span>
+      <span class="stack-guide stack-guide--y"></span>
+    </div>
+
+    <div class="stack-scene">
+      <div class="stack" data-stack>
+        {
+          items.map((item, i) => (
+            <a
+              class="layer"
+              href={item.href}
+              tabindex="-1"
+              draggable="false"
+              data-layer={i}
+            >
+              <span class="layer-back" />
+              <span class="layer-face">
+                <span class="layer-tag">
+                  <span>L{pad(i + 1)}</span>
+                  <span>{item.title}</span>
+                </span>
+                <span class="tile-plate">
+                  {item.image && (
+                    <img src={item.image} alt="" draggable="false" />
+                  )}
+                </span>
+                <span class="layer-handle" data-corner="nw" />
+                <span class="layer-handle" data-corner="ne" />
+                <span class="layer-handle" data-corner="sw" />
+                <span class="layer-handle" data-corner="se" data-anchor />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <ol class="stack-layers">
+      {
+        items.map((item, i) => (
+          <li data-layer-row={i}>
+            <span>L{pad(i + 1)}</span>
+            <span>{item.title}</span>
+            <span>{item.year}</span>
+          </li>
+        ))
+      }
+    </ol>
+
+    <svg class="stack-leader" data-stack-leader>
+      <path data-stack-leader-path></path>
+      <circle r="3" data-stack-leader-start></circle>
+    </svg>
+
+    <div class="stack-info" data-stack-info>
+      {
+        items.map((item, i) => (
+          <div class="stack-card" data-card={i}>
+            <p class="stack-card__meta kicker">
+              <span>
+                {pad(i + 1)} / {pad(items.length)}
+              </span>
+              {item.current ? (
+                <span class="stack-card__live">{labels.nowBuilding}</span>
+              ) : (
+                <span>{item.status}</span>
+              )}
+              <span>{item.year}</span>
+            </p>
+            <p class="stack-card__title" data-scramble={item.title}>
+              {item.title}
+            </p>
+            <p class="stack-card__summary">{item.summary}</p>
+            <span class="stack-card__tags">
+              {item.tags.map((tag) => (
+                <span class="chip">{tag}</span>
+              ))}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <section class="field-index" data-field-index aria-label={labels.index}>
+    <p class="field-index__count kicker">
+      <span>{labels.index}</span>
+      <span>{pad(items.length)}</span>
+    </p>
+    {
+      years.map((year) => (
+        <div class="field-index__year">
+          <h2 class="kicker">{year}</h2>
+          <ol>
+            {items
+              .filter((item) => item.year === year)
+              .map((item) => (
+                <li data-id={item.id} data-row={items.indexOf(item)}>
+                  <a href={item.href}>
+                    <span class="row-title">{item.title}</span>
+                    <span class="row-summary">{item.summary}</span>
+                    <span class="row-kind">
+                      {item.current ? labels.nowBuilding : item.status}
+                    </span>
+                    <span class="row-arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                </li>
+              ))}
+          </ol>
+        </div>
+      ))
+    }
+  </section>
+
+  <div class="field-preview" data-field-preview aria-hidden="true"></div>
+
+  <div
+    class="field-cursor"
+    data-field-cursor
+    data-state="hidden"
+    data-open-label={labels.open}
+    data-drag-label={labels.drag}
+    aria-hidden="true"
+  >
+    <span class="field-cursor__cross"></span>
+    <span class="field-cursor__label" data-field-cursor-label
+      >{labels.open}</span
+    >
+  </div>
+</div>
+
+<script>
+  import "../../scripts/field.ts";
+</script>
