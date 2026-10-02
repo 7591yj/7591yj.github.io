@@ -4,7 +4,7 @@ import { SITE_NAME } from "../consts";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../i18n/ui";
 import { render } from "astro:content";
-import { statusLabel } from "../lib/projects";
+import { statusLabel, yearLabel } from "../lib/projects";
 import { projectLinkLabel } from "../lib/projectLinks";
 import { getProjects, type ProjectEntry } from "../lib/content";
 import { locales } from "../i18n/ui";
@@ -51,8 +51,9 @@ const projectLinks = [
     href,
   })),
 ];
+const years = yearLabel({ year, current });
 const meta: MetaItem[] = [
-  { label: t("meta.year"), value: String(year) },
+  { label: t("meta.year"), value: years },
   { label: t("meta.status"), value: statusLabel(t, status) },
   ...(projectLinks.length > 0
     ? [
@@ -69,7 +70,7 @@ const meta: MetaItem[] = [
   title={`${SITE_NAME} | ${title}`}
   description={subtitle}
   section="work"
-  kicker={[t(current ? "work.nowBuilding" : "work.project"), String(year)]}
+  kicker={[t(current ? "work.nowBuilding" : "work.project"), years]}
   headingTitle={title}
   subtitle={subtitle}
   image={thumbnail ?? images?.[0]}

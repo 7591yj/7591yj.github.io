@@ -17,6 +17,13 @@ export function statusLabel(t: T, status: ProjectStatus): string {
   return t(STATUS_KEYS[status]);
 }
 
+export function yearLabel({
+  year,
+  current,
+}: Pick<ProjectEntry["data"], "year" | "current">): string {
+  return current ? `${year}–` : String(year);
+}
+
 export function sortProjects(entries: ProjectEntry[]): ProjectEntry[] {
   return [...entries].sort(
     (a, b) =>
