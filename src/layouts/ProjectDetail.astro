@@ -5,6 +5,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../i18n/ui";
 import { render } from "astro:content";
 import { statusLabel } from "../lib/projects";
+import { projectLinkLabel } from "../lib/projectLinks";
 import { getProjects, type ProjectEntry } from "../lib/content";
 import { locales } from "../i18n/ui";
 import { mdxComponents } from "../components/content/mdxComponents";
@@ -20,6 +21,7 @@ const {
   year,
   status,
   link,
+  links = [],
   current,
   tech,
   thumbnail,
@@ -42,11 +44,23 @@ const alternates = Object.fromEntries(
 );
 
 const tools = tech.filter((name) => name[0] !== name[0].toLowerCase());
+const projectLinks = [
+  ...(link ? [{ label: projectLinkLabel(link), href: link }] : []),
+  ...links.map(({ label, href }) => ({
+    label: projectLinkLabel(href, label),
+    href,
+  })),
+];
 const meta: MetaItem[] = [
   { label: t("meta.year"), value: String(year) },
   { label: t("meta.status"), value: statusLabel(t, status) },
-  ...(link
-    ? [{ label: t("meta.link"), value: new URL(link).host, href: link }]
+  ...(projectLinks.length > 0
+    ? [
+        {
+          label: t(projectLinks.length > 1 ? "meta.links" : "meta.link"),
+          links: projectLinks,
+        },
+      ]
     : []),
 ];
 ---

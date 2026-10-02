@@ -3,11 +3,10 @@ import Shell, { type Alternates, type ShellSection } from "./Shell.astro";
 import TableOfContents from "../components/content/TableOfContents/TableOfContents.astro";
 import "../components/entry/entry.css";
 
-export interface MetaItem {
-  label: string;
-  value: string;
-  href?: string;
-}
+export type MetaItem = { label: string } & (
+  | { value: string; href?: string }
+  | { links: { label: string; href: string }[] }
+);
 
 interface Props {
   title: string;
@@ -76,8 +75,14 @@ const {
             meta.map((item) => (
               <div>
                 <dt>{item.label}</dt>
-                <dd>
-                  {item.href ? (
+                <dd class:list={{ "entry-meta__links": "links" in item }}>
+                  {"links" in item ? (
+                    item.links.map(({ label, href }) => (
+                      <a href={href} target="_blank" rel="noopener noreferrer">
+                        {label} ↗
+                      </a>
+                    ))
+                  ) : item.href ? (
                     <a
                       href={item.href}
                       target="_blank"

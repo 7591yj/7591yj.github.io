@@ -64,6 +64,13 @@
   overflow-wrap: anywhere;
 }
 
+.entry-meta__links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
 html[data-shell] .entry-meta a:hover {
   color: var(--color-accent);
 }

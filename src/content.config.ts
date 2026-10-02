@@ -32,6 +32,9 @@ const projectSchema = z.object({
   thumbnail: z.string().optional(),
   images: z.array(z.string()).optional(),
   link: z.string().optional(),
+  links: z
+    .array(z.object({ label: z.string().optional(), href: z.url() }))
+    .optional(),
 });
 
 const postTranslationSchema = z.strictObject({

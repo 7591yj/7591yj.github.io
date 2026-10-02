@@ -43,6 +43,7 @@ const en = {
   "meta.year": "Year",
   "meta.status": "Status",
   "meta.link": "Link",
+  "meta.links": "Links",
   "meta.tags": "Tags",
   "meta.readTime": "Read time",
   "meta.stack": "Stack",
@@ -72,6 +73,7 @@ const ja: Partial<Record<UiKey, string>> = {
   "meta.year": "年",
   "meta.status": "ステータス",
   "meta.link": "リンク",
+  "meta.links": "リンク",
   "meta.tags": "タグ",
   "meta.stack": "技術",
 };
