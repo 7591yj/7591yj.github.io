@@ -320,14 +320,24 @@ function initField(root: HTMLElement) {
     const step = (now: number) => {
       const k = Math.min(1, (now - t0) / dur);
       const fixed = Math.floor(k * text.length);
-      let out = text.slice(0, fixed);
-      for (let i = fixed; i < text.length; i++)
-        out +=
-          text[i] === " "
-            ? " "
-            : SCRAMBLE[Math.floor(Math.random() * SCRAMBLE.length)];
-      el.textContent = out;
-      if (k < 1) scrambles.set(el, requestAnimationFrame(step));
+      if (fixed >= text.length) {
+        el.textContent = text;
+        return;
+      }
+      // field.css overlays noise glyphs without changing the title's wrap.
+      el.replaceChildren(
+        text.slice(0, fixed),
+        ...[...text.slice(fixed)].map((char) => {
+          if (char === " ") return char;
+          const cell = document.createElement("span");
+          cell.className = "stack-card__noise";
+          cell.dataset.glyph =
+            SCRAMBLE[Math.floor(Math.random() * SCRAMBLE.length)];
+          cell.textContent = char;
+          return cell;
+        }),
+      );
+      scrambles.set(el, requestAnimationFrame(step));
     };
     scrambles.set(el, requestAnimationFrame(step));
   }

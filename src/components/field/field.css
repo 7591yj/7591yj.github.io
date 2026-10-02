@@ -292,6 +292,19 @@
   text-wrap: balance;
 }
 
+.stack-card__noise {
+  position: relative;
+  -webkit-text-fill-color: transparent;
+}
+
+.stack-card__noise::after {
+  content: attr(data-glyph);
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  -webkit-text-fill-color: currentColor;
+}
+
 .stack-card__summary {
   justify-self: start;
   max-width: 36ch;
