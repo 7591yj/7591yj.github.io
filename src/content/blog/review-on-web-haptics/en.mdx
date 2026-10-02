@@ -11,6 +11,16 @@ import PatternPreview from "./_PatternPreview.tsx";
 import IntensityMatrix from "./_IntensityMatrix.tsx";
 import "./styles.css";
 
+<aside class="haptics-notice" role="note">
+
+**Update: iOS haptics no longer work on iOS 26.5+.** The hidden-switch workaround
+used by web-haptics 0.0.6 has stopped producing haptic feedback, as reported in
+[upstream issue #41](https://github.com/lochie/web-haptics/issues/41). The iOS
+behavior described below reflects how the library worked when I wrote this
+review. The demos on this page will not produce haptics on affected iOS devices.
+
+</aside>
+
 <HapticsNotice client:load />
 
 [Let me go straight to the point](#web-haptics)
