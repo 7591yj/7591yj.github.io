@@ -1,6 +1,6 @@
 import { gsap, onScreen } from "./motion/core";
 import { onPointerChange, usingMouse } from "./pointer";
-import { aimWith, refreshCursor } from "./cursor";
+import { aimWith, refreshCursor, type Aim } from "./cursor";
 import { triggerHaptic } from "../haptics-instance";
 import { TICK } from "../haptics";
 
@@ -17,13 +17,38 @@ const ORBIT_RATIO = 1.5;
 const DENSE_STEP = 24;
 // Matches .stack-scene in field.css.
 const PERSPECTIVE = 1800;
-// Below this tile size the edge tags overrun the plates.
 const CRAMPED = 110;
 const SCRAMBLE = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789/#*+<>";
 // Matches the short landscape query in field.css.
 const SHORT = matchMedia(
   "(max-width: 899px) and (max-height: 540px) and (orientation: landscape)",
 );
+const INTRO = {
+  full: { yaw: 50, tilt: 20, drop: 0.9, stagger: 0.07, settle: 1.8 },
+  brief: { yaw: 18, tilt: 8, drop: 0.6, stagger: 0.04, settle: 1.1 },
+};
+const DEAL = {
+  out: {
+    sign: 1,
+    chromeAt: 0.15,
+    radius: [8, 2],
+    faceAt: 0,
+    fadeAt: 0.8,
+    linkX: [-16, 0],
+    linkDur: 0.7,
+    linkAt: 0.72,
+  },
+  in: {
+    sign: -1,
+    chromeAt: 0,
+    radius: [2, 8],
+    faceAt: 0.5,
+    fadeAt: 0.6,
+    linkX: [0, 16],
+    linkDur: 0.3,
+    linkAt: 0,
+  },
+};
 
 const root = document.querySelector<HTMLElement>("[data-field]");
 if (root) initField(root);
@@ -100,18 +125,7 @@ function initField(root: HTMLElement) {
     const vh = stage.clientHeight;
     narrow = vw < 900;
     if (narrow) {
-      const top =
-        document.querySelector(".shell-top")?.getBoundingClientRect().bottom ??
-        0;
-      // field.css places the card beside the stack in short landscape.
-      const bottom = SHORT.matches
-        ? (document.querySelector(".shell-dock")?.getBoundingClientRect().top ??
-          vh)
-        : info.getBoundingClientRect().top;
-      const band = Math.max(bottom - top - 24, 0);
-      const span = SHORT.matches ? info.getBoundingClientRect().left : vw;
-      size = Math.min(span * 0.6, band / 1.45, 320);
-      root.style.setProperty("--sy", `${((top + bottom) / 2).toFixed(1)}px`);
+      measureNarrow(vw, vh);
     } else {
       size = clamp(Math.min(vw * 0.28, vh * 0.44), 220, 420);
       root.style.removeProperty("--sy");
@@ -122,57 +136,25 @@ function initField(root: HTMLElement) {
     dirty = true;
   }
 
+  function measureNarrow(vw: number, vh: number) {
+    const top = edge(".shell-top", "bottom", 0);
+    // field.css places the card beside the stack in short landscape.
+    const bottom = SHORT.matches
+      ? edge(".shell-dock", "top", vh)
+      : info.getBoundingClientRect().top;
+    const band = Math.max(bottom - top - 24, 0);
+    const span = SHORT.matches ? info.getBoundingClientRect().left : vw;
+    size = Math.min(span * 0.6, band / 1.45, 320);
+    root.style.setProperty("--sy", `${((top + bottom) / 2).toFixed(1)}px`);
+  }
+
   let active = -1;
   let lastReadout = "";
 
   function render() {
     const still = 1 - cam.flat;
-    const tilt = cam.tilt * still + parallaxY * still;
-    const yaw = cam.yaw + parallaxX * still;
-    const recenter =
-      narrow && last ? size * 0.33 * (cam.pos / last - 0.5) * 2 : 0;
-    let cx = 0;
-    let cy = 0;
-    if (narrow) {
-      const s = size * 0.08 * still;
-      const yr = (yaw * Math.PI) / 180;
-      const tr = (tilt * Math.PI) / 180;
-      const f = PERSPECTIVE / (PERSPECTIVE - s * Math.sin(yr) * Math.sin(tr));
-      cx = -s * Math.cos(yr) * f;
-      cy = -s * Math.sin(yr) * Math.cos(tr) * f;
-    }
-    const ox = cam.ox + cx;
-    const oy = cam.oy + recenter * still + cy;
-    stack.style.transform =
-      `translate(${ox.toFixed(1)}px, ${oy.toFixed(1)}px) ` +
-      `rotateX(${tilt.toFixed(3)}deg) rotateZ(${yaw.toFixed(3)}deg)`;
-
-    for (let i = 0; i < n; i++) {
-      const d = cam.pos - i;
-      const above = smooth(0.15, 0.85, d);
-      const near = Math.max(0, 1 - Math.abs(d));
-      let z = d * gap + gap * OPEN * above;
-      z += drop[i] * 900;
-      z += scatter[i] * (d > 0 ? 1 : -1) * 900;
-      if (i === active) z += cam.lift * size * 0.7;
-
-      let opacity = 1 - 0.78 * above;
-      opacity *= 1 - clamp((-d - 2.5) / 2, 0, 0.6);
-      opacity *= 1 - clamp((d - 1.5) / 2, 0, 0.8);
-      opacity *= 1 - drop[i];
-      opacity *= 1 - scatter[i];
-
-      const slide = near * size * 0.08 * still;
-      let scale = 0.94 + near * 0.06;
-      if (i === active) scale *= cam.zoom;
-
-      const el = layers[i];
-      el.style.transform =
-        `translate3d(${slide.toFixed(1)}px, 0, ${z.toFixed(1)}px) ` +
-        `scale(${scale.toFixed(4)})`;
-      el.style.opacity = opacity.toFixed(3);
-      el.style.pointerEvents = above > 0.5 ? "none" : "";
-    }
+    placeStack(still);
+    for (let i = 0; i < n; i++) placeLayer(i, still);
 
     const next = Math.round(clamp(cam.pos, 0, last));
     if (next !== active) {
@@ -182,11 +164,66 @@ function initField(root: HTMLElement) {
 
     leaderStale = true;
 
-    if (coords) {
-      const deg = Math.round(((cam.yaw % 360) + 360) % 360);
-      const text = `L${pad(active + 1)}/${pad(n)} · ${String(deg).padStart(3, "0")}°`;
-      if (text !== lastReadout) coords.textContent = lastReadout = text;
-    }
+    if (coords) showReadout(coords);
+  }
+
+  function placeStack(still: number) {
+    const tilt = cam.tilt * still + parallaxY * still;
+    const yaw = cam.yaw + parallaxX * still;
+    const recenter =
+      narrow && last ? size * 0.33 * (cam.pos / last - 0.5) * 2 : 0;
+    const [cx, cy] = narrow ? narrowOffset(yaw, tilt, still) : [0, 0];
+    const ox = cam.ox + cx;
+    const oy = cam.oy + recenter * still + cy;
+    stack.style.transform =
+      `translate(${ox.toFixed(1)}px, ${oy.toFixed(1)}px) ` +
+      `rotateX(${tilt.toFixed(3)}deg) rotateZ(${yaw.toFixed(3)}deg)`;
+  }
+
+  function narrowOffset(yaw: number, tilt: number, still: number) {
+    const s = size * 0.08 * still;
+    const yr = (yaw * Math.PI) / 180;
+    const tr = (tilt * Math.PI) / 180;
+    const f = PERSPECTIVE / (PERSPECTIVE - s * Math.sin(yr) * Math.sin(tr));
+    return [-s * Math.cos(yr) * f, -s * Math.sin(yr) * Math.cos(tr) * f];
+  }
+
+  function placeLayer(i: number, still: number) {
+    const d = cam.pos - i;
+    const above = smooth(0.15, 0.85, d);
+    const near = Math.max(0, 1 - Math.abs(d));
+    const z = layerZ(i, d, above);
+
+    let opacity = 1 - 0.78 * above;
+    opacity *= 1 - clamp((-d - 2.5) / 2, 0, 0.6);
+    opacity *= 1 - clamp((d - 1.5) / 2, 0, 0.8);
+    opacity *= 1 - drop[i];
+    opacity *= 1 - scatter[i];
+
+    const slide = near * size * 0.08 * still;
+    let scale = 0.94 + near * 0.06;
+    if (i === active) scale *= cam.zoom;
+
+    const el = layers[i];
+    el.style.transform =
+      `translate3d(${slide.toFixed(1)}px, 0, ${z.toFixed(1)}px) ` +
+      `scale(${scale.toFixed(4)})`;
+    el.style.opacity = opacity.toFixed(3);
+    el.style.pointerEvents = above > 0.5 ? "none" : "";
+  }
+
+  function layerZ(i: number, d: number, above: number) {
+    let z = d * gap + gap * OPEN * above;
+    z += drop[i] * 900;
+    z += scatter[i] * (d > 0 ? 1 : -1) * 900;
+    if (i === active) z += cam.lift * size * 0.7;
+    return z;
+  }
+
+  function showReadout(coords: HTMLElement) {
+    const deg = Math.round(((cam.yaw % 360) + 360) % 360);
+    const text = `L${pad(active + 1)}/${pad(n)} · ${String(deg).padStart(3, "0")}°`;
+    if (text !== lastReadout) coords.textContent = lastReadout = text;
   }
 
   function setActive(next: number) {
@@ -242,20 +279,13 @@ function initField(root: HTMLElement) {
     if (probe && event.key?.startsWith("hero:")) dropProbe();
   });
 
+  const settled = () => !leaving && !swapping;
+
   function drawLeader() {
-    const show =
-      !narrow && !leaving && !swapping && active >= 0 && drop[active] < 0.05;
+    const show = !narrow && settled() && active >= 0 && drop[active] < 0.05;
     leader.classList.toggle("is-visible", show);
     if (!show) return;
-    let sx = -Infinity;
-    let sy = 0;
-    for (const h of layers[active].querySelectorAll(".layer-handle")) {
-      const r = h.getBoundingClientRect();
-      if (r.left + r.width / 2 > sx) {
-        sx = r.left + r.width / 2;
-        sy = r.top + r.height / 2;
-      }
-    }
+    const [sx, sy] = handlePoint(layers[active]);
     const card = cards[active].getBoundingClientRect();
     const ex = card.left - 16;
     const ey = card.top + 8;
@@ -266,6 +296,19 @@ function initField(root: HTMLElement) {
     );
     leaderStart.setAttribute("cx", sx.toFixed(1));
     leaderStart.setAttribute("cy", sy.toFixed(1));
+  }
+
+  function handlePoint(layer: HTMLElement) {
+    let sx = -Infinity;
+    let sy = 0;
+    for (const h of layer.querySelectorAll(".layer-handle")) {
+      const r = h.getBoundingClientRect();
+      if (r.left + r.width / 2 > sx) {
+        sx = r.left + r.width / 2;
+        sy = r.top + r.height / 2;
+      }
+    }
+    return [sx, sy];
   }
 
   const scrambles = new WeakMap<HTMLElement, number>();
@@ -331,31 +374,38 @@ function initField(root: HTMLElement) {
   });
 
   window.addEventListener("pointermove", (event) => {
-    if (!dragging) {
-      if (usingMouse() && !locked()) {
-        parallaxX = (event.clientX / innerWidth - 0.5) * 6;
-        parallaxY = (event.clientY / innerHeight - 0.5) * -4;
-        dirty = true;
-      }
-      return;
-    }
+    if (dragging) drag(event);
+    else lean(event);
+  });
+
+  function lean(event: PointerEvent) {
+    if (!usingMouse() || locked()) return;
+    parallaxX = (event.clientX / innerWidth - 0.5) * 6;
+    parallaxY = (event.clientY / innerHeight - 0.5) * -4;
+    dirty = true;
+  }
+
+  function drag(event: PointerEvent) {
     const dx = event.clientX - lastX;
     const dy = event.clientY - lastY;
     lastX = event.clientX;
     lastY = event.clientY;
-    const ox = event.clientX - startX;
-    const oy = event.clientY - startY;
-    if (!moved && Math.hypot(ox, oy) > dragSlop) {
-      moved = true;
-      if (!free) axis = Math.abs(ox) > Math.abs(oy) * ORBIT_RATIO ? "x" : "y";
-    }
+    if (!moved) detectDrag(event);
     if (!moved) return;
     vx = axis === "y" ? 0 : free ? dx : -dx;
     vy = axis === "x" ? 0 : dy;
     orbit(vx * 0.3);
     tPos = clamp(tPos - vy / DRAG_PER_LAYER, -0.35, last + 0.35);
     dirty = true;
-  });
+  }
+
+  function detectDrag(event: PointerEvent) {
+    const ox = event.clientX - startX;
+    const oy = event.clientY - startY;
+    if (Math.hypot(ox, oy) <= dragSlop) return;
+    moved = true;
+    if (!free) axis = Math.abs(ox) > Math.abs(oy) * ORBIT_RATIO ? "x" : "y";
+  }
 
   const release = () => {
     if (!dragging) return;
@@ -392,11 +442,7 @@ function initField(root: HTMLElement) {
       }
       const layer = target.closest<HTMLAnchorElement>("[data-layer]");
       if ((!layer && !card) || leaving) return;
-      if (
-        layer &&
-        (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
-      )
-        return;
+      if (layer && modified(event)) return;
       event.preventDefault();
       const i = layer && usingMouse() ? Number(layer.dataset.layer) : active;
       if (i === active) dive(i);
@@ -553,23 +599,33 @@ function initField(root: HTMLElement) {
     dirty = true;
   });
 
+  const opened: Aim = { state: "open", label: openLabel };
+
   // cursor.ts asks the field for its cursor state first.
   aimWith((el) => {
     if (dragging) return { state: "drag", label: dragLabel };
-    if (leaving || swapping) return { state: "idle" };
-    if (el?.closest("[data-field-index] li a"))
-      return { state: "open", label: openLabel };
-    if (!el?.closest("[data-field-stage]")) return null;
-    if (el.closest("[data-card].is-active"))
-      return { state: "open", label: openLabel };
+    if (!settled()) return { state: "idle" };
+    return el ? elementAim(el) : null;
+  });
+
+  function elementAim(el: Element): Aim | null {
+    if (el.closest("[data-field-index] li a")) return opened;
+    if (!el.closest("[data-field-stage]")) return null;
+    return stageAim(el);
+  }
+
+  function stageAim(el: Element): Aim {
+    if (el.closest("[data-card].is-active")) return opened;
     if (el.closest("[data-stack-scrub]")) return { state: "target" };
     const layer = el.closest<HTMLElement>("[data-layer]");
-    if (!layer) return { state: "idle" };
-    if (layer.classList.contains("is-active"))
-      return { state: "open", label: openLabel };
+    return layer ? layerAim(layer) : { state: "idle" };
+  }
+
+  function layerAim(layer: HTMLElement): Aim {
+    if (layer.classList.contains("is-active")) return opened;
     const tag = layer.querySelector(".layer-tag")?.textContent ?? "";
     return { state: "peek", label: tag.replace(/\s+/g, " ").trim() };
-  });
+  }
 
   function dive(i: number) {
     const layer = layers[i];
@@ -581,34 +637,50 @@ function initField(root: HTMLElement) {
     writeCam(i, tYaw);
 
     const card = cards[i];
-    const title = card.querySelector<HTMLElement>(".stack-card__title");
-    const summary = card.querySelector<HTMLElement>(".stack-card__summary");
+    const title = card.querySelector<HTMLElement>(".stack-card__title")!;
+    const summary = card.querySelector<HTMLElement>(".stack-card__summary")!;
     const spots = readSpots(layer);
-
-    const go = () => {
-      if (spots && title && summary) {
-        settleText([
-          [title, spots.title],
-          [summary, spots.sub],
-        ]);
-      } else {
-        const plate = layer.querySelector<HTMLElement>(".tile-plate");
-        if (plate) plate.style.viewTransitionName = "hero-plate";
-        if (title) title.style.viewTransitionName = "hero-title";
-        if (summary) summary.style.viewTransitionName = "hero-sub";
-      }
-      if (!reduced) sessionStorage.setItem("arrive", spots ? "exact" : "dive");
-      window.location.href = layer.href;
-    };
+    const go = () => depart(layer, title, summary, spots);
 
     if (reduced) return go();
+    diveMotion(i, layer, title, summary, go);
+  }
 
+  function depart(
+    layer: HTMLAnchorElement,
+    title: HTMLElement,
+    summary: HTMLElement,
+    spots: HeroSpots | null,
+  ) {
+    if (spots) {
+      settleText([
+        [title, spots.title],
+        [summary, spots.sub],
+      ]);
+    } else {
+      layer.querySelector<HTMLElement>(
+        ".tile-plate",
+      )!.style.viewTransitionName = "hero-plate";
+      title.style.viewTransitionName = "hero-title";
+      summary.style.viewTransitionName = "hero-sub";
+    }
+    if (!reduced) sessionStorage.setItem("arrive", spots ? "exact" : "dive");
+    window.location.href = layer.href;
+  }
+
+  function diveMotion(
+    i: number,
+    layer: HTMLAnchorElement,
+    title: HTMLElement,
+    summary: HTMLElement,
+    go: () => void,
+  ) {
     root.classList.add("is-leaving");
     const target = plateTarget(layer);
     document.documentElement.classList.add("field-leaving");
-    const text = title && summary ? textTargets(layer, title, summary) : null;
+    const text = textTargets(layer, title, summary);
     const zoom = target.size / (size * 0.62);
-    const yaw = (((cam.yaw % 360) + 540) % 360) - 180;
+    const yaw = wrap(cam.yaw);
     cam.yaw = yaw;
 
     const tl = gsap.timeline({
@@ -628,7 +700,7 @@ function initField(root: HTMLElement) {
       .to(
         cam,
         {
-          yaw: yaw >= 0 ? 360 : -360,
+          yaw: fullTurn(yaw),
           flat: 1,
           duration: 0.95,
           ease: "expo.inOut",
@@ -654,9 +726,8 @@ function initField(root: HTMLElement) {
         { borderRadius: `${(6 / zoom).toFixed(3)}px`, duration: 0.8 },
         0.4,
       );
-    if (text)
-      for (const [el, to] of text)
-        tl.to(el, { ...to, duration: 0.85, ease: "expo.inOut" }, 0.3);
+    for (const [el, to] of text)
+      tl.to(el, { ...to, duration: 0.85, ease: "expo.inOut" }, 0.3);
   }
 
   function settleText(pairs: [HTMLElement, HeroSpot][]) {
@@ -793,7 +864,7 @@ function initField(root: HTMLElement) {
     }
     let moving = authored;
 
-    if (!leaving && !swapping) {
+    if (settled()) {
       const ease = reduced ? 1 : 0.1;
       cam.pos += (tPos - cam.pos) * ease;
       cam.yaw += (tYaw - cam.yaw) * ease;
@@ -821,10 +892,10 @@ function initField(root: HTMLElement) {
   function intro() {
     if (reduced) return;
     authored = true;
-    const full = !saved;
+    const pace = saved ? INTRO.brief : INTRO.full;
     drop.fill(1);
-    cam.yaw = tYaw - (full ? 50 : 18);
-    cam.tilt = TILT - (full ? 20 : 8);
+    cam.yaw = tYaw - pace.yaw;
+    cam.tilt = TILT - pace.tilt;
     const order = layers.map((_, i) => last - i);
     // Start this motion with the incoming page transition.
     const tl = gsap.timeline({
@@ -836,13 +907,13 @@ function initField(root: HTMLElement) {
     order.forEach((i, k) => {
       tl.to(
         drop,
-        { [i]: 0, duration: full ? 0.9 : 0.6, ease: "expo.out" },
-        k * (full ? 0.07 : 0.04),
+        { [i]: 0, duration: pace.drop, ease: "expo.out" },
+        k * pace.stagger,
       );
     });
     tl.to(
       cam,
-      { yaw: tYaw, tilt: TILT, duration: full ? 1.8 : 1.1, ease: "expo.out" },
+      { yaw: tYaw, tilt: TILT, duration: pace.settle, ease: "expo.out" },
       0,
     );
     void onScreen().then(() => tl.restart(true));
@@ -884,7 +955,7 @@ function initField(root: HTMLElement) {
   const wrap = (deg: number) => (((deg % 360) + 540) % 360) - 180;
 
   function switchView(view: View) {
-    if (view === root.dataset.view || swapping || leaving) return;
+    if (view === root.dataset.view || !settled()) return;
     if (reduced) return setView(view);
     pressView(view);
     swapping = authored = true;
@@ -908,7 +979,7 @@ function initField(root: HTMLElement) {
     const yaw = wrap(cam.yaw);
     tYaw += yaw - cam.yaw;
     cam.yaw = yaw;
-    const flatten = { yaw: yaw >= 0 ? 360 : -360, flat: 1 };
+    const flatten = { yaw: fullTurn(yaw), flat: 1 };
     gsap
       .timeline({
         onUpdate: () => void (dirty = true),
@@ -930,7 +1001,7 @@ function initField(root: HTMLElement) {
     document.documentElement.classList.add("shell-fixed");
     measure();
     tYaw = wrap(tYaw);
-    Object.assign(cam, { pos: tPos, yaw: tYaw >= 0 ? 360 : -360, flat: 1 });
+    Object.assign(cam, { pos: tPos, yaw: fullTurn(tYaw), flat: 1 });
     Object.assign(cam, { tilt: TILT, lift: 0, ox: 0, oy: 0, zoom: 1 });
     drop.fill(0);
     scatter.fill(0);
@@ -979,6 +1050,7 @@ function initField(root: HTMLElement) {
     const chrome = index.querySelectorAll<HTMLElement>(
       ".field-index__count, .field-index__year h2",
     );
+    const dir = toRows ? DEAL.out : DEAL.in;
     const links = rows.map((row) => row.link);
     const ghosts = layers.map((layer, i) => {
       const el = document.createElement("div");
@@ -1003,7 +1075,7 @@ function initField(root: HTMLElement) {
       chrome,
       { opacity: +!toRows },
       { opacity: +toRows, duration: 0.4, stagger: 0.08 },
-      toRows ? 0.15 : 0,
+      dir.chromeAt,
     );
     if (toRows) tl.call(() => index.classList.remove("is-dealing"), [], 0.15);
 
@@ -1012,20 +1084,15 @@ function initField(root: HTMLElement) {
       const i = Number(li.dataset.row);
       const g = ghosts[i];
       const face = g.firstElementChild as HTMLElement;
-      const [from, to] = toRows
-        ? [tiles[i].box, rows[i].box]
-        : [rows[i].box, tiles[i].box];
+      const { box, alpha } = tiles[i];
+      const [from, to, fromAlpha, toAlpha] = toRows
+        ? [box, rows[i].box, alpha, 0]
+        : [rows[i].box, box, 0, alpha];
       const at = k * 0.055;
-      const tilt = (k % 2 ? 1 : -1) * (toRows ? 1 : -1) * (5 + (i % 3) * 2);
+      const tilt = (k % 2 ? 1 : -1) * dir.sign * (5 + (i % 3) * 2);
       const { left: x, top: y, width, height } = from;
-      gsap.set(g, {
-        x,
-        y,
-        width,
-        height,
-        opacity: toRows ? tiles[i].alpha : 0,
-      });
-      gsap.set(face, { borderRadius: toRows ? 8 : 2 });
+      gsap.set(g, { x, y, width, height, opacity: fromAlpha });
+      gsap.set(face, { borderRadius: dir.radius[0] });
       gsap.set(face.children, { opacity: +toRows });
       const glide = { duration: 0.8, ease: "expo.inOut" };
       tl.to(g, { opacity: 1, duration: 0.25 }, at)
@@ -1035,28 +1102,20 @@ function initField(root: HTMLElement) {
           { y: to.top, height: to.height, ...glide, ease: "power4.inOut" },
           at,
         )
-        .to(face, { borderRadius: toRows ? 2 : 8, ...glide }, at)
+        .to(face, { borderRadius: dir.radius[1], ...glide }, at)
         .to(g, { rotation: tilt, duration: 0.4 }, at)
         .to(g, { rotation: 0, duration: 0.45, ease: "back.out(2.5)" }, at + 0.4)
         .to(
           face.children,
           { opacity: +!toRows, duration: 0.3 },
-          toRows ? at : at + 0.5,
+          at + dir.faceAt,
         )
-        .to(
-          g,
-          { opacity: toRows ? 0 : tiles[i].alpha, duration: 0.35 },
-          at + (toRows ? 0.8 : 0.6),
-        )
+        .to(g, { opacity: toAlpha, duration: 0.35 }, at + dir.fadeAt)
         .fromTo(
           links[i],
-          { opacity: +!toRows, x: toRows ? -16 : 0 },
-          {
-            opacity: +toRows,
-            x: toRows ? 0 : 16,
-            duration: toRows ? 0.7 : 0.3,
-          },
-          toRows ? at + 0.72 : at,
+          { opacity: +!toRows, x: dir.linkX[0] },
+          { opacity: +toRows, x: dir.linkX[1], duration: dir.linkDur },
+          at + dir.linkAt,
         );
     });
   }
@@ -1126,9 +1185,13 @@ function heroKey(layer: HTMLAnchorElement) {
 }
 
 function readSpots(layer: HTMLAnchorElement): HeroSpots | null {
+  const spots = parseStored(() => localStorage.getItem(heroKey(layer)));
+  return spots?.plate ? spots : null;
+}
+
+function parseStored(read: () => string | null) {
   try {
-    const spots = JSON.parse(localStorage.getItem(heroKey(layer)) ?? "null");
-    return spots?.plate ? spots : null;
+    return JSON.parse(read() ?? "null");
   } catch {
     return null;
   }
@@ -1139,17 +1202,26 @@ function pad(n: number) {
 }
 
 function readCam(): { pos: number; yaw: number } | null {
-  try {
-    const raw = sessionStorage.getItem(CAM_KEY);
-    const cam = raw ? JSON.parse(raw) : null;
-    return typeof cam?.pos === "number" && typeof cam?.yaw === "number"
-      ? cam
-      : null;
-  } catch {
-    return null;
-  }
+  const cam = parseStored(() => sessionStorage.getItem(CAM_KEY));
+  return typeof cam?.pos === "number" && typeof cam.yaw === "number"
+    ? cam
+    : null;
 }
 
 function writeCam(pos: number, yaw: number) {
   sessionStorage.setItem(CAM_KEY, JSON.stringify({ pos, yaw }));
+}
+
+function edge(selector: string, side: "top" | "bottom", fallback: number) {
+  return (
+    document.querySelector(selector)?.getBoundingClientRect()[side] ?? fallback
+  );
+}
+
+function fullTurn(deg: number) {
+  return deg >= 0 ? 360 : -360;
+}
+
+function modified(event: MouseEvent) {
+  return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
 }
