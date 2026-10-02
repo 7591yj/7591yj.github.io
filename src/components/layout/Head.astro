@@ -78,7 +78,13 @@ const {
           return;
         }
       });
+      let revealed;
+      window.pageReveal = new Promise(function (resolve) {
+        revealed = resolve;
+      });
+      if (!("onpagereveal" in window)) revealed(null);
       addEventListener("pagereveal", function (event) {
+        revealed(event.viewTransition);
         let from;
         try {
           from = JSON.parse(sessionStorage.getItem(KEY));
@@ -104,14 +110,20 @@ const {
           const ease = getComputedStyle(document.documentElement)
             .getPropertyValue("--ease-out-expo")
             .trim();
+          // shell.css pins the transform origin while this stretches the pill.
+          const scale = from.w / p.dot.width;
           document.documentElement.animate(
             {
               transform: [
-                "translate(" + (p.nav.left + from.x) + "px, " + y + "px)",
-                "translate(" + p.dot.left + "px, " + y + "px)",
+                "translate(" +
+                  (p.nav.left + from.x) +
+                  "px, " +
+                  y +
+                  "px) scaleX(" +
+                  scale +
+                  ")",
+                "translate(" + p.dot.left + "px, " + y + "px) scaleX(1)",
               ],
-              width: [from.w + "px", p.dot.width + "px"],
-              height: [p.dot.height + "px", p.dot.height + "px"],
             },
             {
               duration: 520,

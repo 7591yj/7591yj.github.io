@@ -70,11 +70,17 @@ html:lang(ja) :is(.display, .entry-sub, .tile-title, .w-title) {
   max-width: 18ch;
 }
 
-/* reveal.ts clears these; the timer covers a failed script load. */
+/* reveal.ts clears these; the timer covers failed script loads. */
 .js-motion [data-reveal],
 .js-motion [data-split] {
   visibility: hidden;
   animation: shell-failsafe 0s 2s forwards;
+}
+
+/* reveal.ts uses SplitText masks, which need room for descenders. */
+.split-line-mask {
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
 }
 
 @keyframes shell-failsafe {
@@ -522,10 +528,10 @@ html[data-shell] .shell-nav > [aria-current="page"]:hover {
     animation-timing-function: var(--ease-in-out-quart);
   }
 
-  /* Head.astro animates this group's width; snapshots would stretch. */
+  /* Head.astro animates this group; snapshots would stretch. */
   ::view-transition-group(shell-nav-dot) {
-    animation-duration: 520ms;
-    animation-timing-function: var(--ease-out-expo);
+    animation: none;
+    transform-origin: 0 0;
     border-radius: 999px;
     background: var(--color-ink);
   }
