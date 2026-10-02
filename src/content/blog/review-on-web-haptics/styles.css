@@ -135,6 +135,10 @@
 
 .responsive-preview__block--accent {
   background: var(--color-accent);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .responsive-preview__block--accent {
   color: #222222;
 }
 
