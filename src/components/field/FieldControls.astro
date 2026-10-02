@@ -15,7 +15,12 @@ const { part, labels } = Astro.props;
 
 {
   part === "view" ? (
-    <div class="shell-pill" role="group" aria-label={labels.view}>
+    <div
+      class="shell-pill field-view-pill"
+      role="group"
+      aria-label={labels.view}
+    >
+      <span class="field-view-pill__thumb" aria-hidden="true" />
       <button
         type="button"
         data-view-btn="field"

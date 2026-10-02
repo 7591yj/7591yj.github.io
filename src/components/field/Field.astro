@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import "../ui/interactive-list.css";
 import "./field.css";
 
 export interface FieldItem {
@@ -56,7 +57,6 @@ const years = [...new Set(items.map((item) => item.year))].sort(
               draggable="false"
               data-layer={i}
             >
-              <span class="layer-back" />
               <span class="layer-face">
                 <span class="layer-tag">
                   <span>L{pad(i + 1)}</span>
@@ -104,6 +104,19 @@ const years = [...new Set(items.map((item) => item.year))].sort(
       <circle r="3" data-stack-leader-start></circle>
     </svg>
 
+    <div
+      class:list={["stack-scrub", { "is-dense": items.length > 12 }]}
+      data-stack-scrub
+    >
+      {
+        items.map((_, i) => (
+          <span data-scrub={i}>
+            <span>L{pad(i + 1)}</span>
+          </span>
+        ))
+      }
+    </div>
+
     <div class="stack-info" data-stack-info>
       {
         items.map((item, i) => (
@@ -128,6 +141,7 @@ const years = [...new Set(items.map((item) => item.year))].sort(
                 <span class="chip">{tag}</span>
               ))}
             </span>
+            <span class="stack-card__open kicker">{labels.open} ↗</span>
           </div>
         ))
       }
@@ -135,33 +149,44 @@ const years = [...new Set(items.map((item) => item.year))].sort(
   </div>
 
   <section class="field-index" data-field-index aria-label={labels.index}>
-    <p class="field-index__count kicker">
-      <span>{labels.index}</span>
-      <span>{pad(items.length)}</span>
-    </p>
+    <header class="field-index__head page-head">
+      <p class="field-index__count kicker">
+        <span>{labels.index}</span>
+      </p>
+    </header>
     {
       years.map((year) => (
-        <div class="field-index__year">
-          <h2 class="kicker">{year}</h2>
-          <ol>
+        <section class="ledger field-index__year">
+          <h2 class="kicker">
+            <span>{year}</span>
+            <span>
+              {pad(items.filter((item) => item.year === year).length)}
+            </span>
+          </h2>
+          <ol class="interactive-list">
             {items
               .filter((item) => item.year === year)
               .map((item) => (
                 <li data-id={item.id} data-row={items.indexOf(item)}>
-                  <a href={item.href}>
-                    <span class="row-title">{item.title}</span>
+                  <a class="interactive-row" href={item.href}>
+                    <span class="row-title interactive-title">
+                      {item.title}
+                    </span>
                     <span class="row-summary">{item.summary}</span>
                     <span class="row-kind">
                       {item.current ? labels.nowBuilding : item.status}
                     </span>
-                    <span class="row-arrow" aria-hidden="true">
+                    <span
+                      class="row-arrow interactive-arrow"
+                      aria-hidden="true"
+                    >
                       ↗
                     </span>
                   </a>
                 </li>
               ))}
           </ol>
-        </div>
+        </section>
       ))
     }
   </section>

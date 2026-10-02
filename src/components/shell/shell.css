@@ -658,6 +658,63 @@ html[data-shell] .shell-nav > [aria-current="page"]:hover {
   animation: none;
 }
 
+/* field.css names the work-only dock controls; leaving pages need these rules. */
+::view-transition-group(field-view),
+::view-transition-group(field-readout) {
+  animation: none;
+}
+
+::view-transition-old(field-view):not(:only-child),
+::view-transition-old(field-readout):not(:only-child) {
+  display: none;
+}
+
+::view-transition-new(field-view):not(:only-child),
+::view-transition-new(field-readout):not(:only-child) {
+  animation: none;
+}
+
+::view-transition-old(field-view),
+::view-transition-new(field-view) {
+  transform-origin: left bottom;
+}
+
+::view-transition-old(field-readout),
+::view-transition-new(field-readout) {
+  transform-origin: right bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-shell]:active-view-transition-type(page) {
+    &::view-transition-new(field-view):only-child {
+      animation: field-dock-in 620ms var(--ease-out-expo) 140ms both;
+    }
+
+    &::view-transition-new(field-readout):only-child {
+      animation: field-dock-in 620ms var(--ease-out-expo) 200ms both;
+    }
+
+    &::view-transition-old(field-view):only-child,
+    &::view-transition-old(field-readout):only-child {
+      animation: field-dock-out 240ms var(--ease-out-quart) both;
+    }
+  }
+
+  @keyframes field-dock-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem) scale(0.86);
+    }
+  }
+
+  @keyframes field-dock-out {
+    to {
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.92);
+    }
+  }
+}
+
 @media (max-width: 719px) {
   .shell-top {
     grid-template-columns: 1fr auto;

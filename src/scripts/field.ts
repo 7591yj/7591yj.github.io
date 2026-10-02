@@ -1,6 +1,8 @@
-import { gsap } from "./motion/core";
-import { usingMouse } from "./pointer";
+import { gsap, onScreen } from "./motion/core";
+import { onPointerChange, usingMouse } from "./pointer";
 import { aimWith, refreshCursor } from "./cursor";
+import { triggerHaptic } from "../haptics-instance";
+import { TICK } from "../haptics";
 
 type View = "field" | "list";
 
@@ -11,7 +13,17 @@ const TILT = 56;
 const YAW = -38;
 const OPEN = 3.2;
 const DRAG_PER_LAYER = 90;
+const ORBIT_RATIO = 1.5;
+const DENSE_STEP = 24;
+// Matches .stack-scene in field.css.
+const PERSPECTIVE = 1800;
+// Below this tile size the edge tags overrun the plates.
+const CRAMPED = 110;
 const SCRAMBLE = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789/#*+<>";
+// Matches the short landscape query in field.css.
+const SHORT = matchMedia(
+  "(max-width: 899px) and (max-height: 540px) and (orientation: landscape)",
+);
 
 const root = document.querySelector<HTMLElement>("[data-field]");
 if (root) initField(root);
@@ -22,6 +34,9 @@ function initField(root: HTMLElement) {
   const layers = [...root.querySelectorAll<HTMLAnchorElement>("[data-layer]")];
   const rows = [...root.querySelectorAll<HTMLElement>("[data-layer-row]")];
   const cards = [...root.querySelectorAll<HTMLElement>("[data-card]")];
+  const scrub = root.querySelector<HTMLElement>("[data-stack-scrub]")!;
+  const segments = [...scrub.querySelectorAll<HTMLElement>("[data-scrub]")];
+  const info = root.querySelector<HTMLElement>("[data-stack-info]")!;
   const leader = root.querySelector<SVGSVGElement>("[data-stack-leader]")!;
   const leaderPath = leader.querySelector<SVGPathElement>(
     "[data-stack-leader-path]",
@@ -65,7 +80,10 @@ function initField(root: HTMLElement) {
   const scatter = layers.map(() => 0);
   let authored = false;
   let leaving = false;
+  let swapping = false;
   let dirty = true;
+  // Draw the leader after render() has moved the layers.
+  let leaderStale = false;
 
   const saved = readCam();
   if (saved) {
@@ -81,10 +99,25 @@ function initField(root: HTMLElement) {
     const vw = stage.clientWidth;
     const vh = stage.clientHeight;
     narrow = vw < 900;
-    size = narrow
-      ? Math.min(vw * 0.6, vh * 0.34, 320)
-      : clamp(Math.min(vw * 0.28, vh * 0.44), 220, 420);
+    if (narrow) {
+      const top =
+        document.querySelector(".shell-top")?.getBoundingClientRect().bottom ??
+        0;
+      // field.css places the card beside the stack in short landscape.
+      const bottom = SHORT.matches
+        ? (document.querySelector(".shell-dock")?.getBoundingClientRect().top ??
+          vh)
+        : info.getBoundingClientRect().top;
+      const band = Math.max(bottom - top - 24, 0);
+      const span = SHORT.matches ? info.getBoundingClientRect().left : vw;
+      size = Math.min(span * 0.6, band / 1.45, 320);
+      root.style.setProperty("--sy", `${((top + bottom) / 2).toFixed(1)}px`);
+    } else {
+      size = clamp(Math.min(vw * 0.28, vh * 0.44), 220, 420);
+      root.style.removeProperty("--sy");
+    }
     gap = size * 0.16;
+    root.classList.toggle("is-cramped", size < CRAMPED);
     root.style.setProperty("--layer", `${size.toFixed(1)}px`);
     dirty = true;
   }
@@ -96,8 +129,22 @@ function initField(root: HTMLElement) {
     const still = 1 - cam.flat;
     const tilt = cam.tilt * still + parallaxY * still;
     const yaw = cam.yaw + parallaxX * still;
+    const recenter =
+      narrow && last ? size * 0.33 * (cam.pos / last - 0.5) * 2 : 0;
+    let cx = 0;
+    let cy = 0;
+    if (narrow) {
+      const s = size * 0.08 * still;
+      const yr = (yaw * Math.PI) / 180;
+      const tr = (tilt * Math.PI) / 180;
+      const f = PERSPECTIVE / (PERSPECTIVE - s * Math.sin(yr) * Math.sin(tr));
+      cx = -s * Math.cos(yr) * f;
+      cy = -s * Math.sin(yr) * Math.cos(tr) * f;
+    }
+    const ox = cam.ox + cx;
+    const oy = cam.oy + recenter * still + cy;
     stack.style.transform =
-      `translate(${cam.ox.toFixed(1)}px, ${cam.oy.toFixed(1)}px) ` +
+      `translate(${ox.toFixed(1)}px, ${oy.toFixed(1)}px) ` +
       `rotateX(${tilt.toFixed(3)}deg) rotateZ(${yaw.toFixed(3)}deg)`;
 
     for (let i = 0; i < n; i++) {
@@ -133,7 +180,7 @@ function initField(root: HTMLElement) {
       probeDetail(next);
     }
 
-    drawLeader();
+    leaderStale = true;
 
     if (coords) {
       const deg = Math.round(((cam.yaw % 360) + 360) % 360);
@@ -148,6 +195,7 @@ function initField(root: HTMLElement) {
     layers.forEach((el, i) => el.classList.toggle("is-active", i === next));
     rows.forEach((el, i) => el.classList.toggle("is-active", i === next));
     cards.forEach((el, i) => el.classList.toggle("is-active", i === next));
+    segments.forEach((el, i) => el.classList.toggle("is-active", i === next));
     if (prev !== -1 && !reduced) {
       const title = cards[next].querySelector<HTMLElement>("[data-scramble]");
       if (title) scramble(title);
@@ -162,24 +210,32 @@ function initField(root: HTMLElement) {
     probe = null;
   }
 
+  // Defer the detail-page probe until the intro and input settle.
   function probeDetail(i: number) {
     window.clearTimeout(probeTimer);
     probeTimer = window.setTimeout(() => {
-      const layer = layers[i];
-      if (leaving || readSpots(layer)) return;
-      dropProbe();
-      const frame = document.createElement("iframe");
-      frame.setAttribute("aria-hidden", "true");
-      frame.tabIndex = -1;
-      frame.style.cssText =
-        `position:fixed;left:0;top:0;width:${innerWidth}px;` +
-        `height:${innerHeight}px;border:0;visibility:hidden;` +
-        "pointer-events:none;z-index:-1";
-      frame.src = layer.href;
-      probe = frame;
-      document.body.append(frame);
-      window.setTimeout(() => probe === frame && dropProbe(), 8000);
+      if (authored) return probeDetail(i);
+      if ("requestIdleCallback" in window)
+        requestIdleCallback(() => loadProbe(i), { timeout: 2000 });
+      else loadProbe(i);
     }, 350);
+  }
+
+  function loadProbe(i: number) {
+    const layer = layers[i];
+    if (i !== active || leaving || readSpots(layer)) return;
+    dropProbe();
+    const frame = document.createElement("iframe");
+    frame.setAttribute("aria-hidden", "true");
+    frame.tabIndex = -1;
+    frame.style.cssText =
+      `position:fixed;left:0;top:0;width:${innerWidth}px;` +
+      `height:${innerHeight}px;border:0;visibility:hidden;` +
+      "pointer-events:none;z-index:-1";
+    frame.src = layer.href;
+    probe = frame;
+    document.body.append(frame);
+    window.setTimeout(() => probe === frame && dropProbe(), 8000);
   }
 
   window.addEventListener("storage", (event) => {
@@ -187,7 +243,8 @@ function initField(root: HTMLElement) {
   });
 
   function drawLeader() {
-    const show = !narrow && !leaving && active >= 0 && drop[active] < 0.05;
+    const show =
+      !narrow && !leaving && !swapping && active >= 0 && drop[active] < 0.05;
     leader.classList.toggle("is-visible", show);
     if (!show) return;
     let sx = -Infinity;
@@ -237,13 +294,15 @@ function initField(root: HTMLElement) {
   let startX = 0;
   let startY = 0;
   let moved = false;
+  let free = true;
+  let axis: "x" | "y" | null = null;
   let lastX = 0;
   let lastY = 0;
   let vx = 0;
   let vy = 0;
   let suppressClick = false;
 
-  const locked = () => leaving || root.dataset.view !== "field";
+  const locked = () => leaving || swapping || root.dataset.view !== "field";
 
   function goTo(i: number) {
     tPos = clamp(i, 0, last);
@@ -263,7 +322,9 @@ function initField(root: HTMLElement) {
     moved = false;
     startX = lastX = event.clientX;
     startY = lastY = event.clientY;
-    dragSlop = event.pointerType === "mouse" ? 10 : 16;
+    free = event.pointerType === "mouse";
+    dragSlop = free ? 10 : 16;
+    axis = null;
     vx = vy = 0;
     root.classList.add("is-dragging");
     setHot(null);
@@ -282,16 +343,17 @@ function initField(root: HTMLElement) {
     const dy = event.clientY - lastY;
     lastX = event.clientX;
     lastY = event.clientY;
-    if (
-      !moved &&
-      Math.hypot(event.clientX - startX, event.clientY - startY) > dragSlop
-    )
+    const ox = event.clientX - startX;
+    const oy = event.clientY - startY;
+    if (!moved && Math.hypot(ox, oy) > dragSlop) {
       moved = true;
+      if (!free) axis = Math.abs(ox) > Math.abs(oy) * ORBIT_RATIO ? "x" : "y";
+    }
     if (!moved) return;
-    vx = dx;
-    vy = dy;
-    orbit(dx * 0.3);
-    tPos = clamp(tPos - dy / DRAG_PER_LAYER, -0.35, last + 0.35);
+    vx = axis === "y" ? 0 : free ? dx : -dx;
+    vy = axis === "x" ? 0 : dy;
+    orbit(vx * 0.3);
+    tPos = clamp(tPos - vy / DRAG_PER_LAYER, -0.35, last + 0.35);
     dirty = true;
   });
 
@@ -305,6 +367,8 @@ function initField(root: HTMLElement) {
   };
   window.addEventListener("pointerup", release);
   window.addEventListener("pointercancel", release);
+  // A previous drag must not swallow the next tap.
+  window.addEventListener("pointerdown", () => (suppressClick = false), true);
 
   stage.addEventListener(
     "click",
@@ -320,20 +384,114 @@ function initField(root: HTMLElement) {
       if (row) {
         return goTo(Number(row.dataset.layerRow));
       }
+      const card = target.closest("[data-card]");
+      if (card && slid) {
+        slid = false;
+        event.preventDefault();
+        return;
+      }
       const layer = target.closest<HTMLAnchorElement>("[data-layer]");
-      if (!layer || leaving) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      if ((!layer && !card) || leaving) return;
+      if (
+        layer &&
+        (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      )
         return;
       event.preventDefault();
-      const i = Number(layer.dataset.layer);
+      const i = layer && usingMouse() ? Number(layer.dataset.layer) : active;
       if (i === active) dive(i);
-      else {
-        goTo(i);
-      }
+      else goTo(i);
     },
     true,
   );
   stage.addEventListener("dragstart", (event) => event.preventDefault());
+
+  const dense = scrub.classList.contains("is-dense");
+  let scrubId = -1;
+  let scrubY = 0;
+  let scrubFrom = 0;
+  let scrubbed = false;
+  function jump(i: number) {
+    i = clamp(i, 0, last);
+    if (i === Math.round(tPos)) return;
+    goTo(i);
+    triggerHaptic(TICK);
+  }
+  function scrubTo(y: number) {
+    const box = scrub.getBoundingClientRect();
+    jump(Math.floor(((y - box.top) / box.height) * n));
+  }
+  scrub.addEventListener("pointerdown", (event) => {
+    event.stopPropagation();
+    if (event.button !== 0 || locked() || scrubId !== -1) return;
+    scrubId = event.pointerId;
+    scrubY = event.clientY;
+    scrubFrom = Math.round(tPos);
+    scrubbed = false;
+    scrub.setPointerCapture(scrubId);
+    scrub.classList.add("is-scrubbing");
+    if (!dense) scrubTo(event.clientY);
+  });
+  scrub.addEventListener("pointermove", (event) => {
+    if (event.pointerId !== scrubId || locked()) return;
+    if (!dense) return scrubTo(event.clientY);
+    const dy = event.clientY - scrubY;
+    if (!scrubbed && Math.abs(dy) <= 8) return;
+    scrubbed = true;
+    jump(scrubFrom + Math.round(dy / DENSE_STEP));
+  });
+  const endScrub = (event: PointerEvent) => {
+    if (event.pointerId !== scrubId) return;
+    if (dense && !scrubbed && event.type === "pointerup" && !locked())
+      scrubTo(event.clientY);
+    scrubId = -1;
+    scrub.classList.remove("is-scrubbing");
+  };
+  scrub.addEventListener("pointerup", endScrub);
+  scrub.addEventListener("pointercancel", endScrub);
+  scrub.addEventListener("lostpointercapture", endScrub);
+
+  let slideId = -1;
+  let slideX = 0;
+  let slideY = 0;
+  let slideFrom = 0;
+  let slideAxis: "x" | "y" | null = null;
+  let slid = false;
+  info.addEventListener("pointerdown", (event) => {
+    event.stopPropagation();
+    if (event.button !== 0 || locked() || slideId !== -1) return;
+    slideId = event.pointerId;
+    slideX = event.clientX;
+    slideY = event.clientY;
+    slideFrom = Math.round(tPos);
+    slideAxis = null;
+    slid = false;
+  });
+  info.addEventListener("pointermove", (event) => {
+    if (event.pointerId !== slideId || locked()) return;
+    const ox = event.clientX - slideX;
+    const oy = event.clientY - slideY;
+    if (!slideAxis) {
+      if (Math.hypot(ox, oy) <= 16) return;
+      slideAxis = Math.abs(ox) > Math.abs(oy) ? "x" : "y";
+      slid = true;
+      if (slideAxis === "x") {
+        info.setPointerCapture(slideId);
+        scrub.classList.add("is-scrubbing");
+      }
+    }
+    if (slideAxis !== "x") return;
+    const step = Math.max(info.getBoundingClientRect().width / n, 24);
+    jump(slideFrom + Math.round(ox / step));
+  });
+  const endSlide = (event: PointerEvent) => {
+    if (event.pointerId !== slideId) return;
+    slideId = -1;
+    scrub.classList.remove("is-scrubbing");
+  };
+  info.addEventListener("pointerup", endSlide);
+  info.addEventListener("pointercancel", endSlide);
+  info.addEventListener("lostpointercapture", endSlide);
 
   let wheelAcc = 0;
   let wheelTimer = 0;
@@ -383,7 +541,7 @@ function initField(root: HTMLElement) {
   }
 
   stage.addEventListener("pointerover", (event) => {
-    if (dragging || leaving) return;
+    if (dragging || leaving || event.pointerType !== "mouse") return;
     const layer = (event.target as Element).closest<HTMLElement>(
       "[data-layer]",
     );
@@ -398,10 +556,13 @@ function initField(root: HTMLElement) {
   // cursor.ts asks the field for its cursor state first.
   aimWith((el) => {
     if (dragging) return { state: "drag", label: dragLabel };
-    if (leaving) return { state: "idle" };
+    if (leaving || swapping) return { state: "idle" };
     if (el?.closest("[data-field-index] li a"))
       return { state: "open", label: openLabel };
     if (!el?.closest("[data-field-stage]")) return null;
+    if (el.closest("[data-card].is-active"))
+      return { state: "open", label: openLabel };
+    if (el.closest("[data-stack-scrub]")) return { state: "target" };
     const layer = el.closest<HTMLElement>("[data-layer]");
     if (!layer) return { state: "idle" };
     if (layer.classList.contains("is-active"))
@@ -516,7 +677,7 @@ function initField(root: HTMLElement) {
     title: HTMLElement,
     summary: HTMLElement,
   ) {
-    // Use measurements from detail.client.ts, or entry.css as a fallback.
+    // Use detail.client.ts measurements, falling back to entry.css.
     const vw = innerWidth;
     let spots: Pick<HeroSpots, "title" | "sub"> | null = readSpots(layer);
     if (!spots) {
@@ -626,9 +787,13 @@ function initField(root: HTMLElement) {
   let frame = 0;
   function tick() {
     frame = requestAnimationFrame(tick);
+    if (leaderStale) {
+      leaderStale = false;
+      drawLeader();
+    }
     let moving = authored;
 
-    if (!leaving) {
+    if (!leaving && !swapping) {
       const ease = reduced ? 1 : 0.1;
       cam.pos += (tPos - cam.pos) * ease;
       cam.yaw += (tYaw - cam.yaw) * ease;
@@ -661,7 +826,9 @@ function initField(root: HTMLElement) {
     cam.yaw = tYaw - (full ? 50 : 18);
     cam.tilt = TILT - (full ? 20 : 8);
     const order = layers.map((_, i) => last - i);
+    // Start this motion with the incoming page transition.
     const tl = gsap.timeline({
+      paused: true,
       delay: 0.1,
       onUpdate: () => void (dirty = true),
       onComplete: () => void (authored = false),
@@ -678,13 +845,13 @@ function initField(root: HTMLElement) {
       { yaw: tYaw, tilt: TILT, duration: full ? 1.8 : 1.1, ease: "expo.out" },
       0,
     );
+    void onScreen().then(() => tl.restart(true));
   }
 
   function setView(view: View, persist = true) {
     root.dataset.view = view;
     document.documentElement.classList.toggle("shell-fixed", view === "field");
-    for (const btn of document.querySelectorAll<HTMLElement>("[data-view-btn]"))
-      btn.setAttribute("aria-pressed", String(btn.dataset.viewBtn === view));
+    pressView(view);
     if (persist) sessionStorage.setItem(VIEW_KEY, view);
     if (view === "field") {
       measure();
@@ -692,53 +859,248 @@ function initField(root: HTMLElement) {
       start();
     } else {
       stop();
-      refreshCursor();
       setHot(null);
       window.scrollTo(0, 0);
     }
+    refreshCursor();
   }
 
   document.addEventListener("click", (event) => {
     const btn = (event.target as Element).closest<HTMLElement>(
       "[data-view-btn]",
     );
-    if (btn) setView(btn.dataset.viewBtn as View);
+    if (btn) switchView(btn.dataset.viewBtn as View);
   });
 
   index.addEventListener("focusin", () => {
-    if (root.dataset.view !== "list") setView("list", false);
+    if (root.dataset.view !== "list" && !swapping) setView("list", false);
   });
 
-  if (usingMouse()) {
-    const px = gsap.quickTo(preview, "x", { duration: 0.5, ease: "power3" });
-    const py = gsap.quickTo(preview, "y", { duration: 0.5, ease: "power3" });
-    index.addEventListener("pointerover", (event) => {
-      const row = (event.target as Element).closest<HTMLElement>(
-        "li[data-row]",
-      );
-      if (!row) return;
-      const plate =
-        layers[Number(row.dataset.row)]?.querySelector(".tile-plate");
-      if (plate) preview.replaceChildren(plate.cloneNode(true));
-      if (!preview.classList.contains("is-visible"))
-        gsap.set(preview, { x: event.clientX + 24, y: event.clientY - 100 });
-      preview.classList.add("is-visible");
-    });
-    index.addEventListener("pointerout", (event) => {
-      const next = event.relatedTarget as Element | null;
-      if (!next?.closest?.("li[data-row]"))
-        preview.classList.remove("is-visible");
-    });
-    index.addEventListener("pointermove", (event) => {
-      px(event.clientX + 24);
-      py(event.clientY - 100);
+  function pressView(view: View) {
+    for (const btn of document.querySelectorAll<HTMLElement>("[data-view-btn]"))
+      btn.setAttribute("aria-pressed", String(btn.dataset.viewBtn === view));
+  }
+
+  const wrap = (deg: number) => (((deg % 360) + 540) % 360) - 180;
+
+  function switchView(view: View) {
+    if (view === root.dataset.view || swapping || leaving) return;
+    if (reduced) return setView(view);
+    pressView(view);
+    swapping = authored = true;
+    setHot(null);
+    refreshCursor();
+    preview.classList.remove("is-visible");
+    root.classList.add("is-swapping");
+    index.classList.add("is-dealing");
+    parallaxX = parallaxY = 0;
+    tPos = Math.round(clamp(tPos, 0, last));
+    if (view === "list") dealOut();
+    else gatherIn();
+  }
+
+  const finish = () => {
+    swapping = authored = false;
+    refreshCursor();
+  };
+
+  function dealOut() {
+    const yaw = wrap(cam.yaw);
+    tYaw += yaw - cam.yaw;
+    cam.yaw = yaw;
+    const flatten = { yaw: yaw >= 0 ? 360 : -360, flat: 1 };
+    gsap
+      .timeline({
+        onUpdate: () => void (dirty = true),
+        onComplete: () => {
+          const tiles = flatTiles();
+          setView("list");
+          fly(true, tiles, rowBoxes(), () => {
+            root.classList.remove("is-swapping");
+            finish();
+          });
+        },
+      })
+      .to(cam, { pos: tPos, duration: 0.35, ease: "power2.out" }, 0)
+      .to(cam, { ...flatten, duration: 0.75, ease: "expo.inOut" }, 0);
+  }
+
+  function gatherIn() {
+    const rows = rowBoxes();
+    document.documentElement.classList.add("shell-fixed");
+    measure();
+    tYaw = wrap(tYaw);
+    Object.assign(cam, { pos: tPos, yaw: tYaw >= 0 ? 360 : -360, flat: 1 });
+    Object.assign(cam, { tilt: TILT, lift: 0, ox: 0, oy: 0, zoom: 1 });
+    drop.fill(0);
+    scatter.fill(0);
+    render();
+    fly(false, flatTiles(), rows, () => {
+      setView("field");
+      window.scrollTo(0, 0);
+      root.classList.remove("is-swapping");
+      index.classList.remove("is-dealing");
+      render();
+      gsap.to(cam, {
+        yaw: tYaw,
+        flat: 0,
+        duration: 1.1,
+        ease: "expo.inOut",
+        onUpdate: () => void (dirty = true),
+        onComplete: finish,
+      });
     });
   }
+
+  const flatTiles = () =>
+    layers.map((el) => ({
+      box: el.getBoundingClientRect(),
+      alpha: Number(el.style.opacity || 1),
+    }));
+
+  const rowBoxes = () => {
+    const rows: { link: HTMLElement; box: DOMRect }[] = [];
+    for (const li of index.querySelectorAll<HTMLElement>("li[data-row]")) {
+      const link = li.querySelector<HTMLElement>("a")!;
+      rows[Number(li.dataset.row)] = {
+        link,
+        box: link.getBoundingClientRect(),
+      };
+    }
+    return rows;
+  };
+
+  function fly(
+    toRows: boolean,
+    tiles: ReturnType<typeof flatTiles>,
+    rows: ReturnType<typeof rowBoxes>,
+    done: () => void,
+  ) {
+    const chrome = index.querySelectorAll<HTMLElement>(
+      ".field-index__count, .field-index__year h2",
+    );
+    const links = rows.map((row) => row.link);
+    const ghosts = layers.map((layer, i) => {
+      const el = document.createElement("div");
+      el.className = "field-ghost";
+      el.classList.toggle("is-active", i === active);
+      el.append(layer.querySelector(".layer-face")!.cloneNode(true));
+      return el;
+    });
+    [...ghosts.keys()]
+      .sort((a, b) => tiles[a].box.width - tiles[b].box.width)
+      .forEach((i) => root.append(ghosts[i]));
+
+    const tl = gsap.timeline({
+      defaults: { ease: "power2.out" },
+      onComplete: () => {
+        done();
+        ghosts.forEach((g) => g.remove());
+        gsap.set([...links, ...chrome], { clearProps: "opacity,transform" });
+      },
+    });
+    tl.fromTo(
+      chrome,
+      { opacity: +!toRows },
+      { opacity: +toRows, duration: 0.4, stagger: 0.08 },
+      toRows ? 0.15 : 0,
+    );
+    if (toRows) tl.call(() => index.classList.remove("is-dealing"), [], 0.15);
+
+    const order = [...index.querySelectorAll<HTMLElement>("li[data-row]")];
+    order.forEach((li, k) => {
+      const i = Number(li.dataset.row);
+      const g = ghosts[i];
+      const face = g.firstElementChild as HTMLElement;
+      const [from, to] = toRows
+        ? [tiles[i].box, rows[i].box]
+        : [rows[i].box, tiles[i].box];
+      const at = k * 0.055;
+      const tilt = (k % 2 ? 1 : -1) * (toRows ? 1 : -1) * (5 + (i % 3) * 2);
+      const { left: x, top: y, width, height } = from;
+      gsap.set(g, {
+        x,
+        y,
+        width,
+        height,
+        opacity: toRows ? tiles[i].alpha : 0,
+      });
+      gsap.set(face, { borderRadius: toRows ? 8 : 2 });
+      gsap.set(face.children, { opacity: +toRows });
+      const glide = { duration: 0.8, ease: "expo.inOut" };
+      tl.to(g, { opacity: 1, duration: 0.25 }, at)
+        .to(g, { x: to.left, width: to.width, ...glide }, at)
+        .to(
+          g,
+          { y: to.top, height: to.height, ...glide, ease: "power4.inOut" },
+          at,
+        )
+        .to(face, { borderRadius: toRows ? 2 : 8, ...glide }, at)
+        .to(g, { rotation: tilt, duration: 0.4 }, at)
+        .to(g, { rotation: 0, duration: 0.45, ease: "back.out(2.5)" }, at + 0.4)
+        .to(
+          face.children,
+          { opacity: +!toRows, duration: 0.3 },
+          toRows ? at : at + 0.5,
+        )
+        .to(
+          g,
+          { opacity: toRows ? 0 : tiles[i].alpha, duration: 0.35 },
+          at + (toRows ? 0.8 : 0.6),
+        )
+        .fromTo(
+          links[i],
+          { opacity: +!toRows, x: toRows ? -16 : 0 },
+          {
+            opacity: +toRows,
+            x: toRows ? 0 : 16,
+            duration: toRows ? 0.7 : 0.3,
+          },
+          toRows ? at + 0.72 : at,
+        );
+    });
+  }
+
+  onPointerChange((mouse) => {
+    if (mouse) return;
+    setHot(null);
+    preview.classList.remove("is-visible");
+    parallaxX = parallaxY = 0;
+    dirty = true;
+  });
+
+  const previewX = (x: number) => x + 96;
+  const px = gsap.quickTo(preview, "x", { duration: 0.5, ease: "power3" });
+  const py = gsap.quickTo(preview, "y", { duration: 0.5, ease: "power3" });
+  index.addEventListener("pointerover", (event) => {
+    if (event.pointerType !== "mouse" || swapping) return;
+    const row = (event.target as Element).closest<HTMLElement>("li[data-row]");
+    if (!row) return;
+    const plate = layers[Number(row.dataset.row)]?.querySelector(".tile-plate");
+    if (plate) preview.replaceChildren(plate.cloneNode(true));
+    if (!preview.classList.contains("is-visible"))
+      gsap.set(preview, { x: previewX(event.clientX), y: event.clientY - 100 });
+    preview.classList.add("is-visible");
+  });
+  index.addEventListener("pointerout", (event) => {
+    const next = event.relatedTarget as Element | null;
+    if (!next?.closest?.("li[data-row]"))
+      preview.classList.remove("is-visible");
+  });
+  index.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse") return;
+    px(previewX(event.clientX));
+    py(event.clientY - 100);
+  });
 
   window.addEventListener("resize", () => {
     if (root.dataset.view !== "field") return;
     measure();
   });
+
+  new ResizeObserver(() => {
+    if (narrow && root.dataset.view === "field") measure();
+  }).observe(info);
 
   const savedView = sessionStorage.getItem(VIEW_KEY) as View | null;
   setView(savedView === "list" ? "list" : "field", false);
