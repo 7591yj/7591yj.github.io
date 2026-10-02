@@ -76,12 +76,13 @@
   font-weight: 600;
 }
 
-.prose a {
+.prose a,
+html[data-shell] .prose a {
   color: var(--color-text-primary);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
-  text-decoration-color: var(--color-border-hover);
+  text-decoration-color: currentColor;
   transition:
     color var(--duration-fast),
     text-decoration-color var(--duration-fast);
@@ -154,6 +155,12 @@ html[data-shell] .prose a:hover {
 
 .prose .copy-btn:hover {
   color: var(--color-text-primary);
+}
+
+@media not (any-hover: hover) {
+  .prose .copy-btn {
+    opacity: 1;
+  }
 }
 
 .prose .copy-btn.copied {
@@ -298,16 +305,38 @@ html[data-shell] .prose a:hover {
 }
 
 @media (max-width: 719px) {
+  .prose {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+
+  :lang(ja) .prose {
+    line-height: 1.85;
+  }
+
+  .prose > :is(div, figure, pre, table) {
+    margin-block: 1.5rem;
+  }
+
   .prose h3 {
-    margin-top: 3.5rem;
+    margin: 3rem 0 1rem;
+  }
+
+  .prose h4 {
+    margin-top: 2.25rem;
+  }
+
+  .prose hr {
+    margin-block: 2.5rem;
+  }
+
+  .prose blockquote {
+    margin-block: 1.5rem;
+    padding: 1.1rem 1.15rem;
   }
 
   .prose pre code {
     padding: 1rem 1.1rem;
-  }
-
-  .prose .copy-btn {
-    opacity: 1;
   }
 
   .prose table {

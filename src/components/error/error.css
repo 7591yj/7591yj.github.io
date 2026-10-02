@@ -3,10 +3,6 @@
   padding-bottom: 9rem;
 }
 
-.error__head {
-  padding-bottom: clamp(3rem, 8vh, 5rem);
-}
-
 .error__code {
   font-size: clamp(6rem, 16vw, 12rem);
   line-height: 0.85;
@@ -49,7 +45,7 @@
 }
 
 .error__foot {
-  padding: 5rem var(--gutter) 0;
+  padding: var(--foot-gap) var(--gutter) 0;
   font: 600 clamp(1.5rem, 3vw, 2.5rem) / 1 var(--font-display);
   letter-spacing: -0.03em;
 }

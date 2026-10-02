@@ -377,6 +377,7 @@
 
 .intensity-matrix__slider {
   flex: 1;
+  min-width: 0;
   accent-color: var(--color-text-primary);
 }
 

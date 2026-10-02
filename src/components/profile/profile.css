@@ -12,7 +12,7 @@
 }
 
 .profile-facts {
-  margin: 0 var(--gutter) clamp(4rem, 10vh, 7rem);
+  margin: 0 var(--gutter) var(--section-gap);
   padding-top: 1.25rem;
   border-top: 1px solid var(--color-border);
 }
@@ -42,22 +42,6 @@
 
 html[data-shell] .profile-facts a:hover {
   color: var(--color-accent);
-}
-
-.ledger {
-  display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr);
-  gap: 1rem 2rem;
-  margin: 0 var(--gutter) 4rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--color-text-primary);
-}
-
-.ledger h2 {
-  justify-content: space-between;
-  align-self: start;
-  padding-top: 0.2rem;
-  color: var(--color-text-primary);
 }
 
 .ledger .interactive-list {
@@ -107,10 +91,6 @@ html[data-shell] .profile-facts a:hover {
 }
 
 @media (max-width: 859px) {
-  .ledger {
-    grid-template-columns: 1fr;
-  }
-
   .ledger-row {
     grid-template-columns: 1fr;
     gap: 0.35rem;
@@ -119,5 +99,21 @@ html[data-shell] .profile-facts a:hover {
   .ledger-aside {
     justify-self: start;
     text-align: left;
+  }
+}
+
+@media (max-width: 719px) {
+  .profile-facts dl {
+    gap: 1rem;
+  }
+
+  .ledger-row {
+    padding: 1rem 0;
+  }
+
+  .ledger-aside {
+    font: var(--label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 }

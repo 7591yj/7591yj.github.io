@@ -2,7 +2,20 @@ html[data-shell] {
   --label: 500 0.6875rem / 1.25 var(--font-plemol);
   --dock-bg: color-mix(in srgb, var(--color-bg-tertiary) 72%, transparent);
   --gutter: clamp(1rem, 3vw, 2.5rem);
+  --page-top: clamp(8rem, 22vh, 13rem);
+  --page-head-end: clamp(3rem, 8vh, 5rem);
+  --section-gap: clamp(4rem, 10vh, 7rem);
+  --foot-gap: 5rem;
   background: var(--color-bg-primary);
+}
+
+@media (max-width: 719px) {
+  html[data-shell] {
+    --page-top: 8rem;
+    --page-head-end: 2.5rem;
+    --section-gap: 3rem;
+    --foot-gap: 3.5rem;
+  }
 }
 
 html.shell-fixed {
@@ -63,11 +76,46 @@ html:lang(ja) :is(.display, .entry-sub, .tile-title, .w-title) {
 .page-head {
   display: grid;
   gap: 1.75rem;
-  padding: clamp(8rem, 22vh, 13rem) var(--gutter) clamp(3rem, 8vh, 5rem);
+  padding: var(--page-top) var(--gutter) var(--page-head-end);
+}
+
+@media (max-width: 719px) {
+  .page-head {
+    gap: 1.25rem;
+  }
 }
 
 .page-head__title {
   max-width: 18ch;
+}
+
+.ledger {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: 1rem 2rem;
+  margin: 0 var(--gutter) 4rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-text-primary);
+}
+
+.ledger h2 {
+  justify-content: space-between;
+  align-self: start;
+  padding-top: 0.2rem;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 859px) {
+  .ledger {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 719px) {
+  .ledger {
+    gap: 1.25rem;
+    margin-bottom: var(--section-gap);
+  }
 }
 
 /* reveal.ts clears these; the timer covers failed script loads. */
@@ -613,7 +661,7 @@ html[data-shell] .shell-nav > [aria-current="page"]:hover {
 @media (max-width: 719px) {
   .shell-top {
     grid-template-columns: 1fr auto;
-    padding: 1rem 1rem 2.5rem;
+    padding: 1rem var(--gutter) 2.5rem;
   }
 
   .shell-clock {

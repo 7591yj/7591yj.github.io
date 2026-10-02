@@ -92,6 +92,10 @@
 }
 
 @media (max-width: 719px) {
+  .term {
+    margin-block: 1.5rem;
+  }
+
   .term__bar {
     padding-inline: 1.1rem;
   }

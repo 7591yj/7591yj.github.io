@@ -96,3 +96,9 @@
   width: 1rem;
   height: 1rem;
 }
+
+@media (max-width: 719px) {
+  .content-carousel {
+    margin-block: 1.5rem;
+  }
+}

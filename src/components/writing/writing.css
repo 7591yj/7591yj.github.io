@@ -98,10 +98,28 @@
 
   .w-date {
     grid-column: 1 / -1;
+    display: flex;
+    gap: 0.75rem;
   }
 
   .w-main {
     grid-column: 1;
+    gap: 0.4rem;
+  }
+
+  .w-title {
+    font-size: 1.625rem;
+    line-height: 1.08;
+  }
+
+  .w-desc {
+    font-size: var(--font-size-base);
+  }
+
+  .w-arrow {
+    align-self: start;
+    font-size: 1.25rem;
+    line-height: 1.4;
   }
 }
 

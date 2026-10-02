@@ -123,7 +123,7 @@ html[data-shell] .entry-meta a:hover {
 }
 
 .entry-foot {
-  padding: 5rem var(--gutter) 0;
+  padding: var(--foot-gap) var(--gutter) 0;
   font: 600 clamp(1.5rem, 3vw, 2.5rem) / 1 var(--font-display);
   letter-spacing: -0.03em;
 }
@@ -142,6 +142,25 @@ html[data-shell] .entry-foot a:hover {
     grid-row: 1;
     justify-self: start;
     width: min(60%, 16rem);
+  }
+}
+
+@media (max-width: 719px) {
+  .entry-hero {
+    gap: 2rem;
+    padding: var(--page-top) var(--gutter) var(--page-head-end);
+  }
+
+  .entry-hero__text {
+    gap: 1.25rem;
+  }
+
+  .entry-meta {
+    gap: 1rem;
+  }
+
+  .entry-body {
+    padding-top: var(--page-head-end);
   }
 }
 
