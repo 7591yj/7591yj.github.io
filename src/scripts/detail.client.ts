@@ -3,9 +3,15 @@ const COPIED_LABEL = "COPIED";
 const COPY_RESET_DELAY_MS = 2000;
 
 function scrollToHash() {
-  const hash = window.location.hash;
+  const hash = window.location.hash.slice(1);
   if (!hash) return;
-  const el = document.querySelector(hash);
+  let id = hash;
+  try {
+    id = decodeURIComponent(hash);
+  } catch {
+    id = hash;
+  }
+  const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
