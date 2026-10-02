@@ -454,7 +454,8 @@ function initField(root: HTMLElement) {
       if ((!layer && !card) || leaving) return;
       if (layer && modified(event)) return;
       event.preventDefault();
-      const i = layer && usingMouse() ? Number(layer.dataset.layer) : active;
+      const pointed = layer && event.detail > 0 && usingMouse();
+      const i = pointed ? Number(layer.dataset.layer) : active;
       if (i === active) dive(i);
       else goTo(i);
     },
@@ -831,6 +832,8 @@ function initField(root: HTMLElement) {
   window.addEventListener("pageshow", (event) => {
     if (!event.persisted) return;
     leaving = false;
+    if (stage.contains(document.activeElement))
+      (document.activeElement as HTMLElement).blur();
     root.classList.remove("is-leaving");
     document.documentElement.classList.remove("field-leaving");
     for (const el of root.querySelectorAll<HTMLElement>(
