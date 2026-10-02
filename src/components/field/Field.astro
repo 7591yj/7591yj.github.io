@@ -35,6 +35,8 @@ const years = [...new Set(items.map((item) => item.year))].sort(
   class="field"
   data-field
   data-view="field"
+  data-open-label={labels.open}
+  data-drag-label={labels.drag}
   style={`--count: ${items.length}`}
 >
   <div class="field-stage" data-field-stage aria-hidden="true">
@@ -165,20 +167,6 @@ const years = [...new Set(items.map((item) => item.year))].sort(
   </section>
 
   <div class="field-preview" data-field-preview aria-hidden="true"></div>
-
-  <div
-    class="field-cursor"
-    data-field-cursor
-    data-state="hidden"
-    data-open-label={labels.open}
-    data-drag-label={labels.drag}
-    aria-hidden="true"
-  >
-    <span class="field-cursor__cross"></span>
-    <span class="field-cursor__label" data-field-cursor-label
-      >{labels.open}</span
-    >
-  </div>
 </div>
 
 <script>

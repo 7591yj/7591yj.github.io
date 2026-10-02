@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
+import Cursor from "../components/layout/Cursor.astro";
 import Head from "../components/layout/Head.astro";
 import LangSwitch from "../components/layout/LangSwitch.astro";
 import ThemeToggle from "../components/layout/ThemeToggle.astro";
@@ -156,6 +157,7 @@ const nav: { id: ShellSection; label: string; href: string }[] = [
     </div>
 
     <div class="shell-target" data-shell-target aria-hidden="true"></div>
+    <Cursor openLabel={t("work.open")} />
 
     <script>
       import "../scripts/shell/shell.ts";

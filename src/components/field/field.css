@@ -32,11 +32,6 @@
   cursor: grabbing;
 }
 
-html.has-field-cursor,
-html.has-field-cursor * {
-  cursor: none !important;
-}
-
 .stack-guides {
   position: absolute;
   inset: 0;
@@ -413,102 +408,7 @@ html.field-leaving :is(.shell-dock__start, .shell-dock__end) > * {
   }
 }
 
-.field-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: var(--z-cursor);
-  pointer-events: none;
-  will-change: transform;
-}
-
-.field-cursor__cross {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition:
-    scale 450ms var(--ease-out-expo),
-    rotate 450ms var(--ease-out-expo),
-    opacity 200ms;
-}
-
-.field-cursor__cross::before,
-.field-cursor__cross::after {
-  content: "";
-  position: absolute;
-  background: var(--color-text-primary);
-}
-
-.field-cursor__cross::before {
-  width: 1.1rem;
-  height: 1px;
-  left: -0.55rem;
-  top: -0.5px;
-}
-
-.field-cursor__cross::after {
-  width: 1px;
-  height: 1.1rem;
-  left: -0.5px;
-  top: -0.55rem;
-}
-
-.field-cursor__label {
-  position: absolute;
-  top: 0.8rem;
-  left: 0.8rem;
-  padding: 0.3rem 0.45rem;
-  border-radius: 0.2rem;
-  white-space: nowrap;
-  font: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: var(--color-ink);
-  color: var(--color-on-ink);
-  opacity: 0;
-  translate: -0.25rem -0.25rem;
-  transition:
-    opacity 180ms var(--ease-out-quart),
-    translate 400ms var(--ease-out-expo),
-    background-color var(--duration-normal);
-}
-
-.field-cursor[data-state="hidden"] .field-cursor__cross {
-  opacity: 0;
-  scale: 0.4;
-}
-
-.field-cursor[data-state="target"] .field-cursor__cross {
-  scale: 0.5;
-}
-
-.field-cursor[data-state="drag"] .field-cursor__cross {
-  rotate: 45deg;
-  scale: 0.8;
-}
-
-.field-cursor:is([data-state="open"], [data-state="drag"], [data-state="peek"])
-  .field-cursor__label {
-  opacity: 1;
-  translate: none;
-}
-
-.field-cursor[data-state="open"] .field-cursor__label {
-  background: var(--color-accent);
-  color: #fff;
-}
-
-.field-cursor[data-state="open"] .field-cursor__label::after {
-  content: " ↗";
-}
-
-@media not ((hover: hover) and (pointer: fine)) {
-  .field-cursor {
-    display: none;
-  }
-}
-
-.shell-readout.field-readout {
+.field-readout {
   display: flex;
   align-items: center;
   gap: 0.75rem;

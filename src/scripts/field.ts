@@ -1,7 +1,8 @@
 import { gsap } from "./motion/core";
+import { usingMouse } from "./pointer";
+import { aimWith, refreshCursor } from "./cursor";
 
 type View = "field" | "list";
-type CursorState = "hidden" | "idle" | "open" | "drag" | "peek" | "target";
 
 const CAM_KEY = "field-cam";
 const VIEW_KEY = "field-view";
@@ -30,16 +31,13 @@ function initField(root: HTMLElement) {
   )!;
   const index = root.querySelector<HTMLElement>("[data-field-index]")!;
   const preview = root.querySelector<HTMLElement>("[data-field-preview]")!;
-  const cursor = root.querySelector<HTMLElement>("[data-field-cursor]")!;
-  const cursorLabel = root.querySelector<HTMLElement>(
-    "[data-field-cursor-label]",
-  )!;
+  const openLabel = root.dataset.openLabel!;
+  const dragLabel = root.dataset.dragLabel!;
   const coords = document.querySelector<HTMLElement>("[data-field-coords]");
 
   const n = layers.length;
   const last = n - 1;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = matchMedia("(pointer: fine) and (hover: hover)").matches;
 
   const clamp = (v: number, lo: number, hi: number) =>
     Math.min(hi, Math.max(lo, v));
@@ -269,13 +267,11 @@ function initField(root: HTMLElement) {
     vx = vy = 0;
     root.classList.add("is-dragging");
     setHot(null);
-    setCursor("drag");
   });
 
   window.addEventListener("pointermove", (event) => {
-    if (finePointer) trackCursor(event);
     if (!dragging) {
-      if (finePointer && !locked()) {
+      if (usingMouse() && !locked()) {
         parallaxX = (event.clientX / innerWidth - 0.5) * 6;
         parallaxY = (event.clientY / innerHeight - 0.5) * -4;
         dirty = true;
@@ -299,14 +295,13 @@ function initField(root: HTMLElement) {
     dirty = true;
   });
 
-  const release = (event: PointerEvent) => {
+  const release = () => {
     if (!dragging) return;
     dragging = false;
     root.classList.remove("is-dragging");
     if (moved) suppressClick = true;
     if (!reduced) orbit(vx * 4);
     goTo(Math.round(tPos - (reduced ? 0 : vy / 18)));
-    if (finePointer) trackCursor(event);
   };
   window.addEventListener("pointerup", release);
   window.addEventListener("pointercancel", release);
@@ -400,42 +395,20 @@ function initField(root: HTMLElement) {
     dirty = true;
   });
 
-  function setCursor(state: CursorState, label?: string) {
-    if (!finePointer) return;
-    cursor.dataset.state = state;
-    if (state === "open") cursorLabel.textContent = cursor.dataset.openLabel!;
-    if (state === "drag") cursorLabel.textContent = cursor.dataset.dragLabel!;
-    if (state === "peek" && label) cursorLabel.textContent = label;
-  }
-
-  function trackCursor(event: PointerEvent) {
-    if (locked()) {
-      setCursor("hidden");
-      return;
-    }
-    cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-    if (dragging) {
-      return setCursor("drag");
-    }
-    const el = event.target instanceof Element ? event.target : null;
-    if (!el?.closest("[data-field-stage]")) {
-      const control = el?.closest("a, button, [role='button']") ?? null;
-      return setCursor(control ? "target" : "idle");
-    }
+  // cursor.ts asks the field for its cursor state first.
+  aimWith((el) => {
+    if (dragging) return { state: "drag", label: dragLabel };
+    if (leaving) return { state: "idle" };
+    if (el?.closest("[data-field-index] li a"))
+      return { state: "open", label: openLabel };
+    if (!el?.closest("[data-field-stage]")) return null;
     const layer = el.closest<HTMLElement>("[data-layer]");
-    if (!layer) return setCursor("idle");
-    if (layer.classList.contains("is-active")) return setCursor("open");
+    if (!layer) return { state: "idle" };
+    if (layer.classList.contains("is-active"))
+      return { state: "open", label: openLabel };
     const tag = layer.querySelector(".layer-tag")?.textContent ?? "";
-    setCursor("peek", tag.replace(/\s+/g, " ").trim());
-  }
-
-  const hideCursor = () => {
-    setCursor("hidden");
-  };
-  window.addEventListener("pointerout", (event) => {
-    if (!event.relatedTarget) hideCursor();
+    return { state: "peek", label: tag.replace(/\s+/g, " ").trim() };
   });
-  window.addEventListener("blur", hideCursor);
 
   function dive(i: number) {
     const layer = layers[i];
@@ -443,7 +416,7 @@ function initField(root: HTMLElement) {
     leaving = true;
     authored = true;
     setHot(null);
-    setCursor("hidden");
+    refreshCursor();
     writeCam(i, tYaw);
 
     const card = cards[i];
@@ -710,10 +683,6 @@ function initField(root: HTMLElement) {
   function setView(view: View, persist = true) {
     root.dataset.view = view;
     document.documentElement.classList.toggle("shell-fixed", view === "field");
-    document.documentElement.classList.toggle(
-      "has-field-cursor",
-      finePointer && view === "field",
-    );
     for (const btn of document.querySelectorAll<HTMLElement>("[data-view-btn]"))
       btn.setAttribute("aria-pressed", String(btn.dataset.viewBtn === view));
     if (persist) sessionStorage.setItem(VIEW_KEY, view);
@@ -723,7 +692,7 @@ function initField(root: HTMLElement) {
       start();
     } else {
       stop();
-      setCursor("hidden");
+      refreshCursor();
       setHot(null);
       window.scrollTo(0, 0);
     }
@@ -740,7 +709,7 @@ function initField(root: HTMLElement) {
     if (root.dataset.view !== "list") setView("list", false);
   });
 
-  if (finePointer) {
+  if (usingMouse()) {
     const px = gsap.quickTo(preview, "x", { duration: 0.5, ease: "power3" });
     const py = gsap.quickTo(preview, "y", { duration: 0.5, ease: "power3" });
     index.addEventListener("pointerover", (event) => {

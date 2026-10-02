@@ -1,5 +1,6 @@
 import { initTheme, watchSystemPreference } from "../theme";
 import { onPointerChange } from "../pointer";
+import "../cursor";
 
 watchSystemPreference();
 initTheme();
