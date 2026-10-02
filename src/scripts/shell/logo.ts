@@ -1,3 +1,5 @@
+import { whenMouse } from "../pointer";
+
 const DIGITS = "0123456789";
 const LETTERS = "abcdefghijklmnopqrstuvwxyz";
 // Matches .shell-logo__strip > span in shell.css.
@@ -83,6 +85,7 @@ function mount(logo: HTMLElement) {
   };
 
   logo.addEventListener("pointerenter", (event) => {
+    if (event.pointerType !== "mouse") return;
     const box = logo.getBoundingClientRect();
     spin(event.clientX > box.left + box.width / 2);
   });
@@ -92,12 +95,8 @@ function mount(logo: HTMLElement) {
 }
 
 const logo = document.querySelector<HTMLElement>(".shell-logo");
-if (
-  logo &&
-  matchMedia("(pointer: fine) and (hover: hover)").matches &&
-  !matchMedia("(prefers-reduced-motion: reduce)").matches
-) {
-  void document.fonts.ready.then(() => mount(logo));
+if (logo && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  whenMouse(() => void document.fonts.ready.then(() => mount(logo)));
 }
 
 export {};

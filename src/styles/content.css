@@ -30,9 +30,11 @@
   --sweep-pos: 100% 0;
 }
 
-.hover-sweep-text-inv:hover,
-.hover-sweep-text-inv.is-swept:hover {
-  --sweep-pos: 0 0;
+@media (any-hover: hover) {
+  .hover-sweep-text-inv:hover,
+  .hover-sweep-text-inv.is-swept:hover {
+    --sweep-pos: 0 0;
+  }
 }
 
 .led {

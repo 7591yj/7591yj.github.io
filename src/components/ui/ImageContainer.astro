@@ -39,7 +39,7 @@ const {
     transition: scale 900ms var(--ease-out-expo);
   }
 
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  @media (any-hover: hover) and (prefers-reduced-motion: no-preference) {
     .media-frame:hover img {
       scale: 1.03;
     }

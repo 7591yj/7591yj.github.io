@@ -470,7 +470,7 @@ html[data-shell] .shell-nav > [aria-current="page"]:hover {
   }
 }
 
-@media not ((hover: hover) and (pointer: fine)) {
+@media not ((any-hover: hover) and (any-pointer: fine)) {
   .shell-target {
     display: none;
   }

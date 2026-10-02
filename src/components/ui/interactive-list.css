@@ -2,9 +2,18 @@
   transition: opacity var(--duration-slow) var(--ease-out-quart);
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .interactive-list:has(a.interactive-row:hover) .interactive-row:not(:hover) {
     opacity: 0.35;
+  }
+
+  .interactive-list a.interactive-row:hover .interactive-title {
+    translate: var(--interactive-title-shift, 1rem) 0;
+  }
+
+  .interactive-list a.interactive-row:hover .interactive-arrow {
+    translate: var(--interactive-arrow-shift, 0.4rem) 0;
+    color: var(--color-accent);
   }
 }
 
@@ -20,12 +29,10 @@
     color var(--duration-normal);
 }
 
-.interactive-list a.interactive-row:hover .interactive-title,
 .interactive-list a.interactive-row:focus-visible .interactive-title {
   translate: var(--interactive-title-shift, 1rem) 0;
 }
 
-.interactive-list a.interactive-row:hover .interactive-arrow,
 .interactive-list a.interactive-row:focus-visible .interactive-arrow {
   translate: var(--interactive-arrow-shift, 0.4rem) 0;
   color: var(--color-accent);

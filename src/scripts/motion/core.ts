@@ -11,9 +11,6 @@ export { gsap, ScrollTrigger, SplitText };
 export const reducedMotion = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export const finePointer = () =>
-  matchMedia("(pointer: fine) and (hover: hover)").matches;
-
 export function each<T extends HTMLElement = HTMLElement>(
   selector: string,
   key: string,

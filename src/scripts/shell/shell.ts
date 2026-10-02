@@ -1,4 +1,5 @@
 import { initTheme, watchSystemPreference } from "../theme";
+import { onPointerChange } from "../pointer";
 
 watchSystemPreference();
 initTheme();
@@ -22,7 +23,7 @@ if (document.querySelector("[data-reveal], [data-split]")) {
 void import("./logo.ts");
 
 const targetFrame = document.querySelector<HTMLElement>("[data-shell-target]");
-if (targetFrame && matchMedia("(pointer: fine) and (hover: hover)").matches) {
+if (targetFrame) {
   let hovered: HTMLElement | null = null;
 
   const placeFrame = (control: HTMLElement) => {
@@ -38,11 +39,12 @@ if (targetFrame && matchMedia("(pointer: fine) and (hover: hover)").matches) {
   };
 
   document.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse") return;
     const element = event.target instanceof Element ? event.target : null;
     const control =
       element?.closest<HTMLElement>("a, button, [role='button']") ?? null;
     const next =
-      control?.closest(".shell-top, .shell-dock, [data-field-index]") &&
+      control?.closest(".shell-top, .shell-dock") &&
       !control.matches(".shell-logo")
         ? control
         : null;
@@ -64,6 +66,9 @@ if (targetFrame && matchMedia("(pointer: fine) and (hover: hover)").matches) {
     if (!event.relatedTarget) hideFrame();
   });
   window.addEventListener("blur", hideFrame);
+  onPointerChange((mouse) => {
+    if (!mouse) hideFrame();
+  });
   window.addEventListener(
     "scroll",
     () => {
