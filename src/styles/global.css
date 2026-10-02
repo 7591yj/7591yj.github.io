@@ -102,8 +102,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent-subtle);
-  color: var(--color-text-primary);
+  background: var(--color-accent);
+  color: #222222;
 }
 
 a {
