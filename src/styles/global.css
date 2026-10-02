@@ -53,6 +53,11 @@
   types: page;
 }
 
+/* Capture the themed UI with its backdrop in the root's circle reveal. */
+html:active-view-transition-type(theme) :not(.shell-cursor) {
+  view-transition-name: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html:active-view-transition-type(theme) {
     &::view-transition-old(root) {
