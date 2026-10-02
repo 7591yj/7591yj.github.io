@@ -113,7 +113,7 @@ const nav: { id: ShellSection; label: string; href: string }[] = [
   />
   <body>
     <header class="shell-top">
-      <a class="shell-logo" href={url("/")}>7591yj</a>
+      <a class="shell-logo" href={url("/")} data-astro-prefetch>7591yj</a>
       <p class="shell-clock">
         <span>{t("shell.tokyo")}</span>{" "}
         <time data-shell-clock>--:--</time>{" "}
@@ -134,6 +134,7 @@ const nav: { id: ShellSection; label: string; href: string }[] = [
           nav.map((item) => (
             <a
               href={item.href}
+              data-astro-prefetch="viewport"
               aria-current={item.id === active ? "page" : undefined}
             >
               {item.id === active && (

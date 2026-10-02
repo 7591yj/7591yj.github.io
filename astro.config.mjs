@@ -20,7 +20,8 @@ export default defineConfig({
       },
     ],
   },
-  prefetch: false,
+  // Only links that opt in with data-astro-prefetch, i.e. the shell nav.
+  prefetch: { prefetchAll: false, defaultStrategy: "hover" },
   redirects: {
     "/projects": "/",
     "/ja/projects": "/ja/",
