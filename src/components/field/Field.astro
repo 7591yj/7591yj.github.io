@@ -27,9 +27,16 @@ interface Props {
 
 const { items, labels } = Astro.props;
 const pad = (n: number) => String(n).padStart(2, "0");
-const years = [...new Set(items.map((item) => item.year))].sort(
-  (a, b) => Number(b) - Number(a),
-);
+const past = items.filter((item) => !item.current);
+const groups = [
+  { label: labels.nowBuilding, items: items.filter((item) => item.current) },
+  ...[...new Set(past.map((item) => item.year))]
+    .sort((a, b) => Number(b) - Number(a))
+    .map((year) => ({
+      label: year,
+      items: past.filter((item) => item.year === year),
+    })),
+].filter((group) => group.items.length > 0);
 ---
 
 <div
@@ -155,36 +162,27 @@ const years = [...new Set(items.map((item) => item.year))].sort(
       </p>
     </header>
     {
-      years.map((year) => (
+      groups.map((group) => (
         <section class="ledger field-index__year">
           <h2 class="kicker">
-            <span>{year}</span>
-            <span>
-              {pad(items.filter((item) => item.year === year).length)}
-            </span>
+            <span>{group.label}</span>
+            <span>{pad(group.items.length)}</span>
           </h2>
           <ol class="interactive-list">
-            {items
-              .filter((item) => item.year === year)
-              .map((item) => (
-                <li data-id={item.id} data-row={items.indexOf(item)}>
-                  <a class="interactive-row" href={item.href}>
-                    <span class="row-title interactive-title">
-                      {item.title}
-                    </span>
-                    <span class="row-summary">{item.summary}</span>
-                    <span class="row-kind">
-                      {item.current ? labels.nowBuilding : item.status}
-                    </span>
-                    <span
-                      class="row-arrow interactive-arrow"
-                      aria-hidden="true"
-                    >
-                      ↗
-                    </span>
-                  </a>
-                </li>
-              ))}
+            {group.items.map((item) => (
+              <li data-id={item.id} data-row={items.indexOf(item)}>
+                <a class="interactive-row" href={item.href}>
+                  <span class="row-title interactive-title">{item.title}</span>
+                  <span class="row-summary">{item.summary}</span>
+                  <span class="row-kind">
+                    {item.current ? item.year : item.status}
+                  </span>
+                  <span class="row-arrow interactive-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              </li>
+            ))}
           </ol>
         </section>
       ))
