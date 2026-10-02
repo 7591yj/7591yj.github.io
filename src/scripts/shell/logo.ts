@@ -60,7 +60,7 @@ function mount(logo: HTMLElement) {
     if (spinning) return;
     spinning = true;
     void Promise.all(
-      reels.map((reel, i) => {
+      reels.map(async (reel, i) => {
         const rank = fromEnd ? reels.length - 1 - i : i;
         const landing = fill(reel, 5 + rank * 2);
         const animation = reel.strip.animate(
@@ -74,10 +74,9 @@ function mount(logo: HTMLElement) {
             fill: "forwards",
           },
         );
-        return animation.finished.then(() => {
-          fill(reel, 1);
-          animation.cancel();
-        });
+        await animation.finished;
+        fill(reel, 1);
+        animation.cancel();
       }),
     ).finally(() => {
       spinning = false;
