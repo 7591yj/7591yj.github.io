@@ -65,20 +65,33 @@ function nameOf(control: Element) {
 }
 
 function aim(target: Element | null) {
+  set(claim(target) ?? pageAim(target));
+}
+
+function claim(target: Element | null) {
   for (const fn of resolvers) {
     const claimed = fn(target);
-    if (claimed) return set(claimed);
+    if (claimed) return claimed;
   }
-  if (target?.closest(`${TEXT}, ${LOGO}`)) return set({ state: "hidden" });
-  if (target?.closest(FRAMED)) return set({ state: "idle" });
-  const control = target?.closest(CONTROL);
-  if (!control) return set({ state: "idle" });
+  return null;
+}
+
+function pageAim(target: Element | null): Aim {
+  if (target?.closest(`${TEXT}, ${LOGO}`)) return { state: "hidden" };
+  const control = target?.closest(FRAMED) ? null : target?.closest(CONTROL);
+  return control ? controlAim(control) : { state: "idle" };
+}
+
+function controlAim(control: Element): Aim {
   const name = nameOf(control);
   if (control.matches(DISABLED))
-    return set({ state: "disabled", label: name ?? "" });
-  if (name === null)
-    return set({ state: "open", label: el!.dataset.openLabel });
-  set(name ? { state: "peek", label: name } : { state: "target" });
+    return { state: "disabled", label: name ?? "" };
+  return namedAim(name);
+}
+
+function namedAim(name: string | null): Aim {
+  if (name === null) return { state: "open", label: el!.dataset.openLabel };
+  return name ? { state: "peek", label: name } : { state: "target" };
 }
 
 function place() {
@@ -91,7 +104,11 @@ function init() {
   label = el?.querySelector<HTMLElement>("[data-shell-cursor-label]") ?? null;
   // Ignore field.ts detail probes.
   if (!el || window !== window.top) return;
+  listen();
+  restore();
+}
 
+function listen() {
   const sync = () =>
     document.documentElement.classList.toggle("has-cursor", usingMouse());
   sync();
@@ -126,17 +143,24 @@ function init() {
   };
   window.addEventListener("pagehide", save);
   window.addEventListener("pageswap", save);
+}
+
+function restore() {
+  const pos = savedPos();
+  if (!usingMouse() || typeof pos?.x !== "number") return;
+  x = pos.x;
+  y = pos.y;
+  place();
+  aim(document.elementFromPoint(x, y));
+}
+
+function savedPos(): { x: number; y: number } | null {
   try {
-    const pos = JSON.parse(sessionStorage.getItem(POS_KEY) ?? "null");
+    const raw = sessionStorage.getItem(POS_KEY);
     sessionStorage.removeItem(POS_KEY);
-    if (usingMouse() && typeof pos?.x === "number") {
-      x = pos.x;
-      y = pos.y;
-      place();
-      aim(document.elementFromPoint(x, y));
-    }
+    return JSON.parse(raw ?? "null");
   } catch {
-    return;
+    return null;
   }
 }
 
