@@ -2,13 +2,23 @@
 import { Font } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Head from "../components/layout/Head.astro";
+import LangSwitch from "../components/layout/LangSwitch.astro";
 import ThemeToggle from "../components/layout/ThemeToggle.astro";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_OG_IMAGE, AUTHOR } from "../consts";
-import { detectLocale, useTranslations, type Locale } from "../i18n/ui";
+import {
+  detectLocale,
+  localeNames,
+  locales,
+  upcomingLocales,
+  useTranslations,
+  type Locale,
+} from "../i18n/ui";
 import "../styles/global.css";
 import "../components/shell/shell.css";
 
 export type ShellSection = "work" | "writing" | "about";
+/** Null sends every language option to its locale root. */
+export type Alternates = Partial<Record<Locale, string>> | null;
 
 interface Props {
   title?: string;
@@ -17,8 +27,7 @@ interface Props {
   type?: "website" | "article";
   publishDate?: string;
   active?: ShellSection;
-  /** Null sends the language switch to the locale root. */
-  alternate?: string | null;
+  alternates?: Alternates;
   noindex?: boolean;
   fixed?: boolean;
 }
@@ -30,7 +39,7 @@ const {
   type = "website",
   publishDate,
   active,
-  alternate,
+  alternates,
   noindex = false,
   fixed = false,
 } = Astro.props;
@@ -39,13 +48,27 @@ const locale = (Astro.currentLocale ??
   detectLocale(Astro.url.pathname)) as Locale;
 const t = useTranslations(locale);
 const url = (path: string) => getRelativeLocaleUrl(locale, path);
-const otherLocale: Locale = locale === "en" ? "ja" : "en";
 const barePath =
   Astro.url.pathname.replace(new RegExp(`^/${locale}(?=/|$)`), "") || "/";
-const alternateHref =
-  alternate === null
-    ? getRelativeLocaleUrl(otherLocale, "/")
-    : (alternate ?? getRelativeLocaleUrl(otherLocale, barePath));
+const languages = [
+  ...locales.map((code) => ({
+    code,
+    name: localeNames[code],
+    current: code === locale,
+    href:
+      code === locale
+        ? Astro.url.pathname
+        : alternates === null
+          ? getRelativeLocaleUrl(code, "/")
+          : (alternates?.[code] ?? getRelativeLocaleUrl(code, barePath)),
+  })),
+  ...upcomingLocales.map((code) => ({
+    code,
+    name: localeNames[code],
+    current: false,
+    href: undefined,
+  })),
+];
 const metaDescription = description ?? t("site.description");
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
@@ -97,13 +120,8 @@ const nav: { id: ShellSection; label: string; href: string }[] = [
         <span>GMT+9</span>
       </p>
       <div class="shell-meta">
-        <a
-          class="shell-lang"
-          href={alternateHref}
-          hreflang={otherLocale}
-          lang={otherLocale}>{otherLocale.toUpperCase()}</a
-        >
-        <ThemeToggle />
+        <LangSwitch label={t("shell.language")} languages={languages} />
+        <ThemeToggle label={t("shell.theme")} />
       </div>
     </header>
 

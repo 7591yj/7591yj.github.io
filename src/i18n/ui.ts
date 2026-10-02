@@ -2,6 +2,16 @@ export const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
+/** Listed in the language switcher before any pages exist in them. */
+export const upcomingLocales = ["ko"] as const;
+export type SwitcherLocale = Locale | (typeof upcomingLocales)[number];
+
+export const localeNames: Record<SwitcherLocale, string> = {
+  en: "English",
+  ja: "日本語",
+  ko: "한국어",
+};
+
 const en = {
   "site.description":
     "Portfolio and blog of 7591yj - software development, design, and research.",
@@ -9,6 +19,8 @@ const en = {
   "shell.work": "Work",
   "shell.writing": "Writing",
   "shell.about": "About",
+  "shell.language": "Language",
+  "shell.theme": "Toggle theme",
   "shell.backWork": "All work",
   "shell.backWriting": "All writing",
   "work.title": "Selected work",
@@ -45,6 +57,8 @@ const en = {
 export type UiKey = keyof typeof en;
 
 const ja: Partial<Record<UiKey, string>> = {
+  "shell.language": "言語",
+  "shell.theme": "テーマを切り替え",
   "site.description":
     "7591yjのポートフォリオとブログ - ソフトウェア開発、デザイン、リサーチ",
   "work.project": "プロジェクト",

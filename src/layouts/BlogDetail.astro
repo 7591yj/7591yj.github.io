@@ -19,12 +19,21 @@ const { title, date, description, tags } = entry.data;
 const { locale, slug } = entry;
 const { Content, headings } = await render(entry.source);
 const t = useTranslations(locale);
-const otherLocale = locales.find((l) => l !== locale)!;
-const translation = (await getBlogPosts(otherLocale)).find(
-  (other) => other.slug === slug,
+const alternates = Object.fromEntries(
+  await Promise.all(
+    locales
+      .filter((other) => other !== locale)
+      .map(async (other) => {
+        const translation = (await getBlogPosts(other)).find(
+          (post) => post.slug === slug,
+        );
+        return [
+          other,
+          translation?.url ?? getRelativeLocaleUrl(other, "/blog"),
+        ];
+      }),
+  ),
 );
-const alternate =
-  translation?.url ?? getRelativeLocaleUrl(otherLocale, "/blog");
 
 const meta: MetaItem[] = [
   { label: t("meta.date"), value: formatDate(date) },
@@ -47,7 +56,7 @@ const meta: MetaItem[] = [
   meta={meta}
   tags={tags}
   tagsLabel={t("meta.tags")}
-  alternate={alternate}
+  alternates={alternates}
   backLinkHref={getRelativeLocaleUrl(locale, "/blog")}
   backLinkLabel={t("shell.backWriting")}
   headings={headings}

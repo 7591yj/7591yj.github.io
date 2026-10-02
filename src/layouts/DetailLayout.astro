@@ -1,5 +1,5 @@
 ---
-import Shell, { type ShellSection } from "./Shell.astro";
+import Shell, { type Alternates, type ShellSection } from "./Shell.astro";
 import TableOfContents from "../components/content/TableOfContents/TableOfContents.astro";
 import "../components/entry/entry.css";
 
@@ -19,7 +19,7 @@ interface Props {
   meta: MetaItem[];
   tags?: string[];
   tagsLabel: string;
-  alternate: string | null;
+  alternates: Alternates;
   backLinkHref: string;
   backLinkLabel: string;
   headings: { depth: number; slug: string; text: string }[];
@@ -38,7 +38,7 @@ const {
   meta,
   tags = [],
   tagsLabel,
-  alternate,
+  alternates,
   backLinkHref,
   backLinkLabel,
   headings,
@@ -50,7 +50,7 @@ const {
 
 <Shell
   active={section}
-  alternate={alternate}
+  alternates={alternates}
   title={title}
   description={description}
   type={type}

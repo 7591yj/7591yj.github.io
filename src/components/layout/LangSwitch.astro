@@ -1,0 +1,62 @@
+---
+interface Language {
+  code: string;
+  name: string;
+  current: boolean;
+  href?: string;
+}
+
+interface Props {
+  label: string;
+  languages: Language[];
+}
+
+const { label, languages } = Astro.props;
+const current = Math.max(
+  0,
+  languages.findIndex((language) => language.current),
+);
+---
+
+<nav
+  class="shell-lang"
+  aria-label={label}
+  data-lang-switch
+  style={`--n: ${languages.length}; --current: ${current}`}
+>
+  <div class="shell-lang__menu">
+    <span class="shell-lang__dot" aria-hidden="true"></span>
+    {
+      languages.map((language) =>
+        language.href ? (
+          <a
+            class:list={[
+              "shell-lang__option",
+              { "is-target": language.current },
+            ]}
+            href={language.href}
+            hreflang={language.code}
+            lang={language.code}
+            title={language.name}
+            aria-current={language.current ? "page" : undefined}
+          >
+            {language.code.toUpperCase()}
+          </a>
+        ) : (
+          <span
+            class="shell-lang__option"
+            lang={language.code}
+            title={language.name}
+            aria-disabled="true"
+          >
+            {language.code.toUpperCase()}
+          </span>
+        ),
+      )
+    }
+  </div>
+</nav>
+
+<script>
+  import "./LangSwitch.client.ts";
+</script>

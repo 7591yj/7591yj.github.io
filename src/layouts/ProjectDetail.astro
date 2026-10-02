@@ -28,11 +28,18 @@ const {
 const { locale, slug } = entry;
 const { Content, headings } = await render(entry.source);
 const t = useTranslations(locale);
-const otherLocale = locales.find((l) => l !== locale)!;
-const translation = (await getProjects(otherLocale)).find(
-  (other) => other.slug === slug,
+const alternates = Object.fromEntries(
+  await Promise.all(
+    locales
+      .filter((other) => other !== locale)
+      .map(async (other) => {
+        const translation = (await getProjects(other)).find(
+          (project) => project.slug === slug,
+        );
+        return [other, translation?.url ?? getRelativeLocaleUrl(other, "/")];
+      }),
+  ),
 );
-const alternate = translation?.url ?? getRelativeLocaleUrl(otherLocale, "/");
 
 const tools = tech.filter((name) => name[0] !== name[0].toLowerCase());
 const meta: MetaItem[] = [
@@ -55,7 +62,7 @@ const meta: MetaItem[] = [
   meta={meta}
   tags={tools}
   tagsLabel={t("meta.stack")}
-  alternate={alternate}
+  alternates={alternates}
   backLinkHref={getRelativeLocaleUrl(locale, "/")}
   backLinkLabel={t("shell.backWork")}
   headings={headings}

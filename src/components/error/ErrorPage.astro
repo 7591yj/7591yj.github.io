@@ -14,7 +14,7 @@ const locale = detectLocale(Astro.url.pathname);
 const t = useTranslations(locale);
 ---
 
-<Shell title={`${SITE_NAME} | ${code}`} alternate={null} noindex>
+<Shell title={`${SITE_NAME} | ${code}`} alternates={null} noindex>
   <main class="error">
     <header class="page-head error__head">
       <p class="kicker" data-reveal>
