@@ -29,8 +29,12 @@ const projectSchema = z.object({
   desc: z.array(z.string()).default([]),
   tags: z.array(z.string()).default([]),
   tech: z.array(z.string()).default([]),
+  thumbnail: z.string().optional(),
   images: z.array(z.string()).optional(),
   link: z.string().optional(),
+  links: z
+    .array(z.object({ label: z.string().optional(), href: z.url() }))
+    .optional(),
 });
 
 const postTranslationSchema = z.strictObject({

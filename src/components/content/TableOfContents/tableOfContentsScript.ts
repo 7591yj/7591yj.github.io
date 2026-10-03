@@ -14,7 +14,10 @@ function createActiveTracker(links: NodeListOf<TOCLink>): SetActive {
     if (slug === activeSlug) return;
     activeSlug = slug;
     links.forEach((l) => {
-      l.classList.toggle("active", l.dataset.slug === slug);
+      const on = l.dataset.slug === slug;
+      l.classList.toggle("active", on);
+      if (on) l.setAttribute("aria-current", "location");
+      else l.removeAttribute("aria-current");
     });
   };
 }
@@ -25,7 +28,6 @@ function observeHeadings(
 ): void {
   const observer = new IntersectionObserver(
     (entries) => {
-      // Find the topmost visible heading
       const visible = entries
         .filter((e) => e.isIntersecting)
         .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
@@ -44,7 +46,6 @@ function bindClickScroll(
   links: NodeListOf<TOCLink>,
   setActive: SetActive,
 ): void {
-  // Handle TOC link clicks with smooth scroll
   links.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
@@ -70,6 +71,5 @@ export function initToc() {
   observeHeadings(headingEls, setActive);
   bindClickScroll(links, setActive);
 
-  // Set initial active state
   setActive(headingEls[0].id);
 }

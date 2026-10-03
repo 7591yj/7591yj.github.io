@@ -1,0 +1,889 @@
+---
+import { Image } from "astro:assets";
+import "../ui/interactive-list.css";
+
+export interface FieldItem {
+  id: string;
+  title: string;
+  summary: string;
+  year: string;
+  status: string;
+  current?: boolean;
+  tags: string[];
+  href: string;
+  image?: string;
+}
+
+interface Props {
+  items: FieldItem[];
+  labels: {
+    index: string;
+    nowBuilding: string;
+    open: string;
+    drag: string;
+  };
+}
+
+const { items, labels } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, "0");
+const past = items.filter((item) => !item.current);
+const groups = [
+  { label: labels.nowBuilding, items: items.filter((item) => item.current) },
+  ...[...new Set(past.map((item) => item.year))]
+    .sort((a, b) => Number(b) - Number(a))
+    .map((year) => ({
+      label: year,
+      items: past.filter((item) => item.year === year),
+    })),
+].filter((group) => group.items.length > 0);
+---
+
+<div
+  class="field"
+  data-field
+  data-view="field"
+  data-open-label={labels.open}
+  data-drag-label={labels.drag}
+  style={`--count: ${items.length}`}
+>
+  <div class="field-stage" data-field-stage aria-hidden="true">
+    <div class="stack-guides">
+      <span class="stack-guide stack-guide--x"></span>
+      <span class="stack-guide stack-guide--y"></span>
+    </div>
+
+    <div class="stack-scene">
+      <div class="stack" data-stack>
+        {
+          items.map((item, i) => (
+            <a
+              class="layer"
+              href={item.href}
+              tabindex="-1"
+              draggable="false"
+              data-layer={i}
+            >
+              <span class="layer-face">
+                <span class="layer-tag">
+                  <span>L{pad(i + 1)}</span>
+                  <span>{item.title}</span>
+                </span>
+                <span class="tile-plate">
+                  {item.image && (
+                    <Image
+                      src={item.image}
+                      alt=""
+                      width={320}
+                      height={320}
+                      densities={[1, 2]}
+                      fit="cover"
+                      loading="eager"
+                      draggable="false"
+                    />
+                  )}
+                </span>
+                <span class="layer-handle" data-corner="nw" />
+                <span class="layer-handle" data-corner="ne" />
+                <span class="layer-handle" data-corner="sw" />
+                <span class="layer-handle" data-corner="se" data-anchor />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <ol class="stack-layers">
+      {
+        items.map((item, i) => (
+          <li data-layer-row={i}>
+            <span>L{pad(i + 1)}</span>
+            <span>{item.title}</span>
+            <span>{item.year}</span>
+          </li>
+        ))
+      }
+    </ol>
+
+    <svg class="stack-leader" data-stack-leader>
+      <path data-stack-leader-path></path>
+      <circle r="3" data-stack-leader-start></circle>
+    </svg>
+
+    <div
+      class:list={["stack-scrub", { "is-dense": items.length > 12 }]}
+      data-stack-scrub
+    >
+      {
+        items.map((_, i) => (
+          <span data-scrub={i}>
+            <span>L{pad(i + 1)}</span>
+          </span>
+        ))
+      }
+    </div>
+
+    <div class="stack-info" data-stack-info>
+      {
+        items.map((item, i) => (
+          <div class="stack-card" data-card={i}>
+            <p class="stack-card__meta kicker">
+              <span>
+                {pad(i + 1)} / {pad(items.length)}
+              </span>
+              {item.current ? (
+                <span class="stack-card__live">{labels.nowBuilding}</span>
+              ) : (
+                <span>{item.status}</span>
+              )}
+              <span>{item.year}</span>
+            </p>
+            <p class="stack-card__title" data-scramble={item.title}>
+              {item.title}
+            </p>
+            <p class="stack-card__summary">{item.summary}</p>
+            <span class="stack-card__tags">
+              {item.tags.map((tag) => (
+                <span class="chip">{tag}</span>
+              ))}
+            </span>
+            <span class="stack-card__open kicker">{labels.open} ↗</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <section class="field-index" data-field-index aria-label={labels.index}>
+    <header class="field-index__head page-head">
+      <p class="field-index__count kicker">
+        <span>{labels.index}</span>
+      </p>
+    </header>
+    {
+      groups.map((group) => (
+        <section class="ledger field-index__year">
+          <h2 class="kicker">
+            <span>{group.label}</span>
+            <span>{pad(group.items.length)}</span>
+          </h2>
+          <ol class="interactive-list">
+            {group.items.map((item) => (
+              <li data-id={item.id} data-row={items.indexOf(item)}>
+                <a class="interactive-row" href={item.href}>
+                  <span class="row-title interactive-title">{item.title}</span>
+                  <span class="row-summary">{item.summary}</span>
+                  <span class="row-kind">
+                    {item.current ? item.year : item.status}
+                  </span>
+                  <span class="row-arrow interactive-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+  </section>
+
+  <div class="field-preview" data-field-preview aria-hidden="true"></div>
+</div>
+
+<script>
+  import "../../scripts/field.ts";
+</script>
+
+<style>
+  .field {
+    position: relative;
+    min-height: 100svh;
+    --sx: 41%;
+    --sy: 52%;
+  }
+
+  .field-stage {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .field-stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle at center,
+      var(--color-border) 1px,
+      transparent 1.2px
+    );
+    background-size: 24px 24px;
+    background-position: center;
+    transition: opacity 600ms var(--ease-out-quart);
+  }
+
+  .field.is-dragging .field-stage {
+    cursor: grabbing;
+  }
+
+  .stack-guides {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 900ms var(--ease-out-quart) 300ms;
+  }
+
+  .stack-guide {
+    position: absolute;
+    border: 0 dashed var(--color-border-hover);
+  }
+
+  .stack-guide--x {
+    left: 0;
+    right: 0;
+    top: var(--sy);
+    border-top-width: 1px;
+  }
+
+  .stack-guide--y {
+    top: 0;
+    bottom: 0;
+    left: var(--sx);
+    border-left-width: 1px;
+  }
+
+  .field.is-ready .stack-guides {
+    opacity: 0.6;
+  }
+
+  .stack-scene {
+    position: absolute;
+    inset: 0;
+    perspective: 1800px;
+    perspective-origin: var(--sx) var(--sy);
+    pointer-events: none;
+  }
+
+  .stack {
+    position: absolute;
+    left: var(--sx);
+    top: var(--sy);
+    transform-style: preserve-3d;
+  }
+
+  .layer {
+    position: absolute;
+    left: calc(var(--layer) / -2);
+    top: calc(var(--layer) / -2);
+    width: var(--layer);
+    height: var(--layer);
+    pointer-events: auto;
+    will-change: transform, opacity;
+    -webkit-user-drag: none;
+  }
+
+  .layer-face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-border);
+    transition: box-shadow var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .layer-tag {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.9rem;
+    right: 0.9rem;
+    display: flex;
+    gap: 0.6rem;
+    font: var(--label);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .layer-tag > :first-child {
+    color: var(--color-text-primary);
+  }
+
+  .field.is-cramped .layer-tag {
+    display: none;
+  }
+
+  .tile-plate {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  .layer .tile-plate,
+  :global(.field-ghost) .tile-plate {
+    width: 62%;
+  }
+
+  .tile-plate :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.25rem;
+    pointer-events: none;
+  }
+
+  .layer-handle {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    translate: -50% -50%;
+    border: 1.5px solid var(--color-accent);
+    background: var(--color-surface);
+    opacity: 0;
+    scale: 0.4;
+    transition:
+      opacity var(--duration-fast),
+      scale var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .layer-handle[data-corner="nw"] {
+    left: 0;
+    top: 0;
+  }
+
+  .layer-handle[data-corner="ne"] {
+    left: 100%;
+    top: 0;
+  }
+
+  .layer-handle[data-corner="sw"] {
+    left: 0;
+    top: 100%;
+  }
+
+  .layer-handle[data-corner="se"] {
+    left: 100%;
+    top: 100%;
+  }
+
+  .layer.is-active .layer-face,
+  :global(.field-ghost.is-active) .layer-face {
+    box-shadow: inset 0 0 0 1.5px var(--color-accent);
+  }
+
+  .layer.is-active .layer-tag > :first-child,
+  :global(.field-ghost.is-active) .layer-tag > :first-child {
+    color: var(--color-accent);
+  }
+
+  .layer.is-active .layer-handle {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .layer.is-hot:not(.is-active) .layer-face {
+    box-shadow: inset 0 0 0 1px var(--color-border-hover);
+  }
+
+  .stack-layers {
+    position: absolute;
+    left: var(--gutter);
+    top: 50%;
+    translate: 0 -50%;
+    display: grid;
+    gap: 0.15rem;
+    font: var(--label);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: opacity 600ms var(--ease-out-quart) 500ms;
+  }
+
+  .field.is-ready .stack-layers {
+    opacity: 1;
+  }
+
+  .stack-layers li {
+    display: grid;
+    grid-template-columns: 2.2rem 8.5rem auto;
+    align-items: center;
+    padding: 0.35rem 0.6rem 0.35rem 0.75rem;
+    border-left: 1px solid var(--color-border);
+    transition:
+      color var(--duration-fast),
+      border-color var(--duration-normal),
+      padding var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .stack-layers li:hover {
+    color: var(--color-text-primary);
+  }
+
+  .stack-layers li.is-active {
+    padding-left: 1.1rem;
+    border-left-color: var(--color-accent);
+    color: var(--color-text-primary);
+  }
+
+  .stack-layers li.is-active > :first-child {
+    color: var(--color-accent);
+  }
+
+  .stack-info {
+    position: absolute;
+    right: var(--gutter);
+    top: 50%;
+    width: min(26rem, 31vw);
+    translate: 0 -50%;
+    display: grid;
+    pointer-events: none;
+    transition: opacity 600ms var(--ease-out-quart) 400ms;
+  }
+
+  .stack-card {
+    grid-area: 1 / 1;
+    display: grid;
+    align-content: start;
+    gap: 0.85rem;
+    opacity: 0;
+    transform: translateY(0.75rem);
+    transition:
+      opacity 250ms var(--ease-out-quart),
+      transform 600ms var(--ease-out-expo);
+  }
+
+  .stack-card.is-active {
+    opacity: 1;
+    transform: none;
+    transition-delay: 80ms;
+  }
+
+  .stack-card__meta {
+    justify-content: space-between;
+  }
+
+  .stack-card__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-accent);
+  }
+
+  .stack-card__live::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .stack-card__title {
+    justify-self: start;
+    font: 600 clamp(2rem, 3.3vw, 3.25rem) / 1 var(--font-display);
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  /* field.ts splits titles into noise glyphs at runtime. */
+  :global(.stack-card__noise) {
+    position: relative;
+    -webkit-text-fill-color: transparent;
+  }
+
+  :global(.stack-card__noise)::after {
+    content: attr(data-glyph);
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .stack-card__summary {
+    justify-self: start;
+    max-width: 36ch;
+    font: 400 var(--font-size-lg) / 1.35 var(--font-display);
+    color: var(--color-text-secondary);
+  }
+
+  .stack-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .stack-card__open {
+    display: none;
+    color: var(--color-accent);
+  }
+
+  .stack-scrub {
+    display: none;
+  }
+
+  .stack-leader {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out-quart);
+  }
+
+  .stack-leader.is-visible {
+    opacity: 1;
+  }
+
+  .stack-leader path {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 1;
+  }
+
+  .stack-leader circle {
+    fill: var(--color-accent);
+  }
+
+  .field.is-leaving .stack-layers {
+    opacity: 0;
+    translate: -1.5rem -50%;
+    transition:
+      opacity 300ms var(--ease-out-quart),
+      translate 600ms var(--ease-out-expo);
+  }
+
+  .field.is-leaving .stack-guides {
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out-quart);
+  }
+
+  .field.is-leaving .stack-scrub {
+    opacity: 0;
+    translate: -1.5rem -50%;
+    transition:
+      opacity 300ms var(--ease-out-quart),
+      translate 600ms var(--ease-out-expo);
+  }
+
+  .field.is-leaving
+    .stack-card
+    :is(.stack-card__meta, .stack-card__tags, .stack-card__open) {
+    opacity: 0;
+    translate: 0 -0.75rem;
+    transition:
+      opacity 250ms var(--ease-out-quart),
+      translate 600ms var(--ease-out-expo);
+  }
+
+  .field.is-leaving .stack-card .stack-card__tags {
+    transition-delay: 60ms;
+  }
+
+  .field.is-leaving .field-stage::before {
+    opacity: 0;
+    transition: opacity 500ms var(--ease-out-quart) 300ms;
+  }
+
+  .field.is-leaving .layer.is-active :is(.layer-tag, .layer-handle) {
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out-quart) 250ms;
+  }
+
+  .field.is-leaving .layer.is-active .layer-face {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px transparent;
+    transition:
+      background-color 400ms var(--ease-out-quart) 350ms,
+      box-shadow 300ms var(--ease-out-quart) 250ms;
+  }
+
+  @media (max-width: 899px) {
+    .field {
+      --sx: 50%;
+      --sy: 40%;
+    }
+
+    .stack-layers {
+      display: none;
+    }
+
+    .stack-info {
+      inset: auto var(--gutter) 6.5rem;
+      width: auto;
+      translate: none;
+    }
+
+    .stack-card.is-active {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .stack-card__open {
+      display: block;
+    }
+
+    .stack-scrub {
+      position: absolute;
+      left: calc(var(--gutter) - 0.75rem);
+      top: var(--sy);
+      translate: 0 -50%;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      height: min(calc(var(--count) * 2rem), calc(var(--layer) * 1.4));
+      padding-left: 0.75rem;
+      font: var(--label);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      pointer-events: auto;
+      touch-action: none;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 600ms var(--ease-out-quart) 500ms;
+    }
+
+    .field.is-ready .stack-scrub {
+      opacity: 1;
+    }
+
+    .stack-scrub > span {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      min-height: 0;
+      padding: 0 0.75rem 0 0.6rem;
+      border-left: 2px solid var(--color-border-hover);
+      transition:
+        border-color var(--duration-fast),
+        border-width var(--duration-normal) var(--ease-out-expo),
+        padding var(--duration-slow) var(--ease-out-expo);
+    }
+
+    .stack-scrub > span > span {
+      padding: 0.1rem 0.3rem;
+      border-radius: 0.2rem;
+      color: var(--color-surface);
+      background: var(--color-accent);
+      opacity: 0;
+      scale: 0.85;
+      transform-origin: left center;
+      transition:
+        opacity var(--duration-fast),
+        scale var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .stack-scrub > span.is-active {
+      padding-left: 0.5rem;
+      border-left-color: var(--color-accent);
+    }
+
+    .stack-scrub > span.is-active > span {
+      opacity: 1;
+      scale: 1;
+    }
+
+    .stack-scrub.is-scrubbing > span {
+      border-left-width: 4px;
+    }
+
+    /* field.ts makes dense rails step through projects. */
+    .stack-scrub.is-dense {
+      gap: 0;
+    }
+
+    .stack-card__title {
+      font-size: 2rem;
+    }
+
+    .stack-card__summary {
+      font-size: var(--font-size-md);
+    }
+  }
+
+  @media (max-width: 899px) and (max-height: 540px) and (orientation: landscape) {
+    .field {
+      --sx: 27%;
+    }
+
+    .stack-info {
+      top: 50%;
+      bottom: auto;
+      left: 50%;
+      translate: 0 -50%;
+    }
+
+    .stack-card {
+      gap: 0.5rem;
+    }
+
+    .stack-card__title {
+      font-size: 1.5rem;
+    }
+
+    .stack-card__summary {
+      font-size: var(--font-size-sm);
+    }
+
+    .stack-card__tags {
+      display: none;
+    }
+  }
+
+  .field[data-view="field"] .field-index {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .field[data-view="list"] .field-stage {
+    display: none;
+  }
+
+  .field-index {
+    padding-bottom: 9rem;
+  }
+
+  .field-index__head {
+    padding-bottom: 1.75rem;
+  }
+
+  .field-index__year {
+    transition: border-color 600ms var(--ease-out-quart);
+  }
+
+  .field-index li a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 7rem 1.5rem;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .field-index li:first-child a {
+    padding-top: 0;
+  }
+
+  .row-title {
+    font: 600 1.5rem / 1.15 var(--font-display);
+    letter-spacing: -0.025em;
+  }
+
+  .row-summary {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .row-kind {
+    font: var(--label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .row-arrow {
+    justify-self: end;
+  }
+
+  /* field.ts owns opacity during view switches. */
+  .field.is-swapping .field-index .interactive-row {
+    transition: none;
+  }
+
+  .field-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-overlay);
+    display: grid;
+    place-items: center;
+    width: 13rem;
+    aspect-ratio: 1;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: var(--color-bg-secondary);
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.85;
+    transition:
+      opacity var(--duration-fast),
+      scale var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .field-preview.is-visible {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .field[data-view="field"] .field-preview {
+    display: none;
+  }
+
+  @media (max-width: 719px) {
+    .field-index li a {
+      grid-template-columns: 1fr auto;
+    }
+
+    .row-summary,
+    .row-kind {
+      display: none;
+    }
+  }
+
+  .field.is-swapping[data-view="list"] .field-stage {
+    display: block;
+    visibility: hidden;
+  }
+
+  .field.is-swapping
+    :is(.stack-layers, .stack-info, .stack-guides, .stack-scrub) {
+    opacity: 0;
+    transition: opacity 250ms var(--ease-out-quart);
+  }
+
+  .field.is-swapping .field-stage::before {
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out-quart);
+  }
+
+  .field-index.is-dealing .field-index__year {
+    border-top-color: transparent;
+  }
+
+  /* field.ts deals cloned layer faces inside ghosts during view swaps. */
+  :global(.field-ghost) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform, width, height, opacity;
+  }
+
+  :global(.field-ghost) .layer-face {
+    overflow: hidden;
+  }
+</style>
+
+<style is:global>
+  html.field-leaving :is(.shell-dock__start, .shell-dock__end) > * {
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out-quart);
+  }
+</style>

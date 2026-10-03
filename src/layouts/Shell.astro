@@ -1,0 +1,164 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Cursor from "../components/layout/Cursor.astro";
+import Head from "../components/layout/Head.astro";
+import LangSwitch from "../components/layout/LangSwitch.astro";
+import ThemeToggle from "../components/layout/ThemeToggle.astro";
+import { SITE_NAME, SITE_DESCRIPTION, SITE_OG_IMAGE, AUTHOR } from "../consts";
+import {
+  detectLocale,
+  localeNames,
+  locales,
+  upcomingLocales,
+  useTranslations,
+  type Locale,
+} from "../i18n/ui";
+import "../styles/global.css";
+import "../components/shell/shell.css";
+
+export type ShellSection = "work" | "writing" | "about";
+/** Null sends every language option to its locale root. */
+export type Alternates = Partial<Record<Locale, string>> | null;
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishDate?: string;
+  active?: ShellSection;
+  alternates?: Alternates;
+  noindex?: boolean;
+  fixed?: boolean;
+}
+
+const {
+  title = SITE_NAME,
+  description,
+  image,
+  type = "website",
+  publishDate,
+  active,
+  alternates,
+  noindex = false,
+  fixed = false,
+} = Astro.props;
+
+const locale = (Astro.currentLocale ??
+  detectLocale(Astro.url.pathname)) as Locale;
+const t = useTranslations(locale);
+const url = (path: string) => getRelativeLocaleUrl(locale, path);
+const barePath =
+  Astro.url.pathname.replace(new RegExp(`^/${locale}(?=/|$)`), "") || "/";
+const languages = [
+  ...locales.map((code) => ({
+    code,
+    name: localeNames[code],
+    current: code === locale,
+    href:
+      code === locale
+        ? Astro.url.pathname
+        : alternates === null
+          ? getRelativeLocaleUrl(code, "/")
+          : (alternates?.[code] ?? getRelativeLocaleUrl(code, barePath)),
+  })),
+  ...upcomingLocales.map((code) => ({
+    code,
+    name: localeNames[code],
+    current: false,
+    href: undefined,
+  })),
+];
+const metaDescription = description ?? t("site.description");
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image ?? SITE_OG_IMAGE, Astro.site).href;
+const jsonLd =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description: metaDescription,
+        url: canonicalUrl,
+        datePublished: publishDate,
+        author: { "@type": "Person", name: AUTHOR },
+        image: ogImage,
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        url: Astro.site,
+        name: SITE_NAME,
+        description: SITE_DESCRIPTION,
+      };
+
+const nav: { id: ShellSection; label: string; href: string }[] = [
+  { id: "work", label: t("shell.work"), href: url("/") },
+  { id: "writing", label: t("shell.writing"), href: url("/blog") },
+  { id: "about", label: t("shell.about"), href: url("/about") },
+];
+---
+
+<html lang={locale} data-shell class:list={{ "shell-fixed": fixed }}>
+  <Head
+    title={title}
+    metaDescription={metaDescription}
+    canonicalUrl={canonicalUrl}
+    type={type}
+    ogImage={ogImage}
+    jsonLd={jsonLd}
+    robotsContent={noindex ? "noindex" : undefined}
+  />
+  <body>
+    <header class="shell-top">
+      <a class="shell-logo" href={url("/")} data-astro-prefetch>7591yj</a>
+      <p class="shell-clock">
+        <span>{t("shell.tokyo")}</span>{" "}
+        <time data-shell-clock>--:--</time>{" "}
+        <span>GMT+9</span>
+      </p>
+      <div class="shell-meta">
+        <LangSwitch label={t("shell.language")} languages={languages} />
+        <ThemeToggle label={t("shell.theme")} />
+      </div>
+    </header>
+
+    <slot />
+
+    <div class="shell-dock">
+      <div class="shell-dock__start"><slot name="dock-start" /></div>
+      <nav class="shell-pill shell-nav" aria-label="Main">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              data-astro-prefetch="viewport"
+              aria-current={item.id === active ? "page" : undefined}
+            >
+              {item.id === active && (
+                <span class="shell-nav__dot" aria-hidden="true" />
+              )}
+              <span
+                class:list={[
+                  "shell-nav__label",
+                  `shell-nav__label--${item.id}`,
+                ]}
+              >
+                {item.label}
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+      <div class="shell-dock__end"><slot name="dock-end" /></div>
+    </div>
+
+    <div class="shell-target" data-shell-target aria-hidden="true"></div>
+    <Cursor openLabel={t("work.open")} />
+
+    <script>
+      import "../scripts/shell/shell.ts";
+    </script>
+  </body>
+</html>

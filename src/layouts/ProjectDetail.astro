@@ -1,11 +1,13 @@
 ---
-import DetailLayout from "./DetailLayout.astro";
+import DetailLayout, { type MetaItem } from "./DetailLayout.astro";
 import { SITE_NAME } from "../consts";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../i18n/ui";
 import { render } from "astro:content";
-import type { ProjectStatus } from "../types";
-import type { ProjectEntry } from "../lib/content";
+import { statusLabel, yearLabel } from "../lib/projects";
+import { projectLinkLabel } from "../lib/projectLinks";
+import { getProjects, type ProjectEntry } from "../lib/content";
+import { locales } from "../i18n/ui";
 import { mdxComponents } from "../components/content/mdxComponents";
 
 interface Props {
@@ -13,64 +15,72 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, subtitle, year, status, link } = entry.data;
-const { locale } = entry;
+const {
+  title,
+  subtitle,
+  year,
+  status,
+  link,
+  links = [],
+  current,
+  tech,
+  thumbnail,
+  images,
+} = entry.data;
+const { locale, slug } = entry;
 const { Content, headings } = await render(entry.source);
 const t = useTranslations(locale);
+const alternates = Object.fromEntries(
+  await Promise.all(
+    locales
+      .filter((other) => other !== locale)
+      .map(async (other) => {
+        const translation = (await getProjects(other)).find(
+          (project) => project.slug === slug,
+        );
+        return [other, translation?.url ?? getRelativeLocaleUrl(other, "/")];
+      }),
+  ),
+);
 
-const statusLabels: Record<ProjectStatus, string> = {
-  released: t("status.released"),
-  "in development": t("status.inDevelopment"),
-  planned: t("status.planned"),
-  prototype: t("status.prototype"),
-  paused: t("status.paused"),
-  archived: t("status.archived"),
-};
+const tools = tech.filter((name) => name[0] !== name[0].toLowerCase());
+const projectLinks = [
+  ...(link ? [{ label: projectLinkLabel(link), href: link }] : []),
+  ...links.map(({ label, href }) => ({
+    label: projectLinkLabel(href, label),
+    href,
+  })),
+];
+const years = yearLabel({ year, current });
+const meta: MetaItem[] = [
+  { label: t("meta.year"), value: years },
+  { label: t("meta.status"), value: statusLabel(t, status) },
+  ...(projectLinks.length > 0
+    ? [
+        {
+          label: t(projectLinks.length > 1 ? "meta.links" : "meta.link"),
+          links: projectLinks,
+        },
+      ]
+    : []),
+];
 ---
 
 <DetailLayout
   title={`${SITE_NAME} | ${title}`}
   description={subtitle}
-  module="MODULE.001///"
+  section="work"
+  kicker={[t(current ? "work.nowBuilding" : "work.project"), years]}
   headingTitle={title}
   subtitle={subtitle}
-  backLinkHref={getRelativeLocaleUrl(locale, "/projects")}
-  backLinkLabel={t("detail.backProjects")}
+  image={thumbnail ?? images?.[0]}
+  meta={meta}
+  tags={tools}
+  tagsLabel={t("meta.stack")}
+  alternates={alternates}
+  backLinkHref={getRelativeLocaleUrl(locale, "/")}
+  backLinkLabel={t("shell.backWork")}
   headings={headings}
 >
-  <div class="meta" slot="meta">
-    {
-      year && (
-        <>
-          <span class="meta__label">{t("meta.year")}</span>
-          <span class="meta__value">{year}</span>
-        </>
-      )
-    }
-    {
-      status && (
-        <>
-          <span class="meta__label">{t("meta.status")}</span>
-          <span class="meta__value">{statusLabels[status]}</span>
-        </>
-      )
-    }
-    {
-      link && (
-        <>
-          <span class="meta__label">{t("meta.link")}</span>
-          <a
-            class="meta__link"
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {link} &#8599;
-          </a>
-        </>
-      )
-    }
-  </div>
-
   <Content components={mdxComponents} />
 </DetailLayout>

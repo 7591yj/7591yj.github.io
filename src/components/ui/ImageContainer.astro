@@ -1,6 +1,4 @@
 ---
-import Inner from "./Inner.astro";
-
 interface Props {
   src: string;
   alt?: string;
@@ -18,42 +16,32 @@ const {
 } = Astro.props;
 ---
 
-<div class:list={["cut-img", className]} style={`--img-size: ${imgSize}`}>
-  <Inner src={src} alt={alt} {...rest} />
+<div class:list={["media-frame", className]} style={`--img-size: ${imgSize}`}>
+  <img src={src} alt={alt} loading="lazy" decoding="async" {...rest} />
 </div>
 
 <style>
-  .cut-img {
-    --cut: 0.75em;
-    --border-w: 1px;
-    --clip: polygon(
-      0 0,
-      100% 0,
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      0 100%
-    );
-    position: relative;
-    background: var(--color-border);
-    clip-path: var(--clip);
-    line-height: 0;
+  .media-frame {
+    display: grid;
+    place-items: center;
+    height: 100%;
     overflow: hidden;
-    transition: background var(--duration-normal) var(--ease-out-expo);
+    border-radius: 0.375rem;
+    background: var(--color-bg-secondary);
+    line-height: 0;
   }
 
-  /* Hover border */
-  .cut-img::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    clip-path: var(--clip);
-    background: var(--color-border-hover);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--duration-normal) var(--ease-out-expo);
+  .media-frame img {
+    display: block;
+    width: var(--img-size);
+    height: var(--img-size);
+    object-fit: scale-down;
+    transition: scale 900ms var(--ease-out-expo);
   }
 
-  .cut-img:hover::before {
-    opacity: 1;
+  @media (any-hover: hover) and (prefers-reduced-motion: no-preference) {
+    .media-frame:hover img {
+      scale: 1.03;
+    }
   }
 </style>

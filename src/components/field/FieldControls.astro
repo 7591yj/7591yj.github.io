@@ -1,0 +1,190 @@
+---
+interface Props {
+  part: "view" | "readout";
+  labels: {
+    view: string;
+    field: string;
+    index: string;
+    count: string;
+    initialReadout: string;
+  };
+}
+
+const { part, labels } = Astro.props;
+---
+
+{
+  part === "view" ? (
+    <div
+      class="shell-pill field-view-pill"
+      role="group"
+      aria-label={labels.view}
+    >
+      <span class="field-view-pill__thumb" aria-hidden="true" />
+      <button
+        type="button"
+        data-view-btn="field"
+        aria-pressed="true"
+        aria-label={labels.field}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="2" y="2" width="5" height="5" rx="1" />
+          <rect x="9" y="2" width="5" height="5" rx="1" />
+          <rect x="2" y="9" width="5" height="5" rx="1" />
+          <rect x="9" y="9" width="5" height="5" rx="1" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        data-view-btn="list"
+        aria-pressed="false"
+        aria-label={labels.index}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="2" y="3" width="12" height="1.5" rx="0.75" />
+          <rect x="2" y="7.25" width="12" height="1.5" rx="0.75" />
+          <rect x="2" y="11.5" width="12" height="1.5" rx="0.75" />
+        </svg>
+      </button>
+    </div>
+  ) : (
+    <p
+      class="shell-readout field-readout"
+      data-field-readout
+      aria-hidden="true"
+    >
+      <span class="field-readout__coords">
+        <span>{labels.count}</span>
+        <span data-field-coords>{labels.initialReadout}</span>
+      </span>
+    </p>
+  )
+}
+
+<style>
+  .shell-readout.field-readout {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+    view-transition-name: field-readout;
+  }
+
+  .field-readout__coords {
+    display: contents;
+  }
+
+  :global(html:not(.shell-fixed)) .field-readout {
+    visibility: hidden;
+  }
+
+  .field-view-pill {
+    position: relative;
+    view-transition-name: field-view;
+  }
+
+  .field-view-pill__thumb {
+    position: absolute;
+    top: 0.3rem;
+    bottom: 0.3rem;
+    left: 0.3rem;
+    width: calc((100% - 0.6rem - 0.15rem) / 2);
+    border-radius: 999px;
+    background: var(--color-ink);
+  }
+
+  .field-view-pill:has([data-view-btn="list"][aria-pressed="true"])
+    .field-view-pill__thumb {
+    translate: calc(100% + 0.15rem) 0;
+  }
+
+  :global(:root:has(.field.is-ready)) .field-view-pill__thumb {
+    transition: translate 520ms var(--ease-out-expo);
+  }
+
+  .shell-pill.field-view-pill > [aria-pressed="true"] {
+    background: transparent;
+  }
+
+  .field-view-pill rect {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .field-view-pill [data-view-btn="list"] rect {
+    transform-origin: left center;
+  }
+
+  :global(:root:has(.field.is-swapping)) .field-view-pill__thumb {
+    animation: field-view-thumb-a 520ms var(--ease-out-quart);
+  }
+
+  :global(:root:has(.field.is-swapping))
+    .field-view-pill:has([data-view-btn="list"][aria-pressed="true"])
+    .field-view-pill__thumb {
+    animation-name: field-view-thumb-b;
+  }
+
+  :global(:root:has(.field.is-swapping))
+    [data-view-btn="field"][aria-pressed="true"]
+    rect {
+    animation: field-view-gather 560ms var(--ease-out-expo)
+      calc(var(--i, 0) * 50ms) backwards;
+  }
+
+  :global(:root:has(.field.is-swapping))
+    [data-view-btn="list"][aria-pressed="true"]
+    rect {
+    animation: field-view-deal 560ms var(--ease-out-expo)
+      calc(var(--i, 0) * 50ms) backwards;
+  }
+
+  .field-view-pill rect:nth-child(2) {
+    --i: 1;
+  }
+
+  .field-view-pill rect:nth-child(3) {
+    --i: 2;
+  }
+
+  .field-view-pill rect:nth-child(4) {
+    --i: 3;
+  }
+
+  @keyframes field-view-thumb-a {
+    35% {
+      scale: 1.3 0.88;
+    }
+  }
+
+  @keyframes field-view-thumb-b {
+    35% {
+      scale: 1.3 0.88;
+    }
+  }
+
+  @keyframes field-view-gather {
+    from {
+      scale: 0.3;
+      rotate: -90deg;
+      opacity: 0;
+    }
+  }
+
+  @keyframes field-view-deal {
+    from {
+      scale: 0 1;
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(:root:has(.field.is-ready)) .field-view-pill__thumb {
+      transition: none;
+    }
+
+    .field-view-pill :is(.field-view-pill__thumb, rect) {
+      animation: none !important;
+    }
+  }
+</style>

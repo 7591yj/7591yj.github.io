@@ -1,18 +1,26 @@
 ---
-import Layout from "./Layout.astro";
-import PageHeading from "../components/ui/PageHeading.astro";
+import Shell, { type Alternates, type ShellSection } from "./Shell.astro";
 import TableOfContents from "../components/content/TableOfContents/TableOfContents.astro";
-import ProjectSlogan from "../components/content/ProjectSlogan.astro";
-import "../styles/detail.css";
+
+export type MetaItem = { label: string } & (
+  | { value: string; href?: string }
+  | { links: { label: string; href: string }[] }
+);
 
 interface Props {
   title: string;
-  module: string;
+  section: ShellSection;
+  kicker: string[];
   headingTitle: string;
+  subtitle?: string;
+  image?: string;
+  meta: MetaItem[];
+  tags?: string[];
+  tagsLabel: string;
+  alternates: Alternates;
   backLinkHref: string;
   backLinkLabel: string;
   headings: { depth: number; slug: string; text: string }[];
-  subtitle?: string;
   description?: string;
   type?: "website" | "article";
   publishDate?: string;
@@ -20,51 +28,318 @@ interface Props {
 
 const {
   title,
-  module,
+  section,
+  kicker,
   headingTitle,
+  subtitle,
+  image,
+  meta,
+  tags = [],
+  tagsLabel,
+  alternates,
   backLinkHref,
   backLinkLabel,
   headings,
-  subtitle,
   description,
   type,
   publishDate,
 } = Astro.props;
 ---
 
-<Layout
+<Shell
+  active={section}
+  alternates={alternates}
   title={title}
   description={description}
   type={type}
   publishDate={publishDate}
 >
-  <main>
-    <section class="header">
-      <PageHeading module={module} title={headingTitle}>
-        <slot name="meta" />
-      </PageHeading>
-      {subtitle && <ProjectSlogan text={subtitle} />}
-    </section>
-    <section class="container-main detail">
-      <div class="detail__main">
-        <article class="prose">
-          <slot />
-        </article>
-
-        <a class="back-link" href={backLinkHref}>&larr; {backLinkLabel}</a>
+  <div class="read-progress" aria-hidden="true"></div>
+  <main class="entry">
+    <header class:list={["entry-hero", { "entry-hero--text": !image }]}>
+      <div class="entry-hero__text">
+        <p class="kicker" data-reveal>
+          {kicker.map((part) => <span>{part}</span>)}
+        </p>
+        <h1 class="display entry-title">{headingTitle}</h1>
+        {
+          subtitle && (
+            <p class="entry-sub" data-reveal>
+              {subtitle}
+            </p>
+          )
+        }
+        <dl class="entry-meta" data-reveal>
+          {
+            meta.map((item) => (
+              <div>
+                <dt>{item.label}</dt>
+                <dd class:list={{ "entry-meta__links": "links" in item }}>
+                  {"links" in item ? (
+                    item.links.map(({ label, href }) => (
+                      <a href={href} target="_blank" rel="noopener noreferrer">
+                        {label} ↗
+                      </a>
+                    ))
+                  ) : item.href ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {item.value} ↗
+                    </a>
+                  ) : (
+                    item.value
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+          {
+            tags.length > 0 && (
+              <div class="entry-meta__tags">
+                <dt>{tagsLabel}</dt>
+                <dd>
+                  {tags.map((tag) => (
+                    <span class="chip">{tag}</span>
+                  ))}
+                </dd>
+              </div>
+            )
+          }
+        </dl>
       </div>
+      {
+        image && (
+          <div class="entry-plate">
+            <img src={image} alt="" />
+          </div>
+        )
+      }
+    </header>
 
+    <section class="entry-body" data-reveal>
       {
         headings.length > 0 && (
-          <aside class="detail__sidebar">
+          <aside class="entry-toc">
             <TableOfContents headings={headings} />
           </aside>
         )
       }
+      <article class="prose">
+        <slot />
+      </article>
     </section>
+
+    <footer class="entry-foot">
+      <a href={backLinkHref}>← {backLinkLabel}</a>
+    </footer>
   </main>
-</Layout>
+</Shell>
 
 <script>
   import "../scripts/detail.client.ts";
 </script>
+
+<style>
+  .entry {
+    padding-bottom: 9rem;
+  }
+
+  .entry-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: end;
+    gap: clamp(2rem, 5vw, 5rem);
+    padding: clamp(8rem, 20vh, 12rem) var(--gutter) clamp(3rem, 7vh, 5rem);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .entry-hero--text {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .entry-hero--text .entry-hero__text {
+    max-width: 60rem;
+  }
+
+  .entry-hero__text {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .entry-title {
+    justify-self: start;
+    view-transition-name: hero-title;
+  }
+
+  :global(.arrive-dive) .entry-sub {
+    view-transition-name: hero-sub;
+  }
+
+  :global(.js-motion.arrive-dive) .entry-sub {
+    visibility: visible;
+    animation: none;
+  }
+
+  .entry-sub {
+    max-width: 36ch;
+    font: 400 clamp(1.125rem, 1.6vw, 1.375rem) / 1.35 var(--font-display);
+    color: var(--color-text-secondary);
+  }
+
+  .entry-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 1rem 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .entry-meta dt {
+    font: var(--label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .entry-meta dd {
+    font-size: var(--font-size-base);
+    overflow-wrap: anywhere;
+  }
+
+  .entry-meta__links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  :global(html[data-shell]) .entry-meta a:hover {
+    color: var(--color-accent);
+  }
+
+  .entry-meta__tags {
+    grid-column: 1 / -1;
+  }
+
+  .entry-meta__tags dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .entry-plate {
+    justify-self: end;
+    display: grid;
+    place-items: center;
+    width: min(100%, 30rem);
+    aspect-ratio: 1;
+    view-transition-name: hero-plate;
+  }
+
+  .entry-plate img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.375rem;
+  }
+
+  .entry-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding: clamp(3rem, 7vh, 5rem) var(--gutter) 0;
+  }
+
+  .entry-toc {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .entry-body {
+      grid-template-columns: minmax(0, 1fr) 14rem;
+      column-gap: 3rem;
+    }
+
+    .entry-body > .prose {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .entry-toc {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+
+  .entry-foot {
+    padding: var(--foot-gap) var(--gutter) 0;
+    font: 600 clamp(1.5rem, 3vw, 2.5rem) / 1 var(--font-display);
+    letter-spacing: -0.03em;
+  }
+
+  :global(html[data-shell]) .entry-foot a:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 859px) {
+    .entry-hero {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .entry-plate {
+      grid-row: 1;
+      justify-self: start;
+      width: min(60%, 16rem);
+    }
+  }
+
+  @media (max-width: 719px) {
+    .entry-hero {
+      gap: 2rem;
+      padding: var(--page-top) var(--gutter) var(--page-head-end);
+    }
+
+    .entry-hero__text {
+      gap: 1.25rem;
+    }
+
+    .entry-meta {
+      gap: 1rem;
+    }
+
+    .entry-body {
+      padding-top: var(--page-head-end);
+    }
+  }
+
+  .read-progress {
+    display: none;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .read-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: var(--z-sticky);
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--color-accent);
+      transform-origin: left center;
+      animation: read-progress linear both;
+      animation-timeline: scroll(root block);
+      pointer-events: none;
+    }
+  }
+
+  @keyframes read-progress {
+    from {
+      transform: scaleX(0);
+    }
+  }
+</style>

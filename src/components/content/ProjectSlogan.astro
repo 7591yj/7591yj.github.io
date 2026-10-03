@@ -32,6 +32,12 @@ const { text } = Astro.props;
     animation-play-state: paused;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .slogan-track {
+      animation: none;
+    }
+  }
+
   @keyframes slogan-scroll {
     0% {
       transform: translateX(0);

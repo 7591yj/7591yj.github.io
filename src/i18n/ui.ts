@@ -2,62 +2,82 @@ export const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
-const ui = {
-  en: {
-    "nav.home": "Home",
-    "nav.projects": "Projects",
-    "nav.blog": "Blog",
-    "nav.about": "About",
-    "404.message": "Page Not Found",
-    "404.back": "Back to Home",
-    "500.message": "Internal Server Error",
-    "500.back": "Back to Home",
-    "projects.selectTech": "Select tech…",
-    "projects.techSelected": "{count} selected",
-    "projects.clear": "Clear",
-    "detail.backBlog": "Back to blog",
-    "detail.backProjects": "Back to projects",
-    "meta.date": "DATE",
-    "meta.year": "YEAR",
-    "meta.status": "STATUS",
-    "meta.link": "LINK",
-    "meta.tags": "TAGS",
-    "status.released": "Released",
-    "status.inDevelopment": "In development",
-    "status.planned": "Planned",
-    "status.prototype": "Prototype",
-    "status.paused": "Paused",
-    "status.archived": "Archived",
-  },
-  ja: {
-    "nav.home": "ホーム",
-    "nav.projects": "プロジェクト",
-    "nav.blog": "ブログ",
-    "nav.about": "プロフィール",
-    "404.message": "ページが見つかりません",
-    "404.back": "ホームへ戻る",
-    "500.message": "内部サーバーエラー",
-    "500.back": "ホームへ戻る",
-    "projects.selectTech": "技術を選択…",
-    "projects.techSelected": "{count}件選択",
-    "projects.clear": "クリア",
-    "detail.backBlog": "ブログへ戻る",
-    "detail.backProjects": "プロジェクトへ戻る",
-    "meta.date": "日付",
-    "meta.year": "年",
-    "meta.status": "ステータス",
-    "meta.link": "リンク",
-    "meta.tags": "タグ",
-    "status.released": "リリース済み",
-    "status.inDevelopment": "開発中",
-    "status.planned": "計画中",
-    "status.prototype": "試作",
-    "status.paused": "一時停止",
-    "status.archived": "アーカイブ",
-  },
-} satisfies Record<Locale, Record<string, string>>;
+/** Listed in the language switcher before any pages exist in them. */
+export const upcomingLocales = ["ko"] as const;
+export type SwitcherLocale = Locale | (typeof upcomingLocales)[number];
 
-// Astro.currentLocale is undefined; infer from the URL path
+export const localeNames: Record<SwitcherLocale, string> = {
+  en: "English",
+  ja: "日本語",
+  ko: "한국어",
+};
+
+const en = {
+  "site.description":
+    "Portfolio and blog of 7591yj - software development, design, and research.",
+  "shell.tokyo": "Tokyo",
+  "shell.work": "Work",
+  "shell.writing": "Writing",
+  "shell.about": "About",
+  "shell.language": "Language",
+  "shell.theme": "Toggle theme",
+  "shell.backWork": "All work",
+  "shell.backWriting": "All writing",
+  "work.title": "Selected work",
+  "work.nowBuilding": "Now building",
+  "work.project": "Project",
+  "work.count": "{count} projects",
+  "work.view": "View",
+  "work.viewField": "Field view",
+  "work.viewIndex": "Index view",
+  "work.open": "Open",
+  "work.drag": "Drag",
+  "writing.title": "Writing",
+  "writing.minutes": "{count} min read",
+  "writing.contents": "Contents",
+  "about.title": "About",
+  "error.kicker": "Error",
+  "404.message": "There's nothing here.",
+  "500.message": "Something went wrong.",
+  "meta.date": "Date",
+  "meta.year": "Year",
+  "meta.status": "Status",
+  "meta.link": "Link",
+  "meta.links": "Links",
+  "meta.tags": "Tags",
+  "meta.readTime": "Read time",
+  "meta.stack": "Stack",
+  "status.released": "Released",
+  "status.inDevelopment": "In development",
+  "status.planned": "Planned",
+  "status.prototype": "Prototype",
+  "status.paused": "Paused",
+  "status.archived": "Archived",
+} as const;
+
+export type UiKey = keyof typeof en;
+
+const ja: Partial<Record<UiKey, string>> = {
+  "shell.language": "言語",
+  "shell.theme": "テーマを切り替え",
+  "site.description":
+    "7591yjのポートフォリオとブログ - ソフトウェア開発、デザイン、リサーチ",
+  "work.project": "プロジェクト",
+  "work.view": "表示",
+  "work.viewField": "フィールド表示",
+  "work.viewIndex": "一覧表示",
+  "error.kicker": "エラー",
+  "404.message": "ここには何もありません。",
+  "500.message": "問題が発生しました。",
+  "meta.date": "日付",
+  "meta.year": "年",
+  "meta.status": "ステータス",
+  "meta.link": "リンク",
+  "meta.links": "リンク",
+  "meta.tags": "タグ",
+  "meta.stack": "技術",
+};
+
 export function detectLocale(pathname: string): Locale {
   const nonDefault = locales.filter((l) => l !== "en");
   return (
@@ -69,7 +89,10 @@ export function detectLocale(pathname: string): Locale {
 
 export function useTranslations(locale: string | undefined) {
   const lang = (locale ?? "en") as Locale;
-  return function t(key: keyof (typeof ui)[Locale]): string {
-    return ui[lang]?.[key] ?? ui["en"][key];
+  return function t(key: UiKey, vars?: Record<string, string | number>) {
+    let text: string = (lang === "ja" ? ja[key] : undefined) ?? en[key];
+    for (const [name, value] of Object.entries(vars ?? {}))
+      text = text.replace(`{${name}}`, String(value));
+    return text;
   };
 }

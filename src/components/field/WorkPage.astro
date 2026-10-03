@@ -1,0 +1,56 @@
+---
+import Shell from "../../layouts/Shell.astro";
+import Field, { type FieldItem } from "./Field.astro";
+import FieldControls from "./FieldControls.astro";
+import { getProjects } from "../../lib/content";
+import { sortProjects, statusLabel, yearLabel } from "../../lib/projects";
+import { useTranslations, type Locale } from "../../i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const tools = (tech: string[]) =>
+  tech.filter((name) => name[0] !== name[0].toLowerCase()).slice(0, 3);
+
+const items: FieldItem[] = sortProjects(await getProjects(locale)).map(
+  ({ slug, url, data }) => ({
+    id: `project-${slug}`,
+    title: data.title,
+    summary: data.subtitle,
+    year: yearLabel(data),
+    status: statusLabel(t, data.status),
+    current: data.current,
+    tags: tools(data.tech),
+    href: url,
+    image: data.thumbnail ?? data.images?.[0],
+  }),
+);
+
+const controls = {
+  view: t("work.view"),
+  field: t("work.viewField"),
+  index: t("work.viewIndex"),
+  count: t("work.count", { count: String(items.length).padStart(2, "0") }),
+  initialReadout: `L01/${String(items.length).padStart(2, "0")} · 322°`,
+};
+---
+
+<Shell active="work" fixed>
+  <main>
+    <h1 class="sr-only">7591yj — {t("work.title")}</h1>
+    <Field
+      items={items}
+      labels={{
+        index: t("work.title"),
+        nowBuilding: t("work.nowBuilding"),
+        open: t("work.open"),
+        drag: t("work.drag"),
+      }}
+    />
+  </main>
+  <FieldControls slot="dock-start" part="view" labels={controls} />
+</Shell>

@@ -16,6 +16,13 @@ function setupTerminals() {
           hasStarted = true;
           io.disconnect();
 
+          if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            if (typed) typed.textContent = command;
+            if (cursor) cursor.style.display = "none";
+            outputEl?.classList.add("is-visible");
+            return;
+          }
+
           let i = 0;
           const tick = () => {
             if (!typed) return;

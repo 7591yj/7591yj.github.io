@@ -1,144 +1,74 @@
-/* ================================================
- * Shared MDX / Markdown prose styles
- * ================================================ */
-
 .prose {
-  font-family: "PlemolJP", system-ui, sans-serif;
   color: var(--color-text-secondary);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   line-height: 1.7;
+  text-wrap: pretty;
 }
 
-/* ---- Headings ---- */
+.prose > :first-child {
+  margin-top: 0;
+}
 
-.prose h3,
-.prose h4,
-.prose h5 {
-  font-family: var(--font-shippori), serif;
+.prose > :is(div, figure, pre, table) {
+  margin-block: 2rem;
+}
+
+.prose > :is(p, ul, ol, blockquote, h4, h5) {
+  max-width: 68ch;
+}
+
+:lang(ja) .prose {
+  line-height: 1.9;
+}
+
+:lang(ja) .prose > :is(p, ul, ol, blockquote) {
+  max-width: 40em;
+}
+
+.prose :is(h3, h4, h5) {
   position: relative;
   color: var(--color-text-primary);
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 7rem;
   cursor: pointer;
+  text-wrap: balance;
+  transition: color var(--duration-fast);
 }
 
 .prose h3 {
-  font-size: var(--font-size-3xl);
-  font-weight: bold;
-  margin: 2rem 0 0.75rem;
+  margin: 4.5rem 0 1.25rem;
+  font: 600 clamp(1.625rem, 2.6vw, 2.25rem) / 1.1 var(--font-display);
+  letter-spacing: -0.035em;
 }
 
 .prose h4 {
-  font-size: var(--font-size-2xl);
-  font-weight: bold;
-  margin: 1.5rem 0 0.5rem;
+  margin: 3rem 0 0.75rem;
+  font: 600 1.3125rem / 1.25 var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 .prose h5 {
-  font-size: var(--font-size-xl);
-  font-weight: bold;
-  margin: 1.25rem 0 0.4rem;
+  margin: 2.25rem 0 0.6rem;
+  font: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
 }
 
 .prose h3:first-child {
   margin-top: 0;
 }
 
-/* ---- Heading anchors ---- */
+:lang(ja) .prose :is(h3, h4) {
+  letter-spacing: 0;
+  word-break: auto-phrase;
+}
 
-.prose h3:hover,
-.prose h4:hover,
-.prose h5:hover {
+.prose :is(h3, h4, h5):hover {
   color: var(--color-accent);
 }
-
-.prose .heading-anchor {
-  opacity: 0;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  margin-left: 0.3em;
-  transition: opacity 0.15s ease;
-}
-
-.prose .heading-anchor::after {
-  content: "#";
-}
-
-.prose h3:hover .heading-anchor,
-.prose h4:hover .heading-anchor,
-.prose h5:hover .heading-anchor {
-  opacity: 1;
-}
-
-/* ---- Body text ---- */
 
 .prose p {
-  margin: 0.6rem 0;
-}
-
-.prose code {
-  font-family: "PlemolJP", system-ui, sans-serif;
-  font-size: 0.85em;
-  padding: 0.15em 0.35em;
-  background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border);
-}
-
-/* ---- Code blocks ---- */
-
-.prose pre {
-  position: relative;
-  overflow-x: auto;
-  margin: 1rem 0;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid var(--color-border);
-  font-size: var(--font-size-md);
-}
-
-.prose pre code {
-  background: none !important;
-  border: none !important;
-  padding: 0 !important;
-  font-size: inherit;
-}
-
-/* Switch Shiki dual-theme to dark variant when site is in dark mode */
-[data-theme="dark"] .prose pre,
-[data-theme="dark"] .prose pre span {
-  color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
-  font-style: var(--shiki-dark-font-style) !important;
-  font-weight: var(--shiki-dark-font-weight) !important;
-  text-decoration: var(--shiki-dark-text-decoration) !important;
-}
-
-.prose .copy-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  font-family: "PlemolJP", system-ui, sans-serif;
-  font-size: var(--font-size-xs);
-  padding: 0.2em 0.6em;
-  background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  opacity: 0;
-  transition:
-    opacity var(--duration-fast) ease,
-    color var(--duration-fast) ease;
-}
-
-.prose pre:hover .copy-btn {
-  opacity: 1;
-}
-
-.prose .copy-btn:hover {
-  color: var(--color-text-primary);
-}
-
-.prose .copy-btn.copied {
-  color: var(--color-accent);
-  opacity: 1;
+  margin: 0 0 1.25em;
 }
 
 .prose strong {
@@ -146,108 +76,207 @@
   font-weight: 600;
 }
 
-/* ---- Lists ---- */
+.prose a,
+html[data-shell] .prose a {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: currentColor;
+  transition:
+    color var(--duration-fast),
+    text-decoration-color var(--duration-fast);
+}
 
-.prose ul,
-.prose ol {
-  padding-left: 1.25rem;
-  margin: 0.5rem 0;
+html[data-shell] .prose a:hover {
+  color: var(--color-accent);
+  text-decoration-color: currentColor;
+}
+
+.prose :not(pre) > code {
+  padding: 0.12em 0.4em;
+  border-radius: 0.25rem;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+}
+
+.prose pre {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 0.5rem;
+  background-color: var(--color-surface) !important;
+  font-size: var(--font-size-base);
+  line-height: 1.65;
+}
+
+.prose pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: inherit;
+}
+
+/* Shiki sets light colors inline, so dark mode needs these overrides. */
+[data-theme="dark"] .prose pre,
+[data-theme="dark"] .prose pre span {
+  color: var(--shiki-dark) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.prose .copy-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.45rem 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  font: var(--label);
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--duration-fast),
+    color var(--duration-normal) var(--ease-out-quart),
+    background-color var(--duration-normal) var(--ease-out-quart);
+}
+
+.prose pre:hover .copy-btn,
+.prose .copy-btn:focus-visible {
+  opacity: 1;
+}
+
+.prose .copy-btn:hover {
+  color: var(--color-text-primary);
+}
+
+@media not (any-hover: hover) {
+  .prose .copy-btn {
+    opacity: 1;
+  }
+}
+
+.prose .copy-btn.copied {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+  opacity: 1;
+}
+
+.prose :is(ul, ol) {
+  margin: 0 0 1.25em;
+  padding-left: 1.5rem;
 }
 
 .prose ul {
-  list-style-type: disc;
+  list-style: disc;
+}
+
+.prose li::marker {
+  color: var(--color-text-muted);
 }
 
 .prose ol {
-  list-style-type: none;
-  counter-reset: list-counter;
-  padding-left: 2rem;
+  list-style: decimal-leading-zero;
+  padding-left: 2.25rem;
 }
 
-.prose ol > li {
-  counter-increment: list-counter;
-  position: relative;
-}
-
-.prose ol > li::before {
-  content: counter(list-counter) ".";
-  font-weight: bold;
-  color: var(--color-text-primary);
-  position: absolute;
-  left: -2rem;
-  width: 1.75rem;
-  text-align: right;
+.prose ol > li::marker {
+  font: var(--label);
+  font-variant-numeric: tabular-nums;
 }
 
 .prose li {
-  margin: 0.3rem 0;
+  margin: 0.35rem 0;
+  padding-left: 0.25rem;
+}
+
+.prose li :is(ul, ol) {
+  margin: 0.35rem 0 0;
 }
 
 .prose li ul {
-  margin: 0.2rem 0;
-  list-style-type: circle;
+  list-style: circle;
 }
-
-/* ---- Horizontal rule ---- */
 
 .prose hr {
-  border: none;
+  margin: 3.5rem 0;
+  border: 0;
   border-top: 1px solid var(--color-border);
-  margin: 2rem 0;
 }
-
-/* ---- Table ---- */
 
 .prose table {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  margin: 1rem 0;
-  font-size: var(--font-size-xl);
+  border-top: 1px solid var(--color-text-primary);
+  font-size: var(--font-size-md);
+  line-height: 1.5;
 }
 
 .prose th {
-  font-family: var(--font-shippori), serif;
-  text-align: start;
-  padding: 0.6rem;
+  padding: 0.9rem 1.25rem 0.9rem 0;
   border-bottom: 1px solid var(--color-border);
+  font: var(--label);
+  text-align: start;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  vertical-align: bottom;
 }
 
 .prose td {
-  padding: 0.75rem;
+  padding: 1rem 1.25rem 1rem 0;
   border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
 }
 
-.prose tr:last-child td {
-  border-bottom: none;
+.prose td:first-child {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-text-primary);
 }
 
-/* ---- Blockquote ---- */
+.prose td :is(strong, b) {
+  font-weight: 600;
+}
 
 .prose blockquote {
-  margin: 1.25rem 0;
-  padding: 0.75rem 1.25rem;
-  border-left: 2px solid var(--color-accent);
-  background: var(--color-bg-tertiary);
+  margin: 2rem 0;
+  padding: 1.35rem 1.6rem;
+  border-radius: 0.5rem;
+  background: var(--color-bg-secondary);
 }
 
 .prose blockquote p {
-  color: var(--color-text-secondary);
-  font-style: italic;
-  margin: 0.3rem 0;
+  margin: 0 0 0.75em;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  line-height: 1.6;
 }
 
-.prose blockquote em {
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose blockquote p:last-child:not(:first-child) > em:only-child {
   font-style: normal;
+  font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-  font-size: 0.85em;
 }
 
-/* ---- Overview split: logo and text side-by-side ---- */
+.prose img {
+  border-radius: 0.375rem;
+}
 
 .overview-split {
   display: flex;
-  flex-direction: row;
   gap: 2rem;
   align-items: flex-start;
 }
@@ -275,27 +304,50 @@
   }
 }
 
-@media (max-width: 768px) {
-  .prose pre {
-    padding: 1rem;
+@media (max-width: 719px) {
+  .prose {
+    font-size: 1.0625rem;
+    line-height: 1.65;
   }
 
-  .prose table {
-    table-layout: auto;
+  :lang(ja) .prose {
+    line-height: 1.85;
   }
 
-  .prose pre {
-    overflow: hidden;
-    padding: 0;
+  .prose > :is(div, figure, pre, table) {
+    margin-block: 1.5rem;
+  }
+
+  .prose h3 {
+    margin: 3rem 0 1rem;
+  }
+
+  .prose h4 {
+    margin-top: 2.25rem;
+  }
+
+  .prose hr {
+    margin-block: 2.5rem;
+  }
+
+  .prose blockquote {
+    margin-block: 1.5rem;
+    padding: 1.1rem 1.15rem;
   }
 
   .prose pre code {
-    display: block !important;
-    overflow-x: auto;
-    padding: 1rem !important;
+    padding: 1rem 1.1rem;
   }
 
-  .prose .copy-btn {
-    opacity: 1;
+  .prose table {
+    display: block;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .prose table > :is(thead, tbody) {
+    display: table;
+    table-layout: fixed;
+    width: max(100%, 36rem);
   }
 }

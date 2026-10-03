@@ -1,8 +1,14 @@
 ---
 import { Icon } from "astro-icon/components";
+
+interface Props {
+  label?: string;
+}
+
+const { label = "Toggle theme" } = Astro.props;
 ---
 
-<button id="theme-toggle" aria-label="Toggle theme" class="theme-toggle">
+<button id="theme-toggle" aria-label={label} class="theme-toggle">
   <Icon class="icon-sun" name="carbon:light" />
   <Icon class="icon-moon" name="carbon:moon" />
 </button>
@@ -14,10 +20,17 @@ import { Icon } from "astro-icon/components";
     align-items: center;
     justify-content: center;
     padding: 0.5rem;
+    border-radius: 999px;
     cursor: pointer;
   }
   .theme-toggle:hover {
     color: var(--color-text-primary);
+  }
+  .theme-toggle :global(svg) {
+    transition: scale 320ms var(--ease-out-expo);
+  }
+  .theme-toggle:active :global(svg) {
+    scale: 0.82;
   }
 
   :global([data-theme="light"]) .icon-moon {

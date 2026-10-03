@@ -9,13 +9,26 @@ import { headingAnchors } from "./src/lib/headingAnchors.ts";
 
 import icon from "astro-icon";
 
-// https://astro.build/config
 export default defineConfig({
   site: "https://7591yj.com",
-  prefetch: false,
+  image: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "7591yj.x02.me",
+        pathname: "/i/**",
+      },
+    ],
+  },
+  // Keep component selectors level with shared CSS.
+  scopedStyleStrategy: "where",
+  // Only links that opt in with data-astro-prefetch, i.e. the shell nav.
+  prefetch: { prefetchAll: false, defaultStrategy: "hover" },
+  redirects: {
+    "/projects": "/",
+    "/ja/projects": "/ja/",
+  },
   experimental: {
-    // Content routes return a `cacheKey`; unchanged pages are skipped as long
-    // as node_modules/.astro survives between builds.
     incrementalBuild: true,
   },
   i18n: {
@@ -43,7 +56,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
     server: {
       watch: {
-        // direnv links into /nix/store, which creates unnecessary listeners.
         ignored: ["**/.direnv", "**/.direnv/**"],
       },
     },
@@ -51,8 +63,36 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Shippori Mincho",
-      cssVariable: "--font-shippori",
+      name: "Archivo",
+      cssVariable: "--font-archivo",
+      weights: ["400", "500", "600", "700", "800"],
+      styles: ["normal", "italic"],
+      // global.css composes locale fonts before system fallbacks.
+      fallbacks: [],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Noto Sans JP",
+      cssVariable: "--font-noto-sans-jp",
+      weights: ["400 800"],
+      styles: ["normal"],
+      fallbacks: [],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "IBM Plex Mono",
+      cssVariable: "--font-plex-mono",
+      weights: ["400", "500", "700"],
+      styles: ["normal", "italic"],
+      fallbacks: [],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "IBM Plex Sans JP",
+      cssVariable: "--font-plex-sans-jp",
+      weights: ["400", "500", "700"],
+      styles: ["normal"],
+      fallbacks: [],
     },
   ],
 });

@@ -1,15 +1,10 @@
 ---
-import "./BizlenzLogo.css";
-
-// Animated Bizlenz logo — stroke-dashoffset draw on scroll
-// 4 bars in left-to-right order for staggered draw-in (x,y)
 const bars = [
   [221, 433],
   [408, 333],
   [595, 233],
   [782, 133],
 ];
-// Diagonal swoosh — draws in after bars
 const swoosh =
   "M98.1115 797.457C-20.0554 823.745 121.607 729.547 207.209 679.163C311.069 609.428 589.276 447.175 871.225 356.044C1153.17 264.914 1061.44 342.901 980.323 393.285C735.488 517.056 216.278 771.169 98.1115 797.457Z";
 ---
@@ -46,3 +41,30 @@ const swoosh =
 <script>
   import "./BizlenzLogo.client.ts";
 </script>
+
+<style>
+  .bizlenz-logo-wrap {
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .bizlenz-logo-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .bizlenz-bar {
+    fill-opacity: 0;
+    stroke-opacity: 1;
+    stroke: currentColor;
+    stroke-width: 10;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .bizlenz-swoosh {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

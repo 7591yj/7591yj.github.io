@@ -1,0 +1,226 @@
+---
+import Shell from "../../layouts/Shell.astro";
+import { getProfile, profileLinks } from "../../lib/profile";
+import { useTranslations, type Locale } from "../../i18n/ui";
+import { SITE_NAME } from "../../consts";
+import "../ui/interactive-list.css";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const profile = getProfile(locale);
+---
+
+<Shell active="about" title={`${SITE_NAME} | ${t("about.title")}`}>
+  <main class="profile">
+    <header class="page-head">
+      <p class="kicker" data-reveal>
+        <span>{profile.kicker}</span>
+      </p>
+      <h1 class="display profile-statement" data-split>
+        {
+          profile.statement.map((run) =>
+            run.em ? <em>{run.text}</em> : run.text,
+          )
+        }
+      </h1>
+    </header>
+
+    <section class="profile-facts" data-reveal aria-label={t("about.title")}>
+      <dl>
+        {
+          profile.facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>
+                {fact.href ? <a href={fact.href}>{fact.value}</a> : fact.value}
+              </dd>
+            </div>
+          ))
+        }
+        <div>
+          <dt>{profile.linksLabel}</dt>
+          <dd class="profile-links">
+            {
+              profileLinks.map((link) => (
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                  {link.label} ↗
+                </a>
+              ))
+            }
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    {
+      profile.sections.map((section) => (
+        <section class="ledger" data-reveal>
+          <h2 class="kicker">
+            <span>{section.title}</span>
+            <span>{String(section.entries.length).padStart(2, "0")}</span>
+          </h2>
+          <ol class="interactive-list">
+            {section.entries.map((entry) => {
+              const Tag = entry.href ? "a" : "div";
+              return (
+                <li>
+                  <Tag
+                    class="ledger-row interactive-row"
+                    href={entry.href}
+                    target={entry.href ? "_blank" : undefined}
+                    rel={entry.href ? "noopener noreferrer" : undefined}
+                  >
+                    <span class="ledger-when">{entry.when}</span>
+                    <span class="ledger-what">
+                      <span class="ledger-title interactive-title">
+                        {entry.title}
+                        {entry.href && (
+                          <span class="interactive-arrow" aria-hidden="true">
+                            {" "}
+                            ↗
+                          </span>
+                        )}
+                      </span>
+                      {entry.detail && (
+                        <span class="ledger-detail">{entry.detail}</span>
+                      )}
+                    </span>
+                    {entry.aside && (
+                      <span class="ledger-aside">{entry.aside}</span>
+                    )}
+                  </Tag>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))
+    }
+  </main>
+</Shell>
+
+<style>
+  .profile {
+    padding-bottom: 9rem;
+  }
+
+  .profile-statement {
+    max-width: 22ch;
+  }
+
+  .profile-statement em {
+    font-style: normal;
+    color: var(--color-accent);
+  }
+
+  .profile-facts {
+    margin: 0 var(--gutter) var(--section-gap);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .profile-facts dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1.25rem 2rem;
+  }
+
+  .profile-facts dt {
+    font: var(--label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .profile-facts dd {
+    font-size: var(--font-size-md);
+  }
+
+  .profile-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+
+  :global(html[data-shell]) .profile-facts a:hover {
+    color: var(--color-accent);
+  }
+
+  .ledger .interactive-list {
+    --interactive-title-shift: 0.35rem;
+    --interactive-arrow-shift: 0rem;
+  }
+
+  .ledger-row {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr) minmax(0, 14rem);
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ledger li:first-child .ledger-row {
+    padding-top: 0;
+  }
+
+  .ledger-when {
+    font: var(--label);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ledger-what {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .ledger-title {
+    font: 600 1.125rem / 1.3 var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  .ledger-detail {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .ledger-aside {
+    justify-self: end;
+    text-align: right;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 859px) {
+    .ledger-row {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .ledger-aside {
+      justify-self: start;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 719px) {
+    .profile-facts dl {
+      gap: 1rem;
+    }
+
+    .ledger-row {
+      padding: 1rem 0;
+    }
+
+    .ledger-aside {
+      font: var(--label);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+  }
+</style>

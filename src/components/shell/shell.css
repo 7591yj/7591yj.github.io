@@ -1,0 +1,576 @@
+html[data-shell] {
+  --label: 500 0.6875rem / 1.25 var(--font-mono);
+  --dock-bg: color-mix(in srgb, var(--color-bg-tertiary) 72%, transparent);
+  --gutter: clamp(1rem, 3vw, 2.5rem);
+  --page-top: clamp(8rem, 22vh, 13rem);
+  --page-head-end: clamp(3rem, 8vh, 5rem);
+  --section-gap: clamp(4rem, 10vh, 7rem);
+  --foot-gap: 5rem;
+  background: var(--color-bg-primary);
+}
+
+@media (max-width: 719px) {
+  html[data-shell] {
+    --page-top: 8rem;
+    --page-head-end: 2.5rem;
+    --section-gap: 3rem;
+    --foot-gap: 3.5rem;
+  }
+}
+
+html.shell-fixed {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html[data-shell] a {
+  text-decoration: none;
+}
+
+html[data-shell] a:hover {
+  color: inherit;
+}
+
+.kicker {
+  display: flex;
+  gap: 0.75rem;
+  font: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.display {
+  font: 600 clamp(2.25rem, 5.4vw, 5rem) / 1 var(--font-display);
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.chip {
+  display: inline-block;
+  font: 500 0.625rem / 1 var(--font-mono);
+  text-transform: uppercase;
+  padding: 0.3rem 0.45rem;
+  border-radius: 999px;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+html:lang(ja)
+  :is(
+    .display,
+    .row-title,
+    .w-title,
+    .ledger-title,
+    .entry-foot,
+    .error__foot
+  ) {
+  letter-spacing: 0;
+}
+
+html:lang(ja) :is(.display, .entry-sub, .w-title) {
+  word-break: auto-phrase;
+}
+
+.page-head {
+  display: grid;
+  gap: 1.75rem;
+  padding: var(--page-top) var(--gutter) var(--page-head-end);
+}
+
+@media (max-width: 719px) {
+  .page-head {
+    gap: 1.25rem;
+  }
+}
+
+.ledger {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: 1rem 2rem;
+  margin: 0 var(--gutter) 4rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-text-primary);
+}
+
+.ledger h2 {
+  justify-content: space-between;
+  align-self: start;
+  padding-top: 0.2rem;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 859px) {
+  .ledger {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 719px) {
+  .ledger {
+    gap: 1.25rem;
+    margin-bottom: var(--section-gap);
+  }
+}
+
+/* reveal.ts clears these; the timer covers failed script loads. */
+.js-motion [data-reveal],
+.js-motion [data-split] {
+  visibility: hidden;
+  animation: shell-failsafe 0s 2s forwards;
+}
+
+/* reveal.ts uses SplitText masks, which need room for descenders. */
+.split-line-mask {
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+}
+
+@keyframes shell-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+
+.shell-top {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-sticky);
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 22rem) 1fr;
+  align-items: start;
+  gap: var(--spacing-lg);
+  padding: 1.25rem var(--gutter) 3rem;
+  background: linear-gradient(
+    var(--color-bg-primary) 30%,
+    color-mix(in srgb, var(--color-bg-primary) 0%, transparent)
+  );
+  pointer-events: none;
+  view-transition-name: shell-top;
+}
+
+.shell-top > * {
+  pointer-events: auto;
+}
+
+.shell-logo {
+  justify-self: start;
+  font: 800 1.5rem / 1 var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+.shell-logo--reels {
+  display: inline-flex;
+  height: 1em;
+  white-space: nowrap;
+}
+
+.shell-logo--reels .shell-logo__char {
+  height: 1.3em;
+  margin-block: -0.15em;
+  clip-path: inset(0 -50%);
+  text-align: center;
+}
+
+.shell-logo__strip {
+  display: block;
+}
+
+.shell-logo__strip > span {
+  display: block;
+  height: 1.3em;
+  line-height: 1.3em;
+}
+
+.shell-meta {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.shell-clock {
+  display: flex;
+  align-items: center;
+  place-self: center;
+  gap: 0.4rem;
+  font: var(--label);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.shell-meta .theme-toggle {
+  transition:
+    opacity 200ms var(--ease-out-quart),
+    scale 460ms var(--ease-out-expo);
+}
+
+.shell-meta:has(.shell-lang.is-open) .theme-toggle {
+  opacity: 0;
+  scale: 0.6;
+  pointer-events: none;
+}
+
+.shell-dock {
+  position: fixed;
+  inset: auto var(--gutter) 1.25rem;
+  z-index: var(--z-sticky);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 0.5rem;
+  pointer-events: none;
+  view-transition-name: shell-dock;
+}
+
+.shell-dock__start {
+  justify-self: start;
+}
+
+.shell-dock__end {
+  justify-self: end;
+}
+
+.shell-dock__start > *,
+.shell-dock__end > * {
+  pointer-events: auto;
+}
+
+.shell-pill {
+  display: flex;
+  gap: 0.15rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: var(--dock-bg);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  pointer-events: auto;
+}
+
+.shell-pill > a,
+.shell-pill > button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  font: 500 0.9375rem / 1 var(--font-display);
+  color: var(--color-text-secondary);
+  transition:
+    background-color var(--duration-normal) var(--ease-out-quart),
+    color var(--duration-normal) var(--ease-out-quart);
+}
+
+.shell-pill > button:has(svg) {
+  padding: 0 0.7rem;
+}
+
+.shell-pill svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+html[data-shell] .shell-pill > a:hover,
+.shell-pill > button:hover {
+  color: var(--color-text-primary);
+}
+
+.shell-pill > [aria-pressed="true"] {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+}
+
+html[data-shell] .shell-pill > [aria-pressed="true"]:hover {
+  color: var(--color-on-ink);
+}
+
+.shell-nav__dot {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--color-ink);
+  view-transition-name: shell-nav-dot;
+}
+
+.shell-nav__label {
+  position: relative;
+}
+
+.shell-nav__label--work {
+  view-transition-name: shell-nav-work;
+}
+
+.shell-nav__label--writing {
+  view-transition-name: shell-nav-writing;
+}
+
+.shell-nav__label--about {
+  view-transition-name: shell-nav-about;
+}
+
+html[data-shell] .shell-nav > [aria-current="page"],
+html[data-shell] .shell-nav > [aria-current="page"]:hover {
+  color: var(--color-on-ink);
+}
+
+.shell-readout {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  background: var(--dock-bg);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  font: var(--label);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.shell-target {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  background: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.92;
+  transition:
+    opacity 180ms var(--ease-out-quart),
+    scale 450ms var(--ease-out-expo);
+}
+
+.shell-target.is-visible {
+  opacity: 1;
+  scale: 1;
+  animation: shell-target-in 180ms var(--ease-out-quart) both;
+}
+
+@keyframes shell-target-in {
+  from {
+    opacity: 0;
+    scale: 0.92;
+  }
+}
+
+@media not ((any-hover: hover) and (any-pointer: fine)) {
+  .shell-target {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-target {
+    transition: none;
+  }
+
+  .shell-target.is-visible {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-shell]:active-view-transition-type(page) {
+    &::view-transition-old(root) {
+      animation: shell-out 280ms var(--ease-in-out-quart) both;
+    }
+
+    &::view-transition-new(root) {
+      animation: shell-in 520ms var(--ease-out-quart) 80ms both;
+    }
+
+    &::view-transition-old(shell-nav-work),
+    &::view-transition-old(shell-nav-writing),
+    &::view-transition-old(shell-nav-about) {
+      animation: shell-nav-label-out 520ms var(--ease-out-expo) both;
+    }
+
+    &::view-transition-new(shell-nav-work),
+    &::view-transition-new(shell-nav-writing),
+    &::view-transition-new(shell-nav-about) {
+      animation: shell-nav-label-in 520ms var(--ease-out-expo) both;
+    }
+  }
+
+  html[data-shell].arrive-dive:active-view-transition-type(page) {
+    &::view-transition-old(root) {
+      animation: shell-out 200ms linear both;
+    }
+
+    &::view-transition-new(root) {
+      animation: none;
+    }
+
+    &::view-transition-old(hero-title),
+    &::view-transition-old(hero-sub) {
+      display: none;
+    }
+
+    &::view-transition-new(hero-title),
+    &::view-transition-new(hero-sub) {
+      animation: none;
+    }
+  }
+
+  ::view-transition-group(hero-sub) {
+    animation-duration: 640ms;
+    animation-timing-function: var(--ease-in-out-quart);
+  }
+
+  /* Head.astro animates this group; snapshots would stretch. */
+  ::view-transition-group(shell-nav-dot) {
+    animation: none;
+    transform-origin: 0 0;
+    border-radius: 999px;
+    background: var(--color-ink);
+  }
+
+  ::view-transition-old(shell-nav-dot),
+  ::view-transition-new(shell-nav-dot) {
+    display: none;
+  }
+
+  ::view-transition-group(shell-nav-work),
+  ::view-transition-group(shell-nav-writing),
+  ::view-transition-group(shell-nav-about) {
+    animation: none;
+    z-index: 1;
+  }
+
+  @keyframes shell-nav-label-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes shell-nav-label-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  ::view-transition-group(hero-plate),
+  ::view-transition-group(hero-title) {
+    animation-duration: 640ms;
+    animation-timing-function: var(--ease-in-out-quart);
+  }
+
+  @keyframes shell-out {
+    to {
+      opacity: 0;
+      transform: scale(0.985);
+    }
+  }
+
+  @keyframes shell-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+  }
+}
+
+::view-transition-group(shell-top),
+::view-transition-group(shell-dock) {
+  animation: none;
+}
+
+::view-transition-old(shell-top),
+::view-transition-old(shell-dock) {
+  display: none;
+}
+
+::view-transition-new(shell-top),
+::view-transition-new(shell-dock) {
+  animation: none;
+}
+
+/* field.css names the work-only dock controls; leaving pages need these rules. */
+::view-transition-group(field-view),
+::view-transition-group(field-readout) {
+  animation: none;
+}
+
+::view-transition-old(field-view):not(:only-child),
+::view-transition-old(field-readout):not(:only-child) {
+  display: none;
+}
+
+::view-transition-new(field-view):not(:only-child),
+::view-transition-new(field-readout):not(:only-child) {
+  animation: none;
+}
+
+::view-transition-old(field-view),
+::view-transition-new(field-view) {
+  transform-origin: left bottom;
+}
+
+::view-transition-old(field-readout),
+::view-transition-new(field-readout) {
+  transform-origin: right bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-shell]:active-view-transition-type(page) {
+    &::view-transition-new(field-view):only-child {
+      animation: field-dock-in 620ms var(--ease-out-expo) 140ms both;
+    }
+
+    &::view-transition-new(field-readout):only-child {
+      animation: field-dock-in 620ms var(--ease-out-expo) 200ms both;
+    }
+
+    &::view-transition-old(field-view):only-child,
+    &::view-transition-old(field-readout):only-child {
+      animation: field-dock-out 240ms var(--ease-out-quart) both;
+    }
+  }
+
+  @keyframes field-dock-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem) scale(0.86);
+    }
+  }
+
+  @keyframes field-dock-out {
+    to {
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.92);
+    }
+  }
+}
+
+@media (max-width: 719px) {
+  .shell-top {
+    grid-template-columns: 1fr auto;
+    padding: 1rem var(--gutter) 2.5rem;
+  }
+
+  .shell-clock {
+    display: none;
+  }
+
+  .shell-dock {
+    inset: auto 0.75rem 0.75rem;
+    grid-template-columns: auto 1fr;
+  }
+
+  .shell-nav {
+    justify-self: end;
+  }
+
+  .shell-dock__end {
+    display: none;
+  }
+
+  .shell-pill > a {
+    padding: 0 0.8rem;
+  }
+}
