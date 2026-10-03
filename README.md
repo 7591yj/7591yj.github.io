@@ -1,81 +1,29 @@
 # 7591yj.github.io
 
-Personal portfolio and blog — built with [Astro](https://astro.build), styled
-with [Tailwind CSS](https://tailwindcss.com), and enhanced with
-[React](https://react.dev) for interactive components.
+My portfolio and blog at [7591yj.com](https://7591yj.com).
 
-Live at **[7591yj.com](https://www.7591yj.com/)**
+## Stack
 
-## Tech Stack
+- Astro, TypeScript, and Tailwind CSS
+- React for interactive components, GSAP for animation, and Swiper for carousels
+- MDX content collections with Satteri for Markdown processing
 
-| Layer         | Technology                                                                                                                            |
-| :------------ | :------------------------------------------------------------------------------------------------------------------------------------ |
-| Framework     | [Astro](https://astro.build) 7 with [View Transitions](https://docs.astro.build/en/guides/view-transitions/)                          |
-| Styling       | [Tailwind CSS](https://tailwindcss.com) 4 + custom design tokens                                                                      |
-| Interactivity | [React](https://react.dev) 19, [Framer Motion](https://motion.dev), [Swiper](https://swiperjs.com)                                    |
-| Content       | [MDX](https://mdxjs.com) with remark-gfm, rehype-slug, rehype-autolink-headings                                                       |
-| Icons         | [astro-icon](https://github.com/natemoo-re/astro-icon) with [Carbon](https://carbondesignsystem.com/elements/icons/library/) icon set |
-| Animations    | [Lottie](https://airbnb.io/lottie/) via lottie-react                                                                                  |
-| i18n          | Astro built-in i18n (en, ja, ko)                                                                                                      |
-| Package mgr   | [pnpm](https://pnpm.io) via [Nix flakes](https://nixos.wiki/wiki/Flakes)                                                              |
+Posts and projects live in `src/content/`, with shared metadata in `en.mdx`
+and translations alongside it.
 
-## Project Structure
+## Development
 
-```text
-src/
-├── components/     # Reusable Astro and React UI components
-├── layouts/        # Shared page layouts
-├── pages/          # Routes, localized pages, and MDX content
-├── scripts/        # Client-side behavior
-├── styles/         # Global CSS, design tokens, and prose styles
-├── icons/          # Custom SVG icons
-├── assets/         # Static source assets
-├── consts.ts       # Site-wide constants
-└── types.ts        # Shared TypeScript types
+Use Node.js and pnpm. The Nix dev shell provides both. With Nix and direnv
+installed, run `direnv allow` to activate it.
+
+```sh
+pnpm install
+pnpm dev
 ```
 
-## Getting Started
-
-> The project environment is defined in `flake.nix` and auto-loaded via
-> `direnv`.
-
-### Prerequisites
-
-- [Nix](https://nixos.org/) with flakes enabled
-- [direnv](https://direnv.net/)
-
-### Commands
-
-| Command          | Action                                              |
-| :--------------- | :-------------------------------------------------- |
-| `direnv allow`   | Enable automatic Nix flake activation for this repo |
-| `pnpm install`   | Install dependencies                                |
-| `pnpm dev`       | Start local dev server at `localhost:4321`          |
-| `pnpm build`     | Build production site to `./dist/`                  |
-| `pnpm preview`   | Preview production build locally                    |
-| `pnpm lint`      | Run ESLint                                          |
-| `pnpm typecheck` | Run Astro type checks                               |
-| `pnpm check`     | Run formatting, lint, and type checks               |
-
-### Recommended Workflow
-
-1. Ensure Nix flakes and direnv are available on your system.
-2. Run `direnv allow` in the repo root.
-3. Run `pnpm install`.
-4. Run `pnpm dev` to start the development server.
-
-## Fonts
-
-This project uses [PlemolJP](https://github.com/yuru7/PlemolJP) as the primary
-typeface, self-hosted in `public/fonts/`. PlemolJP is licensed under the **SIL
-Open Font License, Version 1.1** — see
-[`public/fonts/LICENSE_PlemolJP`](public/fonts/LICENSE_PlemolJP) for the full
-license text.
-
-[Shippori Mincho](https://fonts.google.com/specimen/Shippori+Mincho) is loaded
-via Astro's built-in Fonts API.
-
-## License
-
-Site content and code are personal work. Third-party dependencies are subject to
-their own licenses. Font licensing is documented above.
+| Command        | Purpose                           |
+| -------------- | --------------------------------- |
+| `pnpm build`   | Build the site to `dist/`         |
+| `pnpm preview` | Preview the production build      |
+| `pnpm check`   | Check formatting, lint, and types |
+| `pnpm format`  | Format the project                |
