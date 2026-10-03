@@ -20,6 +20,8 @@ export default defineConfig({
       },
     ],
   },
+  // Keep component selectors level with shared CSS.
+  scopedStyleStrategy: "where",
   // Only links that opt in with data-astro-prefetch, i.e. the shell nav.
   prefetch: { prefetchAll: false, defaultStrategy: "hover" },
   redirects: {

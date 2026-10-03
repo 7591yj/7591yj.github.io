@@ -1,6 +1,5 @@
 ---
 import Defs from "../Defs.astro";
-import "./NixOSLogo.css";
 
 // SVG source: https://brand.nixos.org
 const armPoints =
@@ -48,3 +47,37 @@ const letters = [
 <script>
   import "./NixOSLogo.client.ts";
 </script>
+
+<style>
+  .nixos-logo-wrap {
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .nixos-logo-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .nixos-arm {
+    fill-opacity: 0;
+    stroke-opacity: 1;
+    stroke-width: 28;
+    stroke-linejoin: round;
+  }
+
+  .nixos-letter {
+    fill-opacity: 0;
+    stroke-opacity: 1;
+    stroke: #1a1a1a;
+    stroke-width: 28;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  :global([data-theme="dark"]) .nixos-letter {
+    fill: white;
+    stroke: #ececec;
+  }
+</style>
