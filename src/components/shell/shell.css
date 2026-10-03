@@ -1,5 +1,5 @@
 html[data-shell] {
-  --label: 500 0.6875rem / 1.25 var(--font-plemol);
+  --label: 500 0.6875rem / 1.25 var(--font-mono);
   --dock-bg: color-mix(in srgb, var(--color-bg-tertiary) 72%, transparent);
   --gutter: clamp(1rem, 3vw, 2.5rem);
   --page-top: clamp(8rem, 22vh, 13rem);
@@ -48,7 +48,7 @@ html[data-shell] a:hover {
 
 .chip {
   display: inline-block;
-  font: 500 0.625rem / 1 var(--font-plemol);
+  font: 500 0.625rem / 1 var(--font-mono);
   text-transform: uppercase;
   padding: 0.3rem 0.45rem;
   border-radius: 999px;

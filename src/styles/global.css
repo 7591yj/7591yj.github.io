@@ -5,46 +5,16 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-@font-face {
-  font-family: "PlemolJP";
-  src: url("../../font-sources/PlemolJP-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PlemolJP";
-  src: url("../../font-sources/PlemolJP-Italic.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PlemolJP";
-  src: url("../../font-sources/PlemolJP-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PlemolJP";
-  src: url("../../font-sources/PlemolJP-BoldItalic.woff2") format("woff2");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
 @theme {
   --font-display:
-    var(--font-archivo), -apple-system, BlinkMacSystemFont,
-    "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
-    "Noto Sans CJK JP", "Noto Sans JP", Meiryo, "Apple SD Gothic Neo",
-    "Noto Sans KR", sans-serif;
+    var(--font-archivo), var(--font-noto-sans-jp), -apple-system,
+    BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    "Yu Gothic", "Noto Sans CJK JP", "Noto Sans JP", Meiryo,
+    "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   --font-body: var(--font-display);
-  --font-plemol: "PlemolJP", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-mono:
+    var(--font-plex-mono), var(--font-plex-sans-jp), ui-monospace,
+    "SFMono-Regular", Menlo, monospace;
 }
 
 /* shell.css handles page navigation; theme.ts starts typed theme swaps. */

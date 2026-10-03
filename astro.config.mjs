@@ -65,7 +65,32 @@ export default defineConfig({
       cssVariable: "--font-archivo",
       weights: ["400", "500", "600", "700", "800"],
       styles: ["normal", "italic"],
-      fallbacks: ["Hiragino Sans", "Noto Sans JP", "Arial", "sans-serif"],
+      // global.css composes locale fonts before system fallbacks.
+      fallbacks: [],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Noto Sans JP",
+      cssVariable: "--font-noto-sans-jp",
+      weights: ["400 800"],
+      styles: ["normal"],
+      fallbacks: [],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "IBM Plex Mono",
+      cssVariable: "--font-plex-mono",
+      weights: ["400", "500", "700"],
+      styles: ["normal", "italic"],
+      fallbacks: [],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "IBM Plex Sans JP",
+      cssVariable: "--font-plex-sans-jp",
+      weights: ["400", "500", "700"],
+      styles: ["normal"],
+      fallbacks: [],
     },
   ],
 });

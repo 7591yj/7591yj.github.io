@@ -1,5 +1,4 @@
 ---
-import { Font } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Cursor from "../components/layout/Cursor.astro";
 import Head from "../components/layout/Head.astro";
@@ -101,7 +100,6 @@ const nav: { id: ShellSection; label: string; href: string }[] = [
 ];
 ---
 
-<Font cssVariable="--font-archivo" preload />
 <html lang={locale} data-shell class:list={{ "shell-fixed": fixed }}>
   <Head
     title={title}

@@ -3,7 +3,7 @@
   overflow: hidden;
   border-radius: 0.5rem;
   background: var(--color-surface);
-  font-family: var(--font-plemol);
+  font-family: var(--font-mono);
   font-size: var(--font-size-base);
 }
 
