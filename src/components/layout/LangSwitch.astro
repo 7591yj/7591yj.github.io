@@ -60,3 +60,166 @@ const current = Math.max(
 <script>
   import "./LangSwitch.client.ts";
 </script>
+
+<style>
+  .shell-lang {
+    --w: 2.25rem;
+    --h: 2rem;
+    --spring: var(--ease-spring);
+    position: relative;
+    z-index: 1;
+    width: var(--w);
+    height: var(--h);
+    font: var(--label);
+  }
+
+  .shell-lang__menu {
+    position: absolute;
+    top: 0;
+    left: calc(var(--current) * var(--w) * -1);
+    display: flex;
+    border-radius: 999px;
+    clip-path: inset(
+      0 calc((var(--n) - 1 - var(--current)) * var(--w)) 0
+        calc(var(--current) * var(--w)) round 999px
+    );
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      clip-path 460ms var(--spring),
+      translate 460ms var(--spring),
+      background-color 200ms var(--ease-out-quart);
+  }
+
+  .shell-lang.is-open .shell-lang__menu,
+  .shell-lang:not(.is-ready):is(:hover, :focus-within) .shell-lang__menu {
+    clip-path: inset(0 0 0 0 round 999px);
+    translate: calc(var(--shift, 0px) * -1) 0;
+    background: var(--dock-bg);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  }
+
+  .shell-lang.is-open {
+    z-index: 2;
+  }
+
+  .shell-lang[data-input="fine"] {
+    --spring: var(--ease-out-expo);
+  }
+
+  .shell-lang[data-input="fine"]:not(.is-open) .shell-lang__dot {
+    scale: 0.8;
+  }
+
+  .shell-lang[data-input="fine"].is-pressed .shell-lang__dot {
+    scale: 0.94 0.9;
+  }
+
+  .shell-lang__option {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--w);
+    height: var(--h);
+    overflow: hidden;
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    transition: color 200ms var(--ease-out-quart);
+  }
+
+  :global(html[data-shell]) .shell-lang__option:hover {
+    color: var(--color-text-primary);
+  }
+
+  .shell-lang__option[aria-disabled] {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+  }
+
+  :global(html[data-shell]) .shell-lang.is-open .shell-lang__option.is-target {
+    color: var(--color-on-ink);
+  }
+
+  :global(html[data-shell])
+    .shell-lang.is-open
+    .shell-lang__option.is-target[aria-disabled] {
+    color: var(--color-text-muted);
+  }
+
+  .shell-lang__option:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: -4px;
+    border-radius: 999px;
+  }
+
+  .shell-lang__dot {
+    --at-dot: var(--at, var(--current));
+    position: absolute;
+    inset-block: 3px;
+    left: calc(var(--at-dot) * var(--w) + 3px);
+    right: calc((var(--n) - 1 - var(--at-dot)) * var(--w) + 3px);
+    border-radius: 999px;
+    background: var(--color-ink);
+    opacity: 0;
+    scale: 0.4;
+    translate: var(--pull, 0px) 0;
+    transition:
+      left 420ms var(--spring),
+      right 420ms var(--spring),
+      background-color 200ms var(--ease-out-quart),
+      opacity 160ms var(--ease-out-quart),
+      scale 420ms var(--spring),
+      translate 300ms var(--spring);
+  }
+
+  .shell-lang[data-dir="right"] .shell-lang__dot {
+    transition-duration: 520ms, 260ms, 200ms, 160ms, 420ms, 300ms;
+  }
+
+  .shell-lang[data-dir="left"] .shell-lang__dot {
+    transition-duration: 260ms, 520ms, 200ms, 160ms, 420ms, 300ms;
+  }
+
+  .shell-lang.is-open .shell-lang__dot {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .shell-lang.is-pressed .shell-lang__dot {
+    scale: 0.86 0.8;
+  }
+
+  .shell-lang.is-dragging .shell-lang__dot {
+    translate: var(--pull, 0px) 0;
+    transition-property: left, right, background-color, opacity, scale;
+  }
+
+  .shell-lang__dot.is-void {
+    background: color-mix(in srgb, var(--color-ink) 16%, transparent);
+  }
+
+  /* LangSwitch.client.ts builds the label reels at runtime. */
+  :global(.shell-lang__reel) {
+    display: block;
+    align-self: start;
+  }
+
+  :global(.shell-lang__reel > span) {
+    display: block;
+    height: var(--h);
+    line-height: var(--h);
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shell-lang__menu,
+    .shell-lang__dot {
+      transition-duration: 0s !important;
+    }
+  }
+</style>
