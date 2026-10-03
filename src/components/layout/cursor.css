@@ -89,7 +89,7 @@ html.has-cursor :is(input, textarea, [contenteditable]) {
 
 .shell-cursor[data-state="open"] .shell-cursor__label {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .shell-cursor[data-state="open"] .shell-cursor__label::after {

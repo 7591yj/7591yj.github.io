@@ -70,7 +70,7 @@
   padding: 1.1rem 1.25rem 1.25rem;
   border-radius: 0.5rem;
   background: var(--color-bg-secondary);
-  box-shadow: 0 1.5rem 3rem -1.5rem rgb(0 0 0 / 0.35);
+  box-shadow: var(--shadow-popover);
   pointer-events: none;
   opacity: 0;
   scale: 0.6;

@@ -208,7 +208,7 @@ html:lang(ja) :is(.display, .entry-sub, .tile-title, .w-title) {
 .shell-lang {
   --w: 2.25rem;
   --h: 2rem;
-  --spring: cubic-bezier(0.34, 1.45, 0.6, 1);
+  --spring: var(--ease-spring);
   position: relative;
   z-index: 1;
   width: var(--w);
