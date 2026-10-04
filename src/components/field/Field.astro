@@ -271,6 +271,11 @@ const groups = [
     pointer-events: none;
   }
 
+  /* Head.astro marks WebKit page transitions. */
+  :global(html.webkit-arriving) .stack-scene {
+    display: none;
+  }
+
   .stack {
     position: absolute;
     left: var(--sx);

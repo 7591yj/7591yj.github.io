@@ -93,6 +93,19 @@ const {
       if (!("onpagereveal" in window)) revealed(null);
       addEventListener("pagereveal", function (event) {
         revealed(event.viewTransition);
+        const arriving = event.viewTransition;
+        // WebKit may flatten the stack or stall; Field.astro hides it meanwhile.
+        if (arriving && navigator.vendor.indexOf("Apple") === 0) {
+          const html = document.documentElement;
+          html.classList.add("webkit-arriving");
+          const limit = setTimeout(function () {
+            arriving.skipTransition();
+          }, 1500);
+          arriving.finished.finally(function () {
+            clearTimeout(limit);
+            html.classList.remove("webkit-arriving");
+          });
+        }
         let from;
         try {
           from = JSON.parse(sessionStorage.getItem(KEY));
