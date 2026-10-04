@@ -490,7 +490,7 @@ html[data-shell] .shell-nav > [aria-current="page"]:hover {
   animation: none;
 }
 
-/* field.css names the work-only dock controls; leaving pages need these rules. */
+/* FieldControls.astro names these work-only dock controls. */
 ::view-transition-group(field-view),
 ::view-transition-group(field-readout) {
   animation: none;
@@ -519,11 +519,11 @@ html[data-shell] .shell-nav > [aria-current="page"]:hover {
 @media (prefers-reduced-motion: no-preference) {
   html[data-shell]:active-view-transition-type(page) {
     &::view-transition-new(field-view):only-child {
-      animation: field-dock-in 620ms var(--ease-out-expo) 140ms both;
+      animation: field-dock-in 460ms var(--ease-out-expo) 100ms both;
     }
 
     &::view-transition-new(field-readout):only-child {
-      animation: field-dock-in 620ms var(--ease-out-expo) 200ms both;
+      animation: field-dock-in 460ms var(--ease-out-expo) 140ms both;
     }
 
     &::view-transition-old(field-view):only-child,
