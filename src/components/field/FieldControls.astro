@@ -61,6 +61,24 @@ const { part, labels } = Astro.props;
   )
 }
 
+<script is:inline>
+  (function () {
+    // field.ts saves the view; restore it before first paint.
+    let view;
+    try {
+      view = sessionStorage.getItem("field-view");
+    } catch {
+      return;
+    }
+    if (view !== "list") return;
+    const field = document.querySelector("[data-field]");
+    if (field) field.dataset.view = "list";
+    document.documentElement.classList.remove("shell-fixed");
+    for (const btn of document.querySelectorAll("[data-view-btn]"))
+      btn.setAttribute("aria-pressed", String(btn.dataset.viewBtn === "list"));
+  })();
+</script>
+
 <style>
   .shell-readout.field-readout {
     display: flex;

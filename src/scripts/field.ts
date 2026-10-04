@@ -15,11 +15,12 @@ const OPEN = 3.2;
 const DRAG_PER_LAYER = 90;
 const ORBIT_RATIO = 1.5;
 const DENSE_STEP = 24;
-// Matches .stack-scene in field.css.
+// Matches .stack-scene in Field.astro.
 const PERSPECTIVE = 1800;
 const CRAMPED = 110;
 const SCRAMBLE = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789/#*+<>";
-// Matches the short landscape query in field.css.
+const WEBKIT = navigator.vendor.startsWith("Apple");
+// Matches the short landscape query in Field.astro.
 const SHORT = matchMedia(
   "(max-width: 899px) and (max-height: 540px) and (orientation: landscape)",
 );
@@ -138,7 +139,7 @@ function initField(root: HTMLElement) {
 
   function measureNarrow(vw: number, vh: number) {
     const top = edge(".shell-top", "bottom", 0);
-    // field.css places the card beside the stack in short landscape.
+    // Field.astro places the card beside the stack in short landscape.
     const bottom = SHORT.matches
       ? edge(".shell-dock", "top", vh)
       : info.getBoundingClientRect().top;
@@ -324,7 +325,7 @@ function initField(root: HTMLElement) {
         el.textContent = text;
         return;
       }
-      // field.css overlays noise glyphs without changing the title's wrap.
+      // Field.astro overlays noise glyphs without changing the title's wrap.
       el.replaceChildren(
         text.slice(0, fixed),
         ...[...text.slice(fixed)].map((char) => {
@@ -759,7 +760,7 @@ function initField(root: HTMLElement) {
     title: HTMLElement,
     summary: HTMLElement,
   ) {
-    // Use detail.client.ts measurements, falling back to entry.css.
+    // Use detail.client.ts measurements, falling back to DetailLayout.astro.
     const vw = innerWidth;
     let spots: Pick<HeroSpots, "title" | "sub"> | null = readSpots(layer);
     if (!spots) {
@@ -910,10 +911,9 @@ function initField(root: HTMLElement) {
     cam.yaw = tYaw - pace.yaw;
     cam.tilt = TILT - pace.tilt;
     const order = layers.map((_, i) => last - i);
-    // Start this motion with the incoming page transition.
     const tl = gsap.timeline({
       paused: true,
-      delay: 0.1,
+      delay: WEBKIT ? 0 : 0.1,
       onUpdate: () => void (dirty = true),
       onComplete: () => void (authored = false),
     });
@@ -929,7 +929,15 @@ function initField(root: HTMLElement) {
       { yaw: tYaw, tilt: TILT, duration: pace.settle, ease: "expo.out" },
       0,
     );
-    void onScreen().then(() => tl.restart(true));
+    void arrive().then(() => tl.restart(true));
+  }
+
+  // Head.astro hides the stack until WebKit finishes the transition.
+  function arrive(): Promise<void> {
+    if (!WEBKIT) return onScreen();
+    return Promise.resolve(window.pageReveal)
+      .then((vt) => vt?.finished)
+      .then(() => void (dirty = true));
   }
 
   function setView(view: View, persist = true) {
