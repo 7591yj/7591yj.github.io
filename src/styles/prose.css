@@ -25,6 +25,10 @@
   max-width: 40em;
 }
 
+.prose.prose--project > :is(p, ul, ol, blockquote, h4, h5) {
+  max-width: none;
+}
+
 .prose :is(h3, h4, h5) {
   position: relative;
   color: var(--color-text-primary);
