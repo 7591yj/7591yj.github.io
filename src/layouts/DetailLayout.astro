@@ -127,7 +127,7 @@ const {
           </aside>
         )
       }
-      <article class="prose">
+      <article class:list={["prose", { "prose--project": section === "work" }]}>
         <slot />
       </article>
     </section>

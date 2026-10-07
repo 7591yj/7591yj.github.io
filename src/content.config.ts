@@ -25,9 +25,6 @@ const projectSchema = z.object({
     "archived",
   ]),
   current: z.boolean().optional(),
-  category: z.enum(["software", "personal"]).optional(),
-  desc: z.array(z.string()).default([]),
-  tags: z.array(z.string()).default([]),
   tech: z.array(z.string()).default([]),
   thumbnail: z.string().optional(),
   images: z.array(z.string()).optional(),
@@ -45,7 +42,6 @@ const postTranslationSchema = z.strictObject({
 const projectTranslationSchema = z.strictObject({
   title: z.string(),
   subtitle: z.string(),
-  desc: z.array(z.string()).optional(),
 });
 
 function source(section: string) {
