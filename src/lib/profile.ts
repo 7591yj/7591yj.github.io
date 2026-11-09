@@ -142,8 +142,8 @@ const en: Profile = {
       title: "Certificates",
       entries: [
         {
-          when: "2025.05.24",
-          title: "TOPCIT, 677",
+          when: "2026.10.10",
+          title: "TOPCIT, 695",
           aside: "Ministry of Science and ICT, Korea",
         },
         {
@@ -284,8 +284,8 @@ const ja: Profile = {
       title: "資格",
       entries: [
         {
-          when: "2025.05.24",
-          title: "TOPCIT、677点",
+          when: "2026.10.10",
+          title: "TOPCIT、695点",
           aside: "科学技術情報通信部（韓国）",
         },
         {
