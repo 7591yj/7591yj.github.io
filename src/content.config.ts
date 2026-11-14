@@ -1,4 +1,4 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, type SchemaContext } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 import { defaultLocale } from "./i18n/ui";
@@ -12,27 +12,28 @@ const postSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
-const projectSchema = z.object({
-  title: z.string(),
-  subtitle: z.string(),
-  year: z.number(),
-  status: z.enum([
-    "released",
-    "in development",
-    "planned",
-    "prototype",
-    "paused",
-    "archived",
-  ]),
-  current: z.boolean().optional(),
-  tech: z.array(z.string()).default([]),
-  thumbnail: z.string().optional(),
-  images: z.array(z.string()).optional(),
-  link: z.string().optional(),
-  links: z
-    .array(z.object({ label: z.string().optional(), href: z.url() }))
-    .optional(),
-});
+const projectSchema = ({ image }: SchemaContext) =>
+  z.object({
+    title: z.string(),
+    subtitle: z.string(),
+    year: z.number(),
+    status: z.enum([
+      "released",
+      "in development",
+      "planned",
+      "prototype",
+      "paused",
+      "archived",
+    ]),
+    current: z.boolean().optional(),
+    tech: z.array(z.string()).default([]),
+    thumbnail: image().optional(),
+    images: z.array(z.string()).optional(),
+    link: z.string().optional(),
+    links: z
+      .array(z.object({ label: z.string().optional(), href: z.url() }))
+      .optional(),
+  });
 
 const postTranslationSchema = z.strictObject({
   title: z.string(),

@@ -63,6 +63,8 @@ const { part, labels } = Astro.props;
 
 <script is:inline>
   (function () {
+    // Short landscape sizes against the dock, which exists only now.
+    if (window.fitField) window.fitField();
     // field.ts saves the view; restore it before first paint.
     let view;
     try {

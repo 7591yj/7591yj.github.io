@@ -17,17 +17,8 @@ const ORBIT_RATIO = 1.5;
 const DENSE_STEP = 24;
 // Matches .stack-scene in Field.astro.
 const PERSPECTIVE = 1800;
-const CRAMPED = 110;
 const SCRAMBLE = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789/#*+<>";
 const WEBKIT = navigator.vendor.startsWith("Apple");
-// Matches the short landscape query in Field.astro.
-const SHORT = matchMedia(
-  "(max-width: 899px) and (max-height: 540px) and (orientation: landscape)",
-);
-const INTRO = {
-  full: { yaw: 50, tilt: 20, drop: 0.9, stagger: 0.07, settle: 1.8 },
-  brief: { yaw: 18, tilt: 8, drop: 0.6, stagger: 0.04, settle: 1.1 },
-};
 const DEAL = {
   out: {
     sign: 1,
@@ -102,9 +93,10 @@ function initField(root: HTMLElement) {
   const tTilt = TILT;
   let parallaxX = 0;
   let parallaxY = 0;
-  const drop = layers.map(() => 0);
   const scatter = layers.map(() => 0);
   let authored = false;
+  let live = false;
+  const early = new AbortController();
   let leaving = false;
   let swapping = false;
   let dirty = true;
@@ -113,7 +105,7 @@ function initField(root: HTMLElement) {
 
   const saved = readCam();
   if (saved) {
-    cam.pos = tPos = clamp(saved.pos, 0, last);
+    cam.pos = tPos = Math.round(clamp(saved.pos, 0, last));
     cam.yaw = tYaw = saved.yaw;
   }
 
@@ -122,31 +114,10 @@ function initField(root: HTMLElement) {
   let narrow = false;
 
   function measure() {
-    const vw = stage.clientWidth;
-    const vh = stage.clientHeight;
-    narrow = vw < 900;
-    if (narrow) {
-      measureNarrow(vw, vh);
-    } else {
-      size = clamp(Math.min(vw * 0.28, vh * 0.44), 220, 420);
-      root.style.removeProperty("--sy");
-    }
+    size = window.fitField();
+    narrow = stage.clientWidth < 900;
     gap = size * 0.16;
-    root.classList.toggle("is-cramped", size < CRAMPED);
-    root.style.setProperty("--layer", `${size.toFixed(1)}px`);
     dirty = true;
-  }
-
-  function measureNarrow(vw: number, vh: number) {
-    const top = edge(".shell-top", "bottom", 0);
-    // Field.astro places the card beside the stack in short landscape.
-    const bottom = SHORT.matches
-      ? edge(".shell-dock", "top", vh)
-      : info.getBoundingClientRect().top;
-    const band = Math.max(bottom - top - 24, 0);
-    const span = SHORT.matches ? info.getBoundingClientRect().left : vw;
-    size = Math.min(span * 0.6, band / 1.45, 320);
-    root.style.setProperty("--sy", `${((top + bottom) / 2).toFixed(1)}px`);
   }
 
   let active = -1;
@@ -198,7 +169,6 @@ function initField(root: HTMLElement) {
     let opacity = 1 - 0.78 * above;
     opacity *= 1 - clamp((-d - 2.5) / 2, 0, 0.6);
     opacity *= 1 - clamp((d - 1.5) / 2, 0, 0.8);
-    opacity *= 1 - drop[i];
     opacity *= 1 - scatter[i];
 
     const slide = near * size * 0.08 * still;
@@ -215,7 +185,6 @@ function initField(root: HTMLElement) {
 
   function layerZ(i: number, d: number, above: number) {
     let z = d * gap + gap * OPEN * above;
-    z += drop[i] * 900;
     z += scatter[i] * (d > 0 ? 1 : -1) * 900;
     if (i === active) z += cam.lift * size * 0.7;
     return z;
@@ -283,7 +252,7 @@ function initField(root: HTMLElement) {
   const settled = () => !leaving && !swapping;
 
   function drawLeader() {
-    const show = !narrow && settled() && active >= 0 && drop[active] < 0.05;
+    const show = !narrow && settled() && live;
     leader.classList.toggle("is-visible", show);
     if (!show) return;
     const [sx, sy] = handlePoint(layers[active]);
@@ -642,11 +611,14 @@ function initField(root: HTMLElement) {
   function dive(i: number) {
     const layer = layers[i];
     if (!layer || leaving) return;
+    land();
     leaving = true;
     authored = true;
     setHot(null);
     refreshCursor();
     writeCam(i, tYaw);
+    // Warm the detail page's full-size image during the dive.
+    if (layer.dataset.full) new Image().src = layer.dataset.full;
 
     const card = cards[i];
     const title = card.querySelector<HTMLElement>(".stack-card__title")!;
@@ -903,33 +875,35 @@ function initField(root: HTMLElement) {
     frame = 0;
   };
 
+  // The entrance is CSS; input on the field cuts it short.
   function intro() {
-    if (reduced) return;
     authored = true;
-    const pace = saved ? INTRO.brief : INTRO.full;
-    drop.fill(1);
-    cam.yaw = tYaw - pace.yaw;
-    cam.tilt = TILT - pace.tilt;
-    const order = layers.map((_, i) => last - i);
-    const tl = gsap.timeline({
-      paused: true,
-      delay: WEBKIT ? 0 : 0.1,
-      onUpdate: () => void (dirty = true),
-      onComplete: () => void (authored = false),
-    });
-    order.forEach((i, k) => {
-      tl.to(
-        drop,
-        { [i]: 0, duration: pace.drop, ease: "expo.out" },
-        k * pace.stagger,
-      );
-    });
-    tl.to(
-      cam,
-      { yaw: tYaw, tilt: TILT, duration: pace.settle, ease: "expo.out" },
-      0,
-    );
-    void arrive().then(() => tl.restart(true));
+    const opts = { capture: true, signal: early.signal };
+    root.addEventListener("pointerdown", land, opts);
+    root.addEventListener("wheel", land, opts);
+    window.addEventListener("keydown", fieldKey, opts);
+    void arrive()
+      .then(() =>
+        Promise.allSettled(
+          [stack, ...layers]
+            .flatMap((el) => el.getAnimations())
+            .map((animation) => animation.finished),
+        ),
+      )
+      .then(land);
+  }
+
+  function fieldKey(event: KeyboardEvent) {
+    if (/^(Arrow|Enter$)/.test(event.key)) land();
+  }
+
+  function land() {
+    if (live) return;
+    live = true;
+    early.abort();
+    root.classList.add("is-live");
+    authored = false;
+    render();
   }
 
   // Head.astro hides the stack until WebKit finishes the transition.
@@ -977,6 +951,7 @@ function initField(root: HTMLElement) {
 
   function switchView(view: View) {
     if (view === root.dataset.view || !settled()) return;
+    land();
     if (reduced) return setView(view);
     pressView(view);
     swapping = authored = true;
@@ -1024,7 +999,6 @@ function initField(root: HTMLElement) {
     tYaw = wrap(tYaw);
     Object.assign(cam, { pos: tPos, yaw: fullTurn(tYaw), flat: 1 });
     Object.assign(cam, { tilt: TILT, lift: 0, ox: 0, oy: 0, zoom: 1 });
-    drop.fill(0);
     scatter.fill(0);
     render();
     fly(false, flatTiles(), rows, () => {
@@ -1078,6 +1052,7 @@ function initField(root: HTMLElement) {
       el.className = "field-ghost";
       el.classList.toggle("is-active", i === active);
       el.append(layer.querySelector(".layer-face")!.cloneNode(true));
+      settleLoading(el);
       return el;
     });
     [...ghosts.keys()]
@@ -1157,7 +1132,10 @@ function initField(root: HTMLElement) {
     const row = (event.target as Element).closest<HTMLElement>("li[data-row]");
     if (!row) return;
     const plate = layers[Number(row.dataset.row)]?.querySelector(".tile-plate");
-    if (plate) preview.replaceChildren(plate.cloneNode(true));
+    if (plate) {
+      preview.replaceChildren(plate.cloneNode(true));
+      settleLoading(preview);
+    }
     if (!preview.classList.contains("is-visible"))
       gsap.set(preview, { x: previewX(event.clientX), y: event.clientY - 100 });
     preview.classList.add("is-visible");
@@ -1185,7 +1163,14 @@ function initField(root: HTMLElement) {
   const savedView = sessionStorage.getItem(VIEW_KEY) as View | null;
   setView(savedView === "list" ? "list" : "field", false);
   if (root.dataset.view === "field") intro();
+  else land();
   requestAnimationFrame(() => root.classList.add("is-ready"));
+}
+
+declare global {
+  interface Window {
+    fitField: () => number;
+  }
 }
 
 interface HeroSpot {
@@ -1233,10 +1218,12 @@ function writeCam(pos: number, yaw: number) {
   sessionStorage.setItem(CAM_KEY, JSON.stringify({ pos, yaw }));
 }
 
-function edge(selector: string, side: "top" | "bottom", fallback: number) {
-  return (
-    document.querySelector(selector)?.getBoundingClientRect()[side] ?? fallback
-  );
+// Copies of a plate don't get the inline script's cleanup.
+function settleLoading(scope: Element) {
+  for (const plate of scope.querySelectorAll(".tile-plate.is-loading")) {
+    const done = () => plate.classList.remove("is-loading");
+    plate.querySelector("img")?.decode().then(done, done);
+  }
 }
 
 function fullTurn(deg: number) {

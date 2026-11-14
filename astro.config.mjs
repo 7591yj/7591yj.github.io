@@ -6,6 +6,7 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import react from "@astrojs/react";
 import { headingAnchors } from "./src/lib/headingAnchors.ts";
+import { modulePreload } from "./src/integrations/modulePreload.ts";
 
 import icon from "astro-icon";
 
@@ -51,6 +52,7 @@ export default defineConfig({
     icon({
       iconDir: "src/icons",
     }),
+    modulePreload(),
   ],
   vite: {
     plugins: [tailwindcss()],
