@@ -617,6 +617,8 @@ function initField(root: HTMLElement) {
     setHot(null);
     refreshCursor();
     writeCam(i, tYaw);
+    // Warm the detail page's full-size image during the dive.
+    if (layer.dataset.full) new Image().src = layer.dataset.full;
 
     const card = cards[i];
     const title = card.querySelector<HTMLElement>(".stack-card__title")!;

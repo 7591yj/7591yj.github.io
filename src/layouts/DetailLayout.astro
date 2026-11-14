@@ -1,4 +1,5 @@
 ---
+import type { ImageMetadata } from "astro";
 import Shell, { type Alternates, type ShellSection } from "./Shell.astro";
 import TableOfContents from "../components/content/TableOfContents/TableOfContents.astro";
 
@@ -13,7 +14,7 @@ interface Props {
   kicker: string[];
   headingTitle: string;
   subtitle?: string;
-  image?: string;
+  image?: ImageMetadata | string;
   meta: MetaItem[];
   tags?: string[];
   tagsLabel: string;
@@ -113,7 +114,7 @@ const {
       {
         image && (
           <div class="entry-plate">
-            <img src={image} alt="" />
+            <img src={typeof image === "string" ? image : image.src} alt="" />
           </div>
         )
       }

@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import "../ui/interactive-list.css";
 
 export interface FieldItem {
@@ -11,7 +10,7 @@ export interface FieldItem {
   current?: boolean;
   tags: string[];
   href: string;
-  image?: string;
+  image?: { src: string; srcset: string; full: string };
 }
 
 interface Props {
@@ -62,6 +61,7 @@ const groups = [
               tabindex="-1"
               draggable="false"
               data-layer={i}
+              data-full={item.image?.full}
               style={`--i: ${i}`}
             >
               <span class="layer-face">
@@ -71,14 +71,14 @@ const groups = [
                 </span>
                 <span class="tile-plate">
                   {item.image && (
-                    <Image
-                      src={item.image}
+                    <img
+                      src={item.image.src}
+                      srcset={item.image.srcset}
                       alt=""
-                      width={320}
-                      height={320}
-                      densities={[1, 2]}
-                      fit="cover"
-                      loading="eager"
+                      width="320"
+                      height="320"
+                      decoding="async"
+                      fetchpriority={i === 0 ? "high" : "auto"}
                       draggable="false"
                     />
                   )}
