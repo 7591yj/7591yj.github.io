@@ -332,7 +332,12 @@ const {
       background: var(--color-accent);
       transform: scaleX(0);
       transform-origin: left center;
-      animation: read-progress linear both;
+
+      /* Longhands only: lightningcss folds a shorthand + timeline into an
+         `animation` value browsers reject. */
+      animation-name: read-progress;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: scroll(root block);
       pointer-events: none;
     }
