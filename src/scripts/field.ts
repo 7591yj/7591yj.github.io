@@ -1052,6 +1052,7 @@ function initField(root: HTMLElement) {
       el.className = "field-ghost";
       el.classList.toggle("is-active", i === active);
       el.append(layer.querySelector(".layer-face")!.cloneNode(true));
+      settleLoading(el);
       return el;
     });
     [...ghosts.keys()]
@@ -1131,7 +1132,10 @@ function initField(root: HTMLElement) {
     const row = (event.target as Element).closest<HTMLElement>("li[data-row]");
     if (!row) return;
     const plate = layers[Number(row.dataset.row)]?.querySelector(".tile-plate");
-    if (plate) preview.replaceChildren(plate.cloneNode(true));
+    if (plate) {
+      preview.replaceChildren(plate.cloneNode(true));
+      settleLoading(preview);
+    }
     if (!preview.classList.contains("is-visible"))
       gsap.set(preview, { x: previewX(event.clientX), y: event.clientY - 100 });
     preview.classList.add("is-visible");
@@ -1212,6 +1216,14 @@ function readCam(): { pos: number; yaw: number } | null {
 
 function writeCam(pos: number, yaw: number) {
   sessionStorage.setItem(CAM_KEY, JSON.stringify({ pos, yaw }));
+}
+
+// Copies of a plate don't get the inline script's cleanup.
+function settleLoading(scope: Element) {
+  for (const plate of scope.querySelectorAll(".tile-plate.is-loading")) {
+    const done = () => plate.classList.remove("is-loading");
+    plate.querySelector("img")?.decode().then(done, done);
+  }
 }
 
 function fullTurn(deg: number) {

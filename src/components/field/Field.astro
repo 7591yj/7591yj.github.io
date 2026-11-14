@@ -10,7 +10,7 @@ export interface FieldItem {
   current?: boolean;
   tags: string[];
   href: string;
-  image?: { src: string; srcset: string; full: string };
+  image?: { src: string; srcset: string; full: string; preview?: string };
 }
 
 interface Props {
@@ -69,7 +69,13 @@ const groups = [
                   <span>L{pad(i + 1)}</span>
                   <span>{item.title}</span>
                 </span>
-                <span class="tile-plate">
+                <span
+                  class="tile-plate"
+                  style={
+                    item.image?.preview &&
+                    `--preview: url(${item.image.preview})`
+                  }
+                >
                   {item.image && (
                     <img
                       src={item.image.src}
@@ -231,6 +237,16 @@ const groups = [
       return size;
     };
     window.fitField();
+
+    for (const img of root.querySelectorAll(".tile-plate img")) {
+      if (img.complete) continue;
+      const plate = img.parentElement;
+      plate.classList.add("is-loading");
+      const done = function () {
+        plate.classList.remove("is-loading");
+      };
+      img.decode().then(done, done);
+    }
 
     let cam;
     try {
@@ -426,10 +442,66 @@ const groups = [
   }
 
   .tile-plate {
+    position: relative;
     display: grid;
     place-items: center;
     width: 100%;
     aspect-ratio: 1;
+  }
+
+  /* Halftone placeholder until the image decodes. */
+  .tile-plate::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 0.25rem;
+    background:
+      linear-gradient(
+        color-mix(in srgb, var(--color-text-muted) 30%, transparent) 0 0
+      ),
+      var(--preview) center / cover;
+
+    --dim: color-mix(in srgb, var(--color-ink) 45%, transparent);
+
+    mask:
+      linear-gradient(
+          115deg,
+          var(--dim) 35%,
+          var(--color-ink) 50%,
+          var(--dim) 65%
+        )
+        0 0 / 300% 100%,
+      radial-gradient(circle, var(--color-ink) 0 36%, transparent 42%) 0 0 /
+        4.1667% 4.1667%;
+    mask-composite: intersect;
+    opacity: 0;
+    transition: opacity 500ms var(--ease-out-quart);
+    pointer-events: none;
+  }
+
+  .tile-plate.is-loading::before {
+    opacity: 1;
+    animation: tile-sheen 2.2s linear infinite;
+  }
+
+  @keyframes tile-sheen {
+    from {
+      mask-position:
+        100% 0,
+        0 0;
+    }
+
+    to {
+      mask-position:
+        0 0,
+        0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile-plate.is-loading::before {
+      animation: none;
+    }
   }
 
   .layer .tile-plate,
@@ -442,7 +514,13 @@ const groups = [
     height: 100%;
     object-fit: cover;
     border-radius: 0.25rem;
+    background: var(--preview) center / cover;
+    transition: opacity 500ms var(--ease-out-quart);
     pointer-events: none;
+  }
+
+  .tile-plate.is-loading :global(img) {
+    opacity: 0;
   }
 
   .layer-handle {
